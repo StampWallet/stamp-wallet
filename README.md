@@ -12,7 +12,7 @@ StampWallet also **provides tools** to set up your own **loyalty programme** if 
 # Getting started
 
 To use the StampWallet, simply:
-1. Clone this repository with `git clone https::/github.com/StampWallet/StampWallet`
+1. Clone this repository with `git clone https://github.com/StampWallet/stamp-wallet`
 2. Make sure you have installed `Node.js`, simply run `node -v` to verify Node.js installation on your system.
 If you don't have Node.js installed, visit [this official Node.js site](https://nodejs.org/en) and download latest version.
 3. Make sure you have installed `Expo CLI` - run `npm install -g expo-cli` and verify the installation using `npx expo -v`.
