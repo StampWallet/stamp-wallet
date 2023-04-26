@@ -4,16 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac127baf-9064-4200-b659-3bfcd075c981" name="Changes" comment="basic screen definitions">
-      <change afterPath="$PROJECT_DIR$/.eslintignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.eslintrc.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.prettierrc.json" afterDir="false" />
+    <list default="true" id="ac127baf-9064-4200-b659-3bfcd075c981" name="Changes" comment="add eslint and prettier to project">
+      <change afterPath="$PROJECT_DIR$/src/screens/CardInfoScreen.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/__tests__/hello_word_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/hello_word_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/BenefitManipulationScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/BenefitManipulationScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/CardAdditionScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/CardAdditionScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/CardInfoScreen.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/database.js.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/EmailConfirmationScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/EmailConfirmationScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/MainScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/MainScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/MapScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/MapScreen.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,8 +25,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -91,7 +93,7 @@
       <workItem from="1682248221567" duration="623000" />
       <workItem from="1682544753111" duration="291000" />
       <workItem from="1682545071163" duration="142000" />
-      <workItem from="1682545250061" duration="1535000" />
+      <workItem from="1682545250061" duration="2733000" />
     </task>
     <task id="LOCAL-00001" summary="frontend repository initialization">
       <created>1682032539280</created>
@@ -121,7 +123,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682546038353</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add eslint and prettier to project">
+      <created>1682546869066</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1682546869066</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -144,6 +153,7 @@
     <MESSAGE value="initialize repository" />
     <MESSAGE value="fix readme typo" />
     <MESSAGE value="basic screen definitions" />
-    <option name="LAST_COMMIT_MESSAGE" value="basic screen definitions" />
+    <MESSAGE value="add eslint and prettier to project" />
+    <option name="LAST_COMMIT_MESSAGE" value="add eslint and prettier to project" />
   </component>
 </project>

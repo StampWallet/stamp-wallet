@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-export default function HomeScreen() {
+export default function CardInfoScreen() {
   return (
     <View style={styles.container}>
-      <Text>This is home screen</Text>
+      <Text>This is card info screen screen</Text>
       <StatusBar style="auto" />
     </View>
   );
