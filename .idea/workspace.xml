@@ -4,22 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac127baf-9064-4200-b659-3bfcd075c981" name="Changes" comment="fix readme typo">
-      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/BenefitManipulationScreen.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/CardAdditionScreen.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/CardInfoScreen.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/EmailConfirmationScreen.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/MainScreen.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/MapScreen.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/ScannerView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="ac127baf-9064-4200-b659-3bfcd075c981" name="Changes" comment="basic screen definitions">
+      <change afterPath="$PROJECT_DIR$/.eslintignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.eslintrc.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.prettierrc.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/__tests__/hello_word_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/hello_word_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/screens/TestScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/TestScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,7 +31,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="develop" />
       </map>
     </option>
   </component>
@@ -53,23 +46,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/dawidbania/WebstormProjects/StampWallet/_tests&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/dawidbania/WebstormProjects/StampWallet/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/dawidbania/WebstormProjects/StampWallet/_tests",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "/Users/dawidbania/WebstormProjects/StampWallet/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "ts.external.directory.path": "/Users/dawidbania/WebstormProjects/StampWallet/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -97,7 +91,7 @@
       <workItem from="1682248221567" duration="623000" />
       <workItem from="1682544753111" duration="291000" />
       <workItem from="1682545071163" duration="142000" />
-      <workItem from="1682545250061" duration="624000" />
+      <workItem from="1682545250061" duration="1535000" />
     </task>
     <task id="LOCAL-00001" summary="frontend repository initialization">
       <created>1682032539280</created>
@@ -120,7 +114,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682544959695</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="basic screen definitions">
+      <created>1682546038353</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1682546038353</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -142,6 +143,7 @@
     <MESSAGE value="frontend repository initialization" />
     <MESSAGE value="initialize repository" />
     <MESSAGE value="fix readme typo" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix readme typo" />
+    <MESSAGE value="basic screen definitions" />
+    <option name="LAST_COMMIT_MESSAGE" value="basic screen definitions" />
   </component>
 </project>
