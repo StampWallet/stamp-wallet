@@ -4,19 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac127baf-9064-4200-b659-3bfcd075c981" name="Changes" comment="add eslint and prettier to project">
-      <change afterPath="$PROJECT_DIR$/src/screens/CardInfoScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/hello_word_test.js" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/hello_word_test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/BenefitManipulationScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/BenefitManipulationScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/CardAdditionScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/CardAdditionScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/CardInfoScreen.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/database.js.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/EmailConfirmationScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/EmailConfirmationScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/HomeScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/MainScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/MainScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/MapScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/MapScreen.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="ac127baf-9064-4200-b659-3bfcd075c981" name="Changes" comment="tests for main screen, database, app, home screen" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,15 +13,15 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="task/test-config2" />
       </map>
     </option>
   </component>
@@ -48,24 +36,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/dawidbania/WebstormProjects/StampWallet/_tests",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "prettierjs.PrettierConfiguration.Package": "/Users/dawidbania/WebstormProjects/StampWallet/node_modules/prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
-    "ts.external.directory.path": "/Users/dawidbania/WebstormProjects/StampWallet/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/dawidbania/WebstormProjects/StampWallet/_tests&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/dawidbania/WebstormProjects/StampWallet/node_modules/prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/dawidbania/WebstormProjects/StampWallet/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -77,6 +65,9 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/_tests" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/__tests__" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -130,7 +121,21 @@
       <option name="project" value="LOCAL" />
       <updated>1682546869066</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="shelve">
+      <created>1682639219203</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1682639219203</updated>
+    </task>
+    <task id="LOCAL-00007" summary="tests for main screen, database, app, home screen">
+      <created>1682639318045</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1682639318045</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -154,6 +159,8 @@
     <MESSAGE value="fix readme typo" />
     <MESSAGE value="basic screen definitions" />
     <MESSAGE value="add eslint and prettier to project" />
-    <option name="LAST_COMMIT_MESSAGE" value="add eslint and prettier to project" />
+    <MESSAGE value="shelve" />
+    <MESSAGE value="tests for main screen, database, app, home screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="tests for main screen, database, app, home screen" />
   </component>
 </project>
