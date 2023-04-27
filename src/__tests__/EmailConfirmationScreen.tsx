@@ -7,7 +7,7 @@ import EmailConfirmationScreen from '../screens/EmailConfirmationScreen';
 
 describe('Email confirmation screen tests', () => {
     it('checks if rendered correctly', () => {
-        const tree = render(<EmailConfirmationScreen />).toJSON;
+        const tree = render(<EmailConfirmationScreen />).toJSON();
         expect(tree).toMatchSnapshot();
     })
 
