@@ -20,3 +20,7 @@ If you don't have Node.js installed, visit [this official Node.js site](https://
 5. Install project dependencies using `yarn install`.
 6. Run `yarn start`. This will open a browser window with the Expo developer tools. From here you can launch your app in an emulator or on a physical device by selecting the appropriate option.
 **Alternatively** run `yarn android` or `yarn ios` - this will build and run the app in the specified emulator/simulator.
+
+# Testing
+
+To run tests for this application, use `yarn test`.

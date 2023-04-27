@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "react-native-testing-library";
 import "@testing-library/jest-native/extend-expect";
 
-import TestScreen from "../app/screens/TestScreen";
+import TestScreen from "../src/screens/TestScreen";
 
 describe("hello world", () => {
   it("should be false", () => {
