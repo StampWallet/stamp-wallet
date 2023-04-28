@@ -9,8 +9,7 @@
         "plugin:@typescript-eslint/recommended",
         "airbnb",
         "airbnb/hooks",
-        "prettier",
-        "prettier/react"
+        "prettier"
     ],
     "overrides": [
     ],
