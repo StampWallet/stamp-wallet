@@ -14,8 +14,6 @@ const getTitle = (step: number) => {
 export default function MyBusinessScreen({navigation}) {
   const [step, setStep] = useState(1);
 
-  navigation.reset("HomeScreen")
-
   return (<View style={styles.container}>
     {step === 1 && (<BoxContainer>
       <InputField placeholder="name" setValue={() => {}} value={''}/>
