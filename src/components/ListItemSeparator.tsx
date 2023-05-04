@@ -1,8 +1,12 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-function ListItemSeparator() {
-  return <View style={styles.separator} />;
+interface ListItemSeparatorProps {
+  style?: any;
+}
+
+function ListItemSeparator({ style }: ListItemSeparatorProps) {
+  return <View style={[styles.separator, style]} />;
 }
 
 const styles = StyleSheet.create({

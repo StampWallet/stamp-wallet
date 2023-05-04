@@ -2,15 +2,22 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const TopBar = (props) => {
+interface TopBarProps {
+  iconLeft: any;
+  onPressLeft: any;
+  iconRight?: any;
+  onPressRight?: any;
+}
+
+const TopBar = ({ iconLeft, onPressLeft, iconRight, onPressRight }: TopBarProps) => {
   return (
     <View style={styles.TopBar}>
       <View style={styles.container}>
-        <View style={styles.containerLeft}>
-          <Icon name="menu" size={30} onPress={() => alert('Work in progress')} />
+        <View style={styles.containerIcon}>
+          <Icon name={iconLeft} size={30} onPress={onPressLeft} />
         </View>
-        <View style={styles.containerRight}>
-          <Icon name="filter-menu-outline" size={30} onPress={() => alert('Work in progress')} />
+        <View style={styles.containerIcon}>
+          {iconRight && <Icon name={iconRight} size={30} onPress={onPressRight} />}
         </View>
       </View>
     </View>
@@ -24,16 +31,13 @@ const styles = StyleSheet.create({
     gap: 300,
   },
   TopBar: {
-    height: 125,
+    height: '10%',
+    width: '100%',
     backgroundColor: '#50AAEB',
-    flex: 0.1,
+    paddingTop: 0,
   },
-  containerLeft: {
+  containerIcon: {
     paddingLeft: 20,
-    justifyContent: 'center',
-  },
-  containerRight: {
-    paddingRight: 20,
     justifyContent: 'center',
   },
 });

@@ -12,7 +12,7 @@ const BenefitList = ({ benefits }) => {
         data={benefits}
         keyExtractor={(benefit) => benefit.publicId}
         renderItem={({ item }) => (
-          <TouchableWithoutFeedback onPress={() => {}}>
+          <TouchableWithoutFeedback onPress={() => alert('Work in progress')}>
             <BenefitTile name={item.name} color={'#7BFF78'}>
               <View style={styles.containerRight}>
                 <View style={styles.containerInRow}>

@@ -12,11 +12,12 @@ const Tile = ({ children, color }: TileProps) => {
 
 const styles = StyleSheet.create({
   tile: {
-    backgroundColor: '#ffff', //temp
+    backgroundColor: '#C9CDFF', //temp
     height: 75,
     width: 350,
     borderRadius: 15,
     overflow: 'visible',
+    shadowOpacity: 10,
   },
 });
 

@@ -23,25 +23,6 @@ const BenefitTile = ({ name, color, children }: BenefitTileProps) => {
   );
 };
 
-/*
-const BenefitTile = ({ name, color, children }: BenefitTileProps) => {
-  return (
-    <Tile color={color}>
-      <View style={styles.container}>
-        <View style={styles.containerLeft}>
-          <Text style={styles.text}>{name}</Text>
-        </View>
-        <View style={styles.containerRight}>
-          <View style={styles.containerInRow}>
-            <Text style={styles.text}>200</Text>
-            <Icon name="menu-right" size={35} />
-          </View>
-        </View>
-      </View>
-    </Tile>
-  );
-};
-*/
 const styles = StyleSheet.create({
   container: {
     flex: 1,
