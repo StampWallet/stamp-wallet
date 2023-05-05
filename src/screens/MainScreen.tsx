@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 
-export default function CardInfoScreen() {
+export default function HomeScreen({navigation}) {
   return (
     <View style={styles.container}>
-      <Text>This is card info screen screen</Text>
+      <Text>This is main screen</Text>
       <StatusBar barStyle="default" />
     </View>
   );
