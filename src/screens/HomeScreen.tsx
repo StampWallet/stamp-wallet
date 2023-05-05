@@ -1,20 +1,23 @@
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from "react-native";
 
+import CustomButton from '../components/CustomButton'
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
+
   return (
-
     <View style={styles.container}>
-      <Text>This is home screen</Text>
-      <StatusBar barStyle="default" />
+      <CustomButton onPress={() => {navigation.push("LogInScreen")}} title="Sign in"/>
+      <CustomButton onPress={() => {navigation.push("RegistrationScreen")}} title="Register"/>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#FAF9F6',
     alignItems: 'center',
     justifyContent: 'center',
   },
