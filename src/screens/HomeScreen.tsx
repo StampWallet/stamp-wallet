@@ -1,52 +1,22 @@
 import React from 'react';
-import { StyleSheet, View, StatusBar, FlatList, Text } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { StyleSheet, View } from "react-native";
 
-import TopBar from '../components/TopBar';
-import CardTile from '../components/CardTile';
-import ListItemSeparator from '../components/ListItemSeparator';
+import CustomButton from '../components/CustomButton'
 
-const cards = [
-  {
-    image: require('../assets/biedronka_homepage.jpg'),
-  },
-  {
-    image: require('../assets/biedronka_homepage.jpg'),
-  },
-];
-
-export default function HomeScreen() {
-  const [text, onChangeText] = React.useState('');
+export default function HomeScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <TopBar
-        iconLeft={'menu'}
-        onPressLeft={() => alert('Work in progress')}
-        iconRight={'filter-menu-outline'}
-        onPressRight={() => alert('Work in progress')}
-      />
-      <TextInput
-        style={styles.textInput}
-        onChangeText={onChangeText}
-        placeholder="Search"
-        value={text}
-      />
-      <FlatList
-        data={cards}
-        renderItem={({ item }) => (
-          <CardTile image={item.image} onPress={() => alert('Work in progress')} />
-        )}
-        ItemSeparatorComponent={ListItemSeparator}
-      />
-      <StatusBar barStyle="default" />
+      <CustomButton onPress={() => {navigation.push("LogInScreen")}} title="Sign in"/>
+      <CustomButton onPress={() => {navigation.push("RegistrationScreen")}} title="Register"/>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: '100%',
+    height: '100%',
     backgroundColor: '#FAF9F6',
     alignItems: 'center',
     justifyContent: 'flex-start',
