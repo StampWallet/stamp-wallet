@@ -19,6 +19,12 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#FAF9F6',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+  },
+  textInput: {
+    height: 60,
+    margin: 12,
+    padding: 10,
+    fontSize: 18,
   },
 });
