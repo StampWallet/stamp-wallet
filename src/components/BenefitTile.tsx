@@ -53,6 +53,4 @@ const styles = StyleSheet.create({
   },
 });
 
-//      <View style={styles.containerRight}>{children}</View>
-
 export default BenefitTile;

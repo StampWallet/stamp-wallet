@@ -15,7 +15,7 @@ const cards = [
   },
 ];
 
-export default function MainScreen() {
+export default function MainScreen({ navigation }) {
   const [text, onChangeText] = useState('');
 
   return (
@@ -35,7 +35,7 @@ export default function MainScreen() {
       <FlatList
         data={cards}
         renderItem={({ item }) => (
-          <CardTile image={item.image} onPress={() => alert('Work in progress')} />
+          <CardTile image={item.image} onPress={() => navigation.push('CardInfoScreen')} />
         )}
         ItemSeparatorComponent={ListItemSeparator}
       />

@@ -1,24 +1,22 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-interface TileProps {
-  children: any;
-  color?: any;
-}
+//padding not working - fix!!!
 
-const Tile = ({ children, color }: TileProps) => {
-  return <View style={[styles.tile, { backgroundColor: color }]}>{children}</View>;
+const Tile = ({ children, color = '#C9CDFF', padding = 0 }) => {
+  const styles = StyleSheet.create({
+    tile: {
+      backgroundColor: color,
+      height: 75,
+      width: 350,
+      borderRadius: 15,
+      overflow: 'hidden',
+      shadowOpacity: 10,
+      padding: padding,
+    },
+  });
+
+  return <View style={styles.tile}>{children}</View>;
 };
-
-const styles = StyleSheet.create({
-  tile: {
-    backgroundColor: '#C9CDFF', //temp
-    height: 75,
-    width: 350,
-    borderRadius: 15,
-    overflow: 'visible',
-    shadowOpacity: 10,
-  },
-});
 
 export default Tile;

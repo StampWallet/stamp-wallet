@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+//todo: make icons size be consistent with figma prototypes
+
 const TapBar = (props) => {
   return (
     <View style={styles.TapBar}>
@@ -23,7 +25,7 @@ const TapBar = (props) => {
 const styles = StyleSheet.create({
   TapBar: {
     backgroundColor: '#50AAEB',
-    height: '10%',
+    height: '6.125%',
     marginTop: 'auto',
     width: '100%',
   },

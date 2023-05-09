@@ -1,15 +1,17 @@
 import React from 'react';
-import { StyleSheet, View, Image, Text, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, Image, Text, Pressable } from 'react-native';
 
 import Tile from './Tile';
 
+//todo: source = proper business banner
+
 const CardTile = ({ image, onPress }) => {
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <Pressable onPress={onPress}>
       <Tile>
         <Image style={styles.image} source={image} resizeMode="contain" />
       </Tile>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
 
