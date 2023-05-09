@@ -46,7 +46,7 @@ export default function CardInfoScreen({ navigation }) {
       {/* todo: apply proper paddings */}
       <CustomButton onPress={() => alert('Work in progress')} title="Claim Benefits" />
       <CustomButton onPress={() => alert('Work in progress')} title="Show Card" />
-      <TapBar />
+      <TapBar navigation={navigation} />
     </View>
   );
 }

@@ -4,18 +4,27 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 //todo: make icons size be consistent with figma prototypes
 
-const TapBar = (props) => {
+const TapBar = ({ navigation }) => {
   return (
     <View style={styles.TapBar}>
       <View style={styles.container}>
         <View style={styles.containerIcon}>
-          <Icon name="home-outline" onPress={() => alert('Work in progress')} size={30} />
+          <Icon
+            name="home-outline"
+            onPress={() =>
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'MainScreen' }],
+              })
+            }
+            size={30}
+          />
         </View>
         <View style={styles.containerIcon}>
           <Icon name="plus-circle-outline" onPress={() => alert('Work in progress')} size={30} />
         </View>
         <View style={styles.containerIcon}>
-          <Icon name="map-search-outline" onPress={() => alert('Work in progress')} size={30} />
+          <Icon name="map-search-outline" onPress={() => navigation.push('MapScreen')} size={30} />
         </View>
       </View>
     </View>
