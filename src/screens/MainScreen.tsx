@@ -5,6 +5,9 @@ import { TextInput } from 'react-native-gesture-handler';
 import TopBar from '../components/TopBar';
 import CardTile from '../components/CardTile';
 import ListItemSeparator from '../components/ListItemSeparator';
+import CustomButton from '../components/CustomButton';
+
+import StyleBase from '../styles/StyleBase';
 
 const cards = [
   {
@@ -15,11 +18,11 @@ const cards = [
   },
 ];
 
-export default function MainScreen() {
+export default function MainScreen({ navigation }) {
   const [text, onChangeText] = useState('');
 
   return (
-    <View style={styles.container}>
+    <View style={StyleBase.container}>
       <TopBar
         iconLeft='menu'
         onPressLeft={() => alert('Work in progress')}
@@ -39,6 +42,7 @@ export default function MainScreen() {
         )}
         ItemSeparatorComponent={ListItemSeparator}
       />
+      <CustomButton onPress={() => navigation.push('HomeScreen')} title='Back to home' />
       <StatusBar barStyle='default' />
     </View>
   );

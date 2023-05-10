@@ -1,13 +1,9 @@
 import React from 'react';
-import {StyleSheet, View} from "react-native";
+import { StyleSheet, View } from 'react-native';
 
-const BoxContainer = props => {
-  return (
-    <View style={{...styles.boxContainer, ...props.style}}>
-      {props.children}
-    </View>
-  )
-}
+const BoxContainer = (props) => {
+  return <View style={{ ...styles.boxContainer, ...props.style }}>{props.children}</View>;
+};
 
 const styles = StyleSheet.create({
   boxContainer: {
@@ -15,7 +11,7 @@ const styles = StyleSheet.create({
     width: '75%',
     alignItems: 'center',
     justifyContent: 'center',
-  }
-})
+  },
+});
 
 export default BoxContainer;
