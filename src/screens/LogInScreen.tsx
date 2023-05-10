@@ -7,6 +7,8 @@ import CustomButton from '../components/CustomButton';
 import InputField from '../components/InputField';
 import BoxContainer from '../components/BoxContainer';
 
+import StyleBase from '../styles/StyleBase';
+
 export default function LogInScreen({ navigation }) {
   // this use state is only a temporary solution
   // think about react hook form for this form
@@ -17,19 +19,19 @@ export default function LogInScreen({ navigation }) {
   // const {onPressLogIn, onPressBack} = useOnPressHandlers(navigation);
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="default" />
+    <View style={StyleBase.container}>
+      <StatusBar barStyle='default' />
       <Icon
-        name={'arrow-left'}
+        name='arrow-left'
         size={30}
-        style={styles.backButton}
+        style={styles.backArrow}
         onPress={() => navigation.pop()}
-        title="back"
+        title='back'
       />
       <BoxContainer>
-        <InputField placeholder="email" value={email} setValue={setEmail} />
+        <InputField placeholder='email' value={email} setValue={setEmail} />
         <InputField
-          placeholder="password"
+          placeholder='password'
           value={password}
           setValue={setPassword}
           secureTextEntry
@@ -43,7 +45,7 @@ export default function LogInScreen({ navigation }) {
             routes: [{ name: 'MainScreen' }],
           })
         }
-        title="Log in"
+        title='Log in'
       />
       <Text style={styles.footer}>terms of service</Text>
     </View>
@@ -51,12 +53,6 @@ export default function LogInScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   forgotPassword: {
     width: '100%',
     textAlign: 'right',
@@ -66,12 +62,5 @@ const styles = StyleSheet.create({
     bottom: 15,
     fontSize: 16,
   },
-  backButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    width: 50,
-    alignItems: 'center',
-    borderRadius: 10,
-  },
+  backArrow: { position: 'absolute', top: 10, left: 10, width: 50 },
 });
