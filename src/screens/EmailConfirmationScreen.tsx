@@ -26,7 +26,7 @@ export default function EmailConfirmationScreen({ navigation, route }) {
       </BoxContainer>
       <Text style={styles.email}>{email}</Text>
       <BoxContainer style={styles.buttonBox}>
-        <CustomButton onPress={() => navigation.replace('Home screen')} title='Log out' />
+        <CustomButton onPress={() => navigation.replace('HomeScreen')} title='Log out' />
         <CustomButton onPress={() => setIsChangingEmail(true)} title='Change email' />
       </BoxContainer>
     </View>

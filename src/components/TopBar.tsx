@@ -34,7 +34,9 @@ const styles = StyleSheet.create({
     height: '6.125%',
     width: '100%',
     backgroundColor: '#50AAEB',
-    paddingTop: 0,
+    position: 'absolute',
+    left: 0,
+    top: 0,
   },
   containerIcon: {
     paddingLeft: 20,

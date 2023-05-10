@@ -10,7 +10,7 @@ const TapBar = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.containerIcon}>
           <Icon
-            name="home-outline"
+            name='home-outline'
             onPress={() =>
               navigation.reset({
                 index: 0,
@@ -21,10 +21,10 @@ const TapBar = ({ navigation }) => {
           />
         </View>
         <View style={styles.containerIcon}>
-          <Icon name="plus-circle-outline" onPress={() => alert('Work in progress')} size={30} />
+          <Icon name='plus-circle-outline' onPress={() => alert('Work in progress')} size={30} />
         </View>
         <View style={styles.containerIcon}>
-          <Icon name="map-search-outline" onPress={() => navigation.push('MapScreen')} size={30} />
+          <Icon name='map-search-outline' onPress={() => navigation.push('MapScreen')} size={30} />
         </View>
       </View>
     </View>
@@ -35,8 +35,10 @@ const styles = StyleSheet.create({
   TapBar: {
     backgroundColor: '#50AAEB',
     height: '6.125%',
-    marginTop: 'auto',
     width: '100%',
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
   },
   container: {
     flexDirection: 'row',
