@@ -1,14 +1,35 @@
 import React from 'react';
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from 'react-native';
 
-import CustomButton from '../components/CustomButton'
+import { useFonts } from 'expo-font';
+import { Roboto_400Regular, Roboto_700Bold_Italic } from '@expo-google-fonts/roboto';
 
-export default function HomeScreen({navigation}) {
+import CustomButton from '../components/CustomButton';
+
+export default function HomeScreen({ navigation }) {
+  const [fontsLoaded] = useFonts({
+    'Roboto-Regular': Roboto_700Bold_Italic,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
-      <CustomButton onPress={() => {navigation.push("LogInScreen")}} title="Sign in"/>
-      <CustomButton onPress={() => {navigation.push("RegistrationScreen")}} title="Register"/>
+      <CustomButton
+        onPress={() => {
+          navigation.push('LogInScreen');
+        }}
+        title='Sign in'
+      />
+      <Text style={{ fontFamily: 'Roboto-Regular' }}>asdasdasdas</Text>
+      <CustomButton
+        onPress={() => {
+          navigation.push('RegistrationScreen');
+        }}
+        title='Register'
+      />
     </View>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, StatusBar, FlatList, Text } from 'react-native';
+import { StyleSheet, View, StatusBar, FlatList } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
 import TopBar from '../components/TopBar';
@@ -8,10 +8,10 @@ import ListItemSeparator from '../components/ListItemSeparator';
 
 const cards = [
   {
-    image: require('../assets/biedronka_homepage.jpg'),
+    image: require('../assets/images/biedronka_homepage.jpg'),
   },
   {
-    image: require('../assets/biedronka_homepage.jpg'),
+    image: require('../assets/images/biedronka_homepage.jpg'),
   },
 ];
 
@@ -21,15 +21,15 @@ export default function MainScreen() {
   return (
     <View style={styles.container}>
       <TopBar
-        iconLeft={'menu'}
+        iconLeft='menu'
         onPressLeft={() => alert('Work in progress')}
-        iconRight={'filter-menu-outline'}
+        iconRight='filter-menu-outline'
         onPressRight={() => alert('Work in progress')}
       />
       <TextInput
         style={styles.textInput}
         onChangeText={onChangeText}
-        placeholder="Search"
+        placeholder='Search'
         value={text}
       />
       <FlatList
@@ -39,7 +39,7 @@ export default function MainScreen() {
         )}
         ItemSeparatorComponent={ListItemSeparator}
       />
-      <StatusBar barStyle="default" />
+      <StatusBar barStyle='default' />
     </View>
   );
 }
