@@ -86,7 +86,7 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
           </View>
           <HookFormInput
             control={control}
-            rules={{ required, validate: () => validateNumber(noPoints) }}
+            rules={{ required, validate: () => validateNumber(noBenefits) }}
             placeholder='maximum number of benefits in inventory'
             name='noBenefits'
             isInvalid={Boolean(errors.noBenefits)}
