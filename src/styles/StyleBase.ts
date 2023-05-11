@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
 
-import { swWhite } from '../constants/colors';
+import colors from '../constants/colors';
 
 const StyleBase = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: swWhite,
+    backgroundColor: colors.swWhite,
     alignItems: 'center',
     justifyContent: 'center',
   },
