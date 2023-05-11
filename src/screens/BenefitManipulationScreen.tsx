@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, StatusBar, Platform } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Platform, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import TopBar from '../components/TopBar';
@@ -12,7 +12,7 @@ import BoxContainer from '../components/BoxContainer';
 
 /*
 todo: 
-      fix inputfields to not fuck up the screen when inputing
+      fix topBar to not change when inputing
       integrate/implement datepicker
       check if existing or new benefit
       implementation for new below
@@ -36,35 +36,44 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
     <View style={styles.container}>
       <StatusBar barStyle='default' />
       <TopBar iconLeft={'arrow-left'} onPressLeft={() => navigation.pop()} />
-      <BoxContainer style={styles.boxContainer}>
-        <InputField placeholder='name' value={name} setValue={setName} />
-        <InputField placeholder='number of points required' value={price} setValue={setPrice} />
-        <InputField placeholder='short description' value={description} setValue={setDescription} />
-        {/* todo: style text */}
-        <Text style={styles.text}>Benefit icon</Text>
-        {/* implementation waiting room, Benefit.imageId for current shown*/}
-        <FileDropZone />
-        <View style={styles.containerDatepicker}>
-          {/* waiting room
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <BoxContainer style={styles.boxContainer}>
+          <InputField placeholder='name' value={name} setValue={setName} />
+          <InputField placeholder='number of points required' value={price} setValue={setPrice} />
+          <InputField
+            placeholder='short description'
+            value={description}
+            setValue={setDescription}
+          />
+          {/* todo: style text */}
+          <Text style={styles.text}>Benefit icon</Text>
+          {/* implementation waiting room, Benefit.imageId for current shown*/}
+          <FileDropZone />
+          <View style={styles.containerDatepicker}>
+            {/* waiting room
           <DatePicker />
           <DatePicker />
           Benefit.startDate, Benefit.endDate
           */}
-          <Text>first datepicker</Text>
-          <Text>second datepicker</Text>
-        </View>
-        <InputField
-          placeholder='maximum number of benefits in inventory'
-          value={maxAmount}
-          setValue={setmaxAmount}
-        />
-        <CustomButton title={title} onPress={onPress} />
-      </BoxContainer>
+            <Text>first datepicker</Text>
+            <Text>second datepicker</Text>
+          </View>
+          <InputField
+            placeholder='maximum number of benefits in inventory'
+            value={maxAmount}
+            setValue={setmaxAmount}
+          />
+          <CustomButton title={title} onPress={onPress} />
+        </BoxContainer>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    //width: '100%',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -83,7 +92,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 50,
     height: 600,
-    width: '85%',
+    width: 350,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -6,9 +6,9 @@ import TopBar from '../components/TopBar';
 export default function MapScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <TopBar iconLeft={'arrow-left'} onPressLeft={() => navigation.pop()} />
+      <TopBar iconLeft='arrow-left' onPressLeft={() => navigation.pop()} />
       <Text>This is map view</Text>
-      <StatusBar barStyle="default" />
+      <StatusBar barStyle='default' />
     </View>
   );
 }

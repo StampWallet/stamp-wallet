@@ -1,15 +1,29 @@
 import React from 'react';
-import { StyleSheet, View, Image, Text, Pressable } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  Pressable,
+  ImageSourcePropType,
+  GestureResponderEvent,
+} from 'react-native';
 
 import Tile from './Tile';
 
 //todo: source = proper business banner
 
-const CardTile = ({ image, onPress }) => {
+//seems to work
+interface CardTileProps {
+  image: ImageSourcePropType;
+  onPress: (event: GestureResponderEvent) => void;
+}
+
+const CardTile = ({ image, onPress }: CardTileProps) => {
   return (
     <Pressable onPress={onPress}>
       <Tile>
-        <Image style={styles.image} source={image} resizeMode="contain" />
+        <Image style={styles.image} source={image} resizeMode='contain' />
       </Tile>
     </Pressable>
   );

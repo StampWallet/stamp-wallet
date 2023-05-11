@@ -14,7 +14,7 @@ const SHOW_VIRTUAL = 1;
 export default function CardInfoScreen({ navigation, Card }) {
   /*
   todo:
-  check if virtual or real - if real barcode if virtual as implemented now
+  check if virtual or real
   style components to match figma prototype
   ^status as of rn: chaos
   proper card icon
@@ -23,47 +23,43 @@ export default function CardInfoScreen({ navigation, Card }) {
   proper everything (after api implementation)
   */
 
-  if (SHOW_VIRTUAL /* */) {
-    return (
-      <View style={styles.container}>
-        <StatusBar barStyle='default' />
-        <TopBar iconLeft={'arrow-left'} onPressLeft={() => navigation.pop()} />
-        {/* todo: apply paddings
-                  image as Card.businessDetails.iconImageId */}
-        <CardTile image={require('../assets/biedronka_homepage.jpg')} onPress={() => {}} />
-        <Tile>
-          <View style={styles.accountTileContainer}>
-            <Text style={styles.text}>Account balance</Text>
-            <Text style={styles.text}>100</Text>
-          </View>
-        </Tile>
-        <View style={styles.buttonsContainer}>
-          {/* todo: custom button styles to fit screen
-                    or make them cardtiles instead but without image?
-                    implement onPress   */}
-          <CustomButton onPress={() => alert('Work in progress')} title='Business' />
-          <CustomButton onPress={() => alert('Work in progress')} title='Benefits' />
+  return SHOW_VIRTUAL ? (
+    <View style={styles.container}>
+      <StatusBar barStyle='default' />
+      <TopBar iconLeft={'arrow-left'} onPressLeft={() => navigation.pop()} />
+      {/* todo: apply paddings
+                        image as Card.businessDetails.iconImageId */}
+      <CardTile image={require('../assets/biedronka_homepage.jpg')} onPress={() => {}} />
+      <Tile>
+        <View style={styles.accountTileContainer}>
+          <Text style={styles.text}>Account balance</Text>
+          <Text style={styles.text}>100</Text>
         </View>
-        {/* everything below is in temp form, what is rendered will be based on button^ pressed */}
-        <BoxContainer style={styles.boxContainer}>
-          <Text style={styles.text}>Business name</Text>
-          <Text style={styles.text}>Address</Text>
-          <Text style={styles.text}>Info</Text>
-        </BoxContainer>
-        {/* todo: apply proper paddings */}
-        <CustomButton onPress={() => alert('Work in progress')} title='Claim Benefits' />
-        <CustomButton onPress={() => alert('Work in progress')} title='Show Card' />
-        <TapBar navigation={navigation} />
+      </Tile>
+      <View style={styles.buttonsContainer}>
+        {/* todo: custom button styles to fit screen
+                          or make them cardtiles instead but without image?
+                          implement onPress   */}
+        <CustomButton onPress={() => alert('Work in progress')} title='Business' type='primary' />
+        <CustomButton onPress={() => alert('Work in progress')} title='Benefits' />
       </View>
-    );
-  } else {
-    return (
-      <View style={styles.container}>
-        <TopBar iconLeft={'arrow-left'} onPressLeft={() => navigation.pop()} />
-        <Text>This is real card info</Text>
-      </View>
-    );
-  }
+      {/* everything below is in temp form, what is rendered will be based on button^ pressed */}
+      <BoxContainer style={styles.boxContainer}>
+        <Text style={styles.text}>Business name</Text>
+        <Text style={styles.text}>Address</Text>
+        <Text style={styles.text}>Info</Text>
+      </BoxContainer>
+      {/* todo: apply proper paddings */}
+      <CustomButton onPress={() => alert('Work in progress')} title='Claim Benefits' />
+      <CustomButton onPress={() => alert('Work in progress')} title='Show Card' />
+      <TapBar navigation={navigation} />
+    </View>
+  ) : (
+    <View style={styles.container}>
+      <TopBar iconLeft={'arrow-left'} onPressLeft={() => navigation.pop()} />
+      <Text>This is real card info</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
