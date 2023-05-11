@@ -5,6 +5,7 @@ import BoxContainer from '../components/BoxContainer';
 
 export default function EmailConfirmationScreen({ navigation, route }) {
   const [isChangingEmail, setIsChangingEmail] = useState(false);
+
   const { email } = route.params;
 
   return (

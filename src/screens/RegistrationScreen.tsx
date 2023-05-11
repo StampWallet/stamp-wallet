@@ -1,75 +1,82 @@
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import CustomButton from '../components/CustomButton';
-import InputField from '../components/InputField';
-import BoxContainer from '../components/BoxContainer';
+import { useForm } from 'react-hook-form';
 import useOnPressHandlers from '../hooks/useOnPressHandlers';
 
+import StyleBase from '../styles/StyleBase';
+
+import CustomButton from '../components/CustomButton';
+import HookFormInput from '../components/HookFormInput';
+import BoxContainer from '../components/BoxContainer';
+
+import { validateEmail, validateMatchingPasswords, required } from '../utils/validators';
+import { RegistrationFormData } from '../types';
+
 export default function RegistrationScreen({ navigation }) {
-  // this use state is only a temporary solution
-  // think about react hook form for this form
-  // TODO READ ABOUT HANDLING PASSWORDS!!!
+  const { onPressRegister } = useOnPressHandlers();
 
-  const [name, setName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [repeatedPassword, setRepeatedPassword] = useState<string>('');
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm();
 
-  // this yields undefined, find a workaround
-  // const {onPressRegister, onPressBack} = useOnPressHandlers(navigation);
+  const password = watch('password');
+  const passwordRepeated = watch('passwordRepeated');
 
   return (
-    <View style={styles.container}>
+    <View style={StyleBase.container}>
       <Icon
-        name={'arrow-left'}
+        name='arrow-left'
         size={30}
-        style={styles.backButton}
+        style={StyleBase.backArrow}
         onPress={() => navigation.pop()}
-        title="back"
+        title='back'
       />
-      <BoxContainer>
-        <InputField placeholder="name" value={name} setValue={setName} />
-        <InputField placeholder="email" value={email} setValue={setEmail} />
-        <InputField
-          placeholder="password"
-          value={password}
-          setValue={setPassword}
+      <BoxContainer style={{ marginBottom: 25 }}>
+        <HookFormInput
+          control={control}
+          rules={{
+            required,
+          }}
+          name='name'
+          placeholder='name'
+          isInvalid={Boolean(errors.name)}
+        />
+        <HookFormInput
+          control={control}
+          rules={{ required, pattern: validateEmail }}
+          name='email'
+          placeholder='email'
+          isInvalid={Boolean(errors.email)}
+        />
+        <HookFormInput
+          control={control}
+          rules={{ required }}
+          name='password'
+          placeholder='password'
+          isInvalid={Boolean(errors.password)}
           secureTextEntry
         />
-        <InputField
-          placeholder="repeat password"
-          value={repeatedPassword}
-          setValue={setRepeatedPassword}
+        <HookFormInput
+          control={control}
+          rules={{
+            required,
+            validate: () => validateMatchingPasswords(password, passwordRepeated),
+          }}
+          name='passwordRepeated'
+          placeholder='repeat password'
+          isInvalid={Boolean(errors.passwordRepeated)}
           secureTextEntry
         />
       </BoxContainer>
       <CustomButton
-        onPress={() =>
-          navigation.push('EmailConfirmationScreen', {
-            email,
-          })
-        }
-        title="Register"
+        onPress={handleSubmit((data: RegistrationFormData) => onPressRegister(navigation, data))}
+        title='Register'
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    width: 50,
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-});
