@@ -1,49 +1,75 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, StatusBar, Platform, ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useForm } from 'react-hook-form';
+
+import StyleBase from '../styles/StyleBase';
 
 import TopBar from '../components/TopBar';
-import InputField from '../components/InputField';
 import FileDropZone from '../components/FileDropZone';
 import DatePicker from '../components/DatePicker';
 import CustomButton from '../components/CustomButton';
-import TapBar from '../components/TapBar';
 import BoxContainer from '../components/BoxContainer';
+import HookFormInput from '../components/HookFormInput';
+
+import { required, validateNumber } from '../utils/validators';
 
 /*
 todo: 
-      fix topBar to not change when inputing
       integrate/implement datepicker
       check if existing or new benefit
-      implementation for new below
-      for existing same but info given eg. useState(card prop)
-      ^de facto change only button onPress?
       button onPress sends request through api
+      fix scroll view
+      check if noBenefits integer
+      check maxAmount
+      provide initial value to forminput
 */
 
 export default function BenefitManipulationScreen({ navigation, Benefit }) {
-  //todo: use hookforms instead of usestate
-  const [name, setName] = useState(/* Benefit.name */ '');
-  const [price, setPrice] = useState(/* Benefit.price */ '');
-  const [description, setDescription] = useState(/* Benefit.description */ '');
-  const [maxAmount, setmaxAmount] = useState(/* Benefit.maxAmount*/ '');
+  const name = /*Benefit.name*/ '';
+  const description = /*Benefit.description*/ '';
+  const maxAmount = /*Benefit.maxAmount*/ '';
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm();
+
+  const noPoints = watch('noPoints');
+  const noBenefits = watch('noBenefits');
+
   const title = Benefit /*.publicId*/ ? 'Edit benefit' : 'Create benefit';
   const onPress = Benefit /*.publicId*/
-    ? () => alert('Work on edition in progress')
-    : () => alert('Work on creation in progress');
-
+    ? handleSubmit(() => alert('Work on edition in progress'))
+    : handleSubmit(() => alert('Work on creation in progress'));
   return (
-    <View style={styles.container}>
+    <View style={StyleBase.container}>
       <StatusBar barStyle='default' />
       <TopBar iconLeft={'arrow-left'} onPressLeft={() => navigation.pop()} />
-      <ScrollView contentContainerStyle={styles.scrollView}>
+      <ScrollView style={styles.scrollView}>
         <BoxContainer style={styles.boxContainer}>
-          <InputField placeholder='name' value={name} setValue={setName} />
-          <InputField placeholder='number of points required' value={price} setValue={setPrice} />
-          <InputField
+          {/* show current value? */}
+          <HookFormInput
+            control={control}
+            rules={{ required }}
+            placeholder='name'
+            name='name'
+            isInvalid={Boolean(errors.name)}
+          />
+          <HookFormInput
+            control={control}
+            rules={{ required, validate: () => validateNumber(noPoints) }}
+            placeholder='number of points required'
+            name='noPoints'
+            isInvalid={Boolean(errors.noPoints)}
+          />
+          <HookFormInput
+            control={control}
+            rules={{ required }}
             placeholder='short description'
-            value={description}
-            setValue={setDescription}
+            name='desc'
+            isInvalid={Boolean(errors.desc)}
           />
           {/* todo: style text */}
           <Text style={styles.text}>Benefit icon</Text>
@@ -58,10 +84,12 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
             <Text>first datepicker</Text>
             <Text>second datepicker</Text>
           </View>
-          <InputField
+          <HookFormInput
+            control={control}
+            rules={{ required, validate: () => validateNumber(noPoints) }}
             placeholder='maximum number of benefits in inventory'
-            value={maxAmount}
-            setValue={setmaxAmount}
+            name='noBenefits'
+            isInvalid={Boolean(errors.noBenefits)}
           />
           <CustomButton title={title} onPress={onPress} />
         </BoxContainer>
@@ -72,13 +100,8 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
 
 const styles = StyleSheet.create({
   scrollView: {
-    //width: '100%',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    //backgroundColor: '#000',
+    height: 700,
   },
   containerDatepicker: {
     height: 100,

@@ -31,7 +31,8 @@ const styles = StyleSheet.create({
     gap: 300,
   },
   TopBar: {
-    height: '6.125%',
+    height: 40, //temp
+    //height: '6.125%',
     width: '100%',
     backgroundColor: '#50AAEB',
     position: 'absolute',

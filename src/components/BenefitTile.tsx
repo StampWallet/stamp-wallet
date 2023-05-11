@@ -6,7 +6,7 @@ import Tile from './Tile';
 
 interface BenefitTileProps {
   name: string;
-  color: any;
+  color: string;
   children: any;
 }
 

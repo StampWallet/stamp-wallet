@@ -40,3 +40,9 @@ export const validateMatchingPasswords = (
 
   return 'Passwords do not match.';
 };
+
+export const validateNumber = (value: any): string | boolean => {
+  if (isNaN(value)) return 'Please provide a number.';
+
+  return true;
+};

@@ -23,3 +23,17 @@ export type BusinessRegistrationFormData = {
   postalCode: string;
   city: string;
 };
+
+export type BenefitFormData = {
+  name: string;
+  price: number;
+  description: string;
+  /*
+  waiting for components implem
+  imageId: string,
+  or image: ImageSourcePropType
+  startDate: string, (?)
+  endDate: string,
+  */
+  maxAmount: number; //check if int somehow
+};
