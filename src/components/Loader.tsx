@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, View, StyleSheet, Text } from 'react-native';
-import { swBlack } from '../constants/colors';
+import colors from '../constants/colors';
 
 interface ILoader {
   loaderDescription: string;
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   indicator: {},
   loaderTextStyle: {
-    color: swBlack,
+    color: colors.swBlack,
   },
 });
 
