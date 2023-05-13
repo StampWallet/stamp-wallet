@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Pressable, Text, GestureResponderEvent } from 'react-native';
 
-import { swDarkBlue, swWhite, swPaleViolet } from '../constants/colors';
+import colors from '../constants/colors';
 
 interface ICustomButton {
   // eslint-disable-next-line no-unused-vars
@@ -36,17 +36,17 @@ const styles = StyleSheet.create({
   },
 
   buttonPrimary: {
-    backgroundColor: swDarkBlue,
+    backgroundColor: colors.swDarkBlue,
   },
 
   buttonSecondary: {
-    backgroundColor: swPaleViolet,
+    backgroundColor: colors.swPaleViolet,
   },
 
   buttonText: {
     fontSize: 20,
     fontWeight: 'normal',
-    color: swWhite,
+    color: colors.swWhite,
     alignSelf: 'center',
     lineHeight: 25,
   },

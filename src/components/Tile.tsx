@@ -1,13 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-interface TileProps {
-  children: any;
-  color?: any;
-}
-
-const Tile = ({ children, color }: TileProps) => {
-  return <View style={[styles.tile, { backgroundColor: color }]}>{children}</View>;
+const Tile = (props) => {
+  return <View style={{ ...styles.tile, ...props.style }}>{props.children}</View>;
 };
 
 const styles = StyleSheet.create({
@@ -16,7 +11,7 @@ const styles = StyleSheet.create({
     height: 75,
     width: 350,
     borderRadius: 15,
-    overflow: 'visible',
+    overflow: 'hidden',
     shadowOpacity: 10,
   },
 });

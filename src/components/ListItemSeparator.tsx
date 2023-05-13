@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import colors from '../constants/colors';
+
 interface ListItemSeparatorProps {
   style?: any;
 }
@@ -13,7 +15,7 @@ const styles = StyleSheet.create({
   separator: {
     width: '100%',
     height: 10,
-    backgroundColor: '#fff',
+    backgroundColor: colors.swWhite,
   },
 });
 

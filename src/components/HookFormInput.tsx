@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TextInput, StyleSheet, Text } from 'react-native';
 import { Controller, Control, RegisterOptions } from 'react-hook-form';
 
-import { swUnderlineBlue, swWhite, swRed } from '../constants/colors';
+import colors from '../constants/colors';
 
 interface IHookFormInput {
   control: Control;
@@ -58,9 +58,9 @@ const styles = StyleSheet.create({
   },
   container: {
     display: 'flex',
-    backgroundColor: swWhite,
+    backgroundColor: colors.swWhite,
     width: '100%',
-    borderBottomColor: swUnderlineBlue,
+    borderBottomColor: colors.swUnderlineBlue,
     borderBottomWidth: 1,
     paddingHorizontal: 10,
     marginVertical: 5,
@@ -68,12 +68,12 @@ const styles = StyleSheet.create({
   },
   input: {},
   invalidField: {
-    borderBottomColor: swRed,
+    borderBottomColor: colors.swRed,
     marginBottom: 5,
   },
   errorMessage: {
     width: '100%',
-    color: swRed,
+    color: colors.swRed,
     textAlign: 'right',
     marginBottom: 5,
   },

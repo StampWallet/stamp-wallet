@@ -6,7 +6,7 @@ import Tile from './Tile';
 
 interface BenefitTileProps {
   name: string;
-  color: any;
+  color: string;
   children: any;
 }
 
@@ -52,7 +52,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-//      <View style={styles.containerRight}>{children}</View>
 
 export default BenefitTile;

@@ -1,15 +1,31 @@
 import React from 'react';
-import { StyleSheet, View, Image, Text, TouchableWithoutFeedback } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  Pressable,
+  ImageSourcePropType,
+  GestureResponderEvent,
+} from 'react-native';
 
 import Tile from './Tile';
 
-const CardTile = ({ image, onPress }) => {
+//todo: source = proper business banner
+
+//seems to work
+interface CardTileProps {
+  image: ImageSourcePropType;
+  onPress: (event: GestureResponderEvent) => void;
+}
+
+const CardTile = ({ image, onPress }: CardTileProps) => {
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <Pressable onPress={onPress}>
       <Tile>
-        <Image style={styles.image} source={image} resizeMode="contain" />
+        <Image style={styles.image} source={image} resizeMode='contain' />
       </Tile>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
 
