@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   StyleSheet,
   Pressable,
@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import colors from '../constants/colors';
+import colors from '../../constants/colors';
 
 interface ICustomButton {
   // eslint-disable-next-line no-unused-vars
@@ -17,6 +17,7 @@ interface ICustomButton {
   type?: string;
   customButtonStyle?: StyleProp<ViewStyle>;
   customTextStyle?: StyleProp<ViewStyle>;
+  children?: ReactNode;
 }
 const CustomButton = ({
   onPress,
@@ -24,17 +25,22 @@ const CustomButton = ({
   type,
   customButtonStyle,
   customTextStyle,
+  children,
 }: ICustomButton) => {
   const buttonStyle = StyleSheet.flatten([
     styles.buttonContainer,
+    // sets primary or secondary button version, can be overloaded with custom style
     { ...(type === 'primary' ? { ...styles.buttonPrimary } : { ...styles.buttonSecondary }) },
     customButtonStyle,
+    // this removes padding and border for image being present
+    { ...(!title && { padding: 0 }) },
   ]);
   const textStyle = StyleSheet.flatten([styles.buttonText, customTextStyle]);
 
   return (
     <Pressable onPress={onPress} style={buttonStyle}>
-      <Text style={textStyle}>{title}</Text>
+      {title && <Text style={textStyle}>{title}</Text>}
+      {!title && children}
     </Pressable>
   );
 };
