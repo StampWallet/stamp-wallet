@@ -5,9 +5,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import useOnPressHandlers from '../hooks/useOnPressHandlers';
 
-import CustomButton from '../components/CustomButton';
-import HookFormInput from '../components/HookFormInput';
-import BoxContainer from '../components/BoxContainer';
+import CustomButton from '../components/Miscellaneous/CustomButton';
+import HookFormInput from '../components/HookFormComponents/HookFormInput';
+import BoxContainer from '../components/Miscellaneous/BoxContainer';
 
 import StyleBase from '../styles/StyleBase';
 

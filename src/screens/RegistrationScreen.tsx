@@ -7,9 +7,9 @@ import useOnPressHandlers from '../hooks/useOnPressHandlers';
 
 import StyleBase from '../styles/StyleBase';
 
-import CustomButton from '../components/CustomButton';
-import HookFormInput from '../components/HookFormInput';
-import BoxContainer from '../components/BoxContainer';
+import CustomButton from '../components/Miscellaneous/CustomButton';
+import HookFormInput from '../components/HookFormComponents/HookFormInput';
+import BoxContainer from '../components/Miscellaneous/BoxContainer';
 
 import { validateEmail, validateMatchingPasswords, required } from '../utils/validators';
 import { RegistrationFormData } from '../types';

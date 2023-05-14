@@ -9,7 +9,7 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 
-import Tile from './Tile';
+import Tile from '../Miscellaneous/Tile';
 
 //todo: source = proper business banner
 
