@@ -46,7 +46,7 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
   return (
     <View style={StyleBase.container}>
       <StatusBar barStyle='default' />
-      <TopBar iconLeft={'arrow-left'} onPressLeft={() => navigation.pop()} />
+      <TopBar iconLeft='arrow-left' onPressLeft={() => navigation.pop()} />
       <ScrollView style={styles.scrollView}>
         <BoxContainer style={styles.boxContainer}>
           {/* show current value? */}

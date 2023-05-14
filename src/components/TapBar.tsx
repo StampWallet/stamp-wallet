@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import useOnPressHandlers from '../hooks/useOnPressHandlers';
+
 //todo: make icons size be consistent with figma prototypes
 
 const TapBar = ({ navigation }) => {
@@ -9,6 +11,8 @@ const TapBar = ({ navigation }) => {
     <View style={styles.TapBar}>
       <View style={styles.container}>
         <View style={styles.containerIcon}>
+          {/*onPress={useOnPressHandlers(navigation).onPressLogIn()}
+              ^doesnt work for now navigation is */}
           <Icon
             name='home-outline'
             onPress={() =>
@@ -34,7 +38,8 @@ const TapBar = ({ navigation }) => {
 const styles = StyleSheet.create({
   TapBar: {
     backgroundColor: '#50AAEB',
-    height: '6.125%',
+    //height: '6.125%',
+    height: 40,
     width: '100%',
     position: 'absolute',
     left: 0,
