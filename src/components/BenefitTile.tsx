@@ -1,5 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+  Pressable,
+  GestureResponderEvent,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Tile from './Tile';
@@ -8,18 +15,21 @@ interface BenefitTileProps {
   name: string;
   color: string;
   children: any;
+  onPress: (event: GestureResponderEvent) => void;
 }
 
-const BenefitTile = ({ name, color, children }: BenefitTileProps) => {
+const BenefitTile = ({ name, color, children, onPress }: BenefitTileProps) => {
   return (
-    <Tile color={color}>
-      <View style={styles.container}>
-        <View style={styles.containerLeft}>
-          <Text style={styles.text}>{name}</Text>
+    <Pressable onPress={onPress}>
+      <Tile color={color}>
+        <View style={styles.container}>
+          <View style={styles.containerLeft}>
+            <Text style={styles.text}>{name}</Text>
+          </View>
+          {children}
         </View>
-        {children}
-      </View>
-    </Tile>
+      </Tile>
+    </Pressable>
   );
 };
 

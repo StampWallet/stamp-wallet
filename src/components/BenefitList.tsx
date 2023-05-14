@@ -1,27 +1,30 @@
 import React from 'react';
-import { Text, FlatList, TouchableWithoutFeedback, StyleSheet, View } from 'react-native';
+import { Text, FlatList, Pressable, StyleSheet, View, GestureResponderEvent } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import BenefitTile from './BenefitTile';
 import ListItemSeparator from './ListItemSeparator';
 
-const BenefitList = ({ benefits }) => {
+interface BenefitListProps {
+  benefits: object;
+  onPress: (event: GestureResponderEvent) => void;
+}
+
+const BenefitList = ({ benefits, onPress }) => {
   return (
     <View style={styles.container}>
       <FlatList
         data={benefits}
         keyExtractor={(benefit) => benefit.publicId}
         renderItem={({ item }) => (
-          <TouchableWithoutFeedback onPress={() => alert('Work in progress')}>
-            <BenefitTile name={item.name} color={'#7BFF78'}>
-              <View style={styles.containerRight}>
-                <View style={styles.containerInRow}>
-                  <Text style={styles.text}>{item.price}</Text>
-                  <Icon name="menu-right" size={35} />
-                </View>
+          <BenefitTile name={item.name} color={'#7BFF78'} onPress={onPress}>
+            <View style={styles.containerRight}>
+              <View style={styles.containerInRow}>
+                <Text style={styles.text}>{item.price}</Text>
+                <Icon name='menu-right' size={35} />
               </View>
-            </BenefitTile>
-          </TouchableWithoutFeedback>
+            </View>
+          </BenefitTile>
         )}
         ItemSeparatorComponent={ListItemSeparator}
       />
@@ -33,8 +36,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
-    paddingTop: 100,
+    marginRight: '5%',
+    marginLeft: '5%',
   },
   containerRight: {
     padding: 10,
