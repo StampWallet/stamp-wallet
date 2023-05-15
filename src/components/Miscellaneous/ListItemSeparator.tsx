@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import colors from '../constants/colors';
+import colors from '../../constants/colors';
 
 interface ListItemSeparatorProps {
   style?: any;

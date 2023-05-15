@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import CustomButton from '../components/CustomButton';
-import BoxContainer from '../components/BoxContainer';
+import CustomButton from '../components/Miscellaneous/CustomButton';
+import BoxContainer from '../components/Miscellaneous/BoxContainer';
 
 export default function EmailConfirmationScreen({ navigation, route }) {
   const [isChangingEmail, setIsChangingEmail] = useState(false);

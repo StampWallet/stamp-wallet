@@ -6,15 +6,13 @@ import useOnPressHandlers from '../hooks/useOnPressHandlers';
 
 import StyleBase from '../styles/StyleBase';
 
-import TopBar from '../components/TopBar';
-import TapBar from '../components/TapBar';
-import CardTile from '../components/CardTile';
-import Tile from '../components/Tile';
-import BenefitTile from '../components/BenefitTile';
-import CustomButton from '../components/CustomButton';
-import BoxContainer from '../components/BoxContainer';
-import colors from '../constants/colors';
-import BenefitList from '../components/BenefitList';
+import TopBar from '../components/Bars/TopBar';
+import TapBar from '../components/Bars/TapBar';
+import CardTile from '../components/Cards/CardTile';
+import Tile from '../components/Miscellaneous/Tile';
+import BenefitTile from '../components/Benefits/BenefitTile';
+import CustomButton from '../components/Miscellaneous/CustomButton';
+import BoxContainer from '../components/Miscellaneous/BoxContainer';
 
 const SHOW_VIRTUAL = 1;
 

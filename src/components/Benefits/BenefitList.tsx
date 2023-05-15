@@ -3,7 +3,7 @@ import { Text, FlatList, Pressable, StyleSheet, View, GestureResponderEvent } fr
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import BenefitTile from './BenefitTile';
-import ListItemSeparator from './ListItemSeparator';
+import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 
 interface BenefitListProps {
   benefits: object;

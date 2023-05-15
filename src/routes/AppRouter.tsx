@@ -11,7 +11,7 @@ import BenefitManipulationScreen from '../screens/BenefitManipulationScreen';
 import CardAdditionScreen from '../screens/CardAdditionScreen';
 import RegistrationScreen from '../screens/RegistrationScreen';
 import LogInScreen from '../screens/LogInScreen';
-import MyBusinessScreen from '../screens/MyBusinessScreen';
+import MyBusinessScreen from '../screens/MyBusiness';
 import BenefitDescriptionScreen from '../screens/BenefitDescriptionScreen';
 
 const Stack = createNativeStackNavigator();

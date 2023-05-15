@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { StyleSheet, View, StatusBar, FlatList, Platform } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
-import TopBar from '../components/TopBar';
-import CardTile from '../components/CardTile';
-import ListItemSeparator from '../components/ListItemSeparator';
-import CustomButton from '../components/CustomButton';
+import TopBar from '../components/Bars/TopBar';
+import CardTile from '../components/Cards/CardTile';
+import ListItemSeparator from '../components/Miscellaneous/ListItemSeparator';
+import CustomButton from '../components/Miscellaneous/CustomButton';
 
 import StyleBase from '../styles/StyleBase';
 

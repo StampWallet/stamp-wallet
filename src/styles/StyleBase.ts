@@ -13,6 +13,12 @@ const StyleBase = StyleSheet.create({
   formMargin: {
     flex: 1,
   },
+  errorMessage: {
+    width: '100%',
+    color: colors.swRed,
+    textAlign: 'right',
+    marginBottom: 5,
+  },
 });
 
 export default StyleBase;

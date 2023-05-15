@@ -2,7 +2,9 @@ import React from 'react';
 import { View, TextInput, StyleSheet, Text } from 'react-native';
 import { Controller, Control, RegisterOptions } from 'react-hook-form';
 
-import colors from '../constants/colors';
+import colors from '../../constants/colors';
+import StyleBase from '../../styles/StyleBase';
+import ErrorField from './ErrorField';
 
 interface IHookFormInput {
   control: Control;
@@ -38,7 +40,7 @@ const HookFormInput = ({
               secureTextEntry={secureTextEntry}
             />
           </View>
-          {error && <Text style={styles.errorMessage}>{error.message || 'Validation error'}</Text>}
+          <ErrorField isVisible={isInvalid} error={error?.message || 'Validation error'} />
         </>
       )}
     />
@@ -69,12 +71,6 @@ const styles = StyleSheet.create({
   input: {},
   invalidField: {
     borderBottomColor: colors.swRed,
-    marginBottom: 5,
-  },
-  errorMessage: {
-    width: '100%',
-    color: colors.swRed,
-    textAlign: 'right',
     marginBottom: 5,
   },
 });

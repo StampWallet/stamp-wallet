@@ -42,7 +42,7 @@ export const validateMatchingPasswords = (
 };
 
 export const validateNumber = (value: any): string | boolean => {
-  if (isNaN(value)) return 'Please provide a number.';
+  if (Number.isNaN(value)) return 'Please provide a number.';
 
   return true;
 };
