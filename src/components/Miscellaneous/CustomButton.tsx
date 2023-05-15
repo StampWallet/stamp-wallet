@@ -6,17 +6,18 @@ import {
   GestureResponderEvent,
   StyleProp,
   ViewStyle,
+  TextStyle,
 } from 'react-native';
 
 import colors from '../../constants/colors';
 
-interface ICustomButton {
+interface CustomButtonProps {
   // eslint-disable-next-line no-unused-vars
   onPress: (event: GestureResponderEvent) => void;
   title: string;
   type?: string;
   customButtonStyle?: StyleProp<ViewStyle>;
-  customTextStyle?: StyleProp<ViewStyle>;
+  customTextStyle?: StyleProp<TextStyle>;
   children?: ReactNode;
 }
 const CustomButton = ({
@@ -26,7 +27,7 @@ const CustomButton = ({
   customButtonStyle,
   customTextStyle,
   children,
-}: ICustomButton) => {
+}: CustomButtonProps) => {
   const buttonStyle = StyleSheet.flatten([
     styles.buttonContainer,
     // sets primary or secondary button version, can be overloaded with custom style
