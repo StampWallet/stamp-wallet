@@ -31,13 +31,9 @@ const styles = StyleSheet.create({
     gap: 300,
   },
   TopBar: {
-    height: 40, //temp
-    //height: '6.125%',
-    width: '100%',
-    backgroundColor: '#50AAEB',
-    position: 'absolute',
-    left: 0,
-    top: 0,
+    flexShrink: 0,
+    flexGrow: 0,
+    flexBasis: 'auto',
   },
   containerIcon: {
     paddingLeft: 20,

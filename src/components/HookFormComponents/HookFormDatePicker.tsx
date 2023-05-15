@@ -43,36 +43,32 @@ const HookFormDatePicker = ({
   };
 
   return (
-    <View>
-      <Controller
-        control={control}
-        name={name}
-        rules={rules}
-        render={({ fieldState: { error } }) => (
-          <>
-            <View>
-              <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode='date'
-                minimumDate={new Date(minDate)}
-                maximumDate={new Date(maxDate)}
-                onConfirm={handleConfirm}
-                onCancel={() => setDatePickerVisibility(false)}
-              />
-            </View>
-            <CustomButton
-              onPress={() => {
-                setDatePickerVisibility((prev) => !prev);
-              }}
-              title={getDatePickerLabel(pickerName)}
-              customButtonStyle={[styles.datePicker, isInvalid && styles.datePickerWithError]}
-              customTextStyle={styles.datePickerText}
-            />
-            <ErrorField isVisible={isInvalid} error={error?.message || 'Date is required'} />
-          </>
-        )}
-      />
-    </View>
+    <Controller
+      control={control}
+      name={name}
+      rules={rules}
+      render={({ fieldState: { error } }) => (
+        <>
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode='date'
+            minimumDate={new Date(minDate)}
+            maximumDate={new Date(maxDate)}
+            onConfirm={handleConfirm}
+            onCancel={() => setDatePickerVisibility(false)}
+          />
+          <CustomButton
+            onPress={() => {
+              setDatePickerVisibility((prev) => !prev);
+            }}
+            title={getDatePickerLabel(pickerName)}
+            customButtonStyle={[styles.datePicker, isInvalid && styles.datePickerWithError]}
+            customTextStyle={styles.datePickerText}
+          />
+          <ErrorField isVisible={isInvalid} error={error?.message || 'Date is required'} />
+        </>
+      )}
+    />
   );
 };
 
