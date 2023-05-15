@@ -4,50 +4,90 @@ import { Control, Controller, RegisterOptions, useFormContext } from 'react-hook
 
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import ErrorField from './ErrorField';
+import CustomButton from '../Miscellaneous/CustomButton';
 
-interface IHookFormDatePicker {
+import colors from '../../constants/colors';
+import formatToDate from '../../utils/formatToDate';
+import getDatePickerLabel from '../../utils/getDatePickerLabel';
+
+type DatePickerNamesType = 'dateFrom' | 'dateTo';
+
+interface HookFormDatePickerProps {
   control: Control;
   rules?: RegisterOptions;
-  name: string;
+  name: DatePickerNamesType;
   isInvalid?: boolean;
-  placeholder?: string;
+  minDate: string;
+  maxDate: string;
 }
 
-const HookFormDatePicker = ({ control, name, rules, isInvalid, placeholder }) => {
+const HookFormDatePicker = ({
+  control,
+  name,
+  rules,
+  isInvalid = false,
+  minDate,
+  maxDate,
+}: HookFormDatePickerProps) => {
+  const [pickerName, setPickerName] = useState<string>(name);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const { setValue } = useFormContext();
 
   const handleConfirm = (date) => {
-    setValue(name, date);
+    const dateString = date.toISOString();
+    const formattedDate = formatToDate(dateString);
+
+    setValue(name, formattedDate);
+    setPickerName(formattedDate);
     setDatePickerVisibility(false);
   };
 
   return (
-    <View style={styles.datePicker}>
-      <Controller
-        control={control}
-        name={name}
-        rules={rules}
-        render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <>
-            <View>
-              <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode='date'
-                onConfirm={handleConfirm}
-                onCancel={() => setDatePickerVisibility(false)}
-              />
-            </View>
-            <ErrorField isVisible={isInvalid} error={error?.message || 'Date is required'} />
-          </>
-        )}
-      />
-    </View>
+    <Controller
+      control={control}
+      name={name}
+      rules={rules}
+      render={({ fieldState: { error } }) => (
+        <>
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode='date'
+            minimumDate={new Date(minDate)}
+            maximumDate={new Date(maxDate)}
+            onConfirm={handleConfirm}
+            onCancel={() => setDatePickerVisibility(false)}
+          />
+          <CustomButton
+            onPress={() => {
+              setDatePickerVisibility((prev) => !prev);
+            }}
+            title={getDatePickerLabel(pickerName)}
+            customButtonStyle={[styles.datePicker, isInvalid && styles.datePickerWithError]}
+            customTextStyle={styles.datePickerText}
+          />
+          <ErrorField isVisible={isInvalid} error={error?.message || 'Date is required'} />
+        </>
+      )}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  datePicker: {},
+  datePicker: {
+    backgroundColor: colors.swWhite,
+    borderStyle: 'solid',
+    borderBottomColor: colors.swUnderlineBlue,
+    borderBottomWidth: 1,
+    borderRadius: 0,
+    width: 125,
+  },
+  datePickerWithError: {
+    borderBottomColor: colors.swRed,
+  },
+  datePickerText: {
+    color: colors.swBlack,
+    fontSize: 16,
+  },
 });
 
 export default HookFormDatePicker;

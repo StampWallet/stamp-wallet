@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar, Platform, ScrollView } from 'react-native';
+import { StyleSheet, StatusBar, View, Platform, ScrollView } from 'react-native';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import StyleBase from '../styles/StyleBase';
@@ -12,6 +12,7 @@ import BoxContainer from '../components/Miscellaneous/BoxContainer';
 import HookFormInput from '../components/HookFormComponents/HookFormInput';
 
 import { required, validateNumber } from '../utils/validators';
+import { MAX_DATE, MIN_DATE } from '../constants/numericAndStringConstants';
 
 /*
 todo: 
@@ -39,6 +40,8 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
 
   const pointsWatch = watch('noPoints');
   const benefitsWatch = watch('noBenefits');
+  const dateFromWatch = watch('dateFrom');
+  const dateToWatch = watch('dateToWatch');
 
   const title = Benefit /*.publicId*/ ? 'Edit benefit' : 'Create benefit';
   const onPress = Benefit /*.publicId*/
@@ -54,58 +57,62 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
         contentContainerStyle={{ marginBottom: 10, justifyContent: 'center', alignItems: 'center' }}
       >
         <FormProvider {...methods}>
-          {/* show current value? */}
-          <HookFormInput
-            control={control}
-            rules={{ required }}
-            placeholder='name'
-            name='name'
-            isInvalid={Boolean(errors.name)}
-          />
-          <HookFormInput
-            control={control}
-            rules={{ required, validate: () => validateNumber(pointsWatch) }}
-            placeholder='number of points required'
-            name='points'
-            isInvalid={Boolean(errors.points)}
-          />
-          <HookFormInput
-            control={control}
-            rules={{ required }}
-            placeholder='short description'
-            name='desc'
-            isInvalid={Boolean(errors.desc)}
-          />
-          {/* todo: style text */}
-          <HookFormImagePicker
-            control={control}
-            rules={{ required }}
-            name='benefitIcon'
-            isInvalid={Boolean(errors.benefitIcon)}
-          />
-          <View style={styles.containerDatepicker}>
-            <HookFormDatePicker
+          <BoxContainer style={styles.boxContainer}>
+            {/* show current value? */}
+            <HookFormInput
               control={control}
-              rules={{}}
-              name='dateFrom'
-              isInvalid={false}
-              placeholder='date from'
+              rules={{ required }}
+              placeholder='name'
+              name='name'
+              isInvalid={Boolean(errors.name)}
             />
-            <HookFormDatePicker
+            <HookFormInput
               control={control}
-              rules={{}}
-              name='dateTo'
-              isInvalid={false}
-              placeholder='date to'
+              rules={{ required, validate: () => validateNumber(pointsWatch) }}
+              placeholder='number of points required'
+              name='points'
+              isInvalid={Boolean(errors.points)}
             />
-          </View>
-          <HookFormInput
-            control={control}
-            rules={{ required, validate: () => validateNumber(benefitsWatch) }}
-            placeholder='maximum number of benefits in inventory'
-            name='benefits'
-            isInvalid={Boolean(errors.benefits)}
-          />
+            <HookFormInput
+              control={control}
+              rules={{ required }}
+              placeholder='short description'
+              name='desc'
+              isInvalid={Boolean(errors.desc)}
+            />
+            <HookFormImagePicker
+              control={control}
+              rules={{ required }}
+              name='benefitIcon'
+              isInvalid={Boolean(errors.benefitIcon)}
+            />
+            <View style={styles.containerDatepicker}>
+              <HookFormDatePicker
+                control={control}
+                name='dateFrom'
+                rules={{ required }}
+                minDate={MIN_DATE}
+                maxDate={dateToWatch || MAX_DATE}
+                isInvalid={Boolean(errors.dateFrom)}
+              />
+              <HookFormDatePicker
+                control={control}
+                name='dateTo'
+                rules={{ required }}
+                minDate={dateFromWatch || MIN_DATE}
+                maxDate={MAX_DATE}
+                isInvalid={Boolean(errors.dateTo)}
+              />
+            </View>
+            <HookFormInput
+              control={control}
+              rules={{ required, validate: () => validateNumber(benefitsWatch) }}
+              placeholder='maximum number of benefits in inventory'
+              name='benefits'
+              isInvalid={Boolean(errors.benefits)}
+            />
+            <CustomButton title={title} onPress={onPress} />
+          </BoxContainer>
         </FormProvider>
         <CustomButton title={title} onPress={onPress} customButtonStyle={{ width: '100%' }} />
       </ScrollView>
