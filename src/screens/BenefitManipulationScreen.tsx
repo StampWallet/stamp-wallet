@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar, Platform, ScrollView } from 'react-native';
+import { StyleSheet, StatusBar, View, Platform, ScrollView } from 'react-native';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import StyleBase from '../styles/StyleBase';
@@ -12,6 +12,7 @@ import BoxContainer from '../components/Miscellaneous/BoxContainer';
 import HookFormInput from '../components/HookFormComponents/HookFormInput';
 
 import { required, validateNumber } from '../utils/validators';
+import { MAX_DATE, MIN_DATE } from '../constants/numericAndStringConstants';
 
 /*
 todo: 
@@ -39,6 +40,8 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
 
   const pointsWatch = watch('noPoints');
   const benefitsWatch = watch('noBenefits');
+  const dateFromWatch = watch('dateFrom');
+  const dateToWatch = watch('dateToWatch');
 
   const title = Benefit /*.publicId*/ ? 'Edit benefit' : 'Create benefit';
   const onPress = Benefit /*.publicId*/
@@ -47,6 +50,7 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
 
   return (
     <View style={StyleBase.container}>
+      <StatusBar />
       <TopBar iconLeft='arrow-left' onPressLeft={() => navigation.pop()} />
       <ScrollView style={styles.scrollView}>
         <FormProvider {...methods}>
@@ -73,7 +77,6 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
               name='desc'
               isInvalid={Boolean(errors.desc)}
             />
-            {/* todo: style text */}
             <HookFormImagePicker
               control={control}
               rules={{ required }}
@@ -83,20 +86,20 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
             <View style={styles.containerDatepicker}>
               <HookFormDatePicker
                 control={control}
-                rules={{}}
                 name='dateFrom'
-                isInvalid={false}
-                placeholder='date from'
+                rules={{ required }}
+                minDate={MIN_DATE}
+                maxDate={dateToWatch || MAX_DATE}
+                isInvalid={Boolean(errors.dateFrom)}
               />
               <HookFormDatePicker
                 control={control}
-                rules={{}}
                 name='dateTo'
-                isInvalid={false}
-                placeholder='date to'
+                rules={{ required }}
+                minDate={dateFromWatch || MIN_DATE}
+                maxDate={MAX_DATE}
+                isInvalid={Boolean(errors.dateTo)}
               />
-              <Text>first datepicker</Text>
-              <Text>second datepicker</Text>
             </View>
             <HookFormInput
               control={control}
