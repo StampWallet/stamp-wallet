@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, StatusBar, Pressable } from 'react-native';
-import { Shadow } from 'react-native-shadow-2';
 
 import useOnPressHandlers from '../hooks/useOnPressHandlers';
 
 import StyleBase from '../styles/StyleBase';
 
 import colors from '../constants/colors';
+
+import { Benefit } from '../types';
 
 import TopBar from '../components/Bars/TopBar';
 import TapBar from '../components/Bars/TapBar';
@@ -18,12 +19,19 @@ import BoxContainer from '../components/Miscellaneous/BoxContainer';
 
 const SHOW_VIRTUAL = 1;
 
-export default function CardInfoScreen({ navigation, Card }) {
+//temp
+interface ICardInfoScreen {
+  navigation: any; //proper type
+  Card?: any; //todo
+  benefits: ArrayLike<Benefit>;
+}
+
+export default function CardInfoScreen({ navigation, Card, benefits }: ICardInfoScreen) {
   /*
-  todo:
+  todo:b
   check if virtual or real
-  style components to match figma prototype
-  ^status as of rn: chaos
+  needs some styling
+  tested on pixel 6 pro (1440x3120), components MAY NOT fit properly on other models
   proper card icon
   proper account balance from api
   proper descriptions
@@ -34,21 +42,83 @@ export default function CardInfoScreen({ navigation, Card }) {
 
   const { onPressBack } = useOnPressHandlers();
 
-  const benefits = [
+  //mock data
+  benefits = [
     {
-      publicId: 1,
-      name: 'test',
+      publicId: '1',
+      name: 'test1',
       price: 100,
+      description: 'test1',
+      imageId: 'chrumczak',
+      startDate: {
+        type: 'ąąą',
+        //format:
+        nullable: true,
+      },
+      endDate: {
+        type: 'ęęę',
+        //format:
+        nullable: true,
+      },
+      maxAmount: 100,
+      available: true,
     },
     {
-      publicId: 2,
+      publicId: '2',
       name: 'test2',
       price: 200,
+      description: 'test2',
+      imageId: 'chrumczak',
+      startDate: {
+        type: 'ąąą',
+        //format:
+        nullable: true,
+      },
+      endDate: {
+        type: 'ęęę',
+        //format:
+        nullable: true,
+      },
+      maxAmount: 100,
+      available: true,
     },
     {
-      publicId: 3,
+      publicId: '3',
       name: 'test3',
       price: 300,
+      description: 'test3',
+      imageId: 'chrumczak',
+      startDate: {
+        type: 'ąąą',
+        //format:
+        nullable: true,
+      },
+      endDate: {
+        type: 'ęęę',
+        //format:
+        nullable: true,
+      },
+      maxAmount: 100,
+      available: true,
+    },
+    {
+      publicId: '4',
+      name: 'test4',
+      price: 400,
+      description: 'test4',
+      imageId: 'chrumczak',
+      startDate: {
+        type: 'ąąą',
+        //format:
+        nullable: true,
+      },
+      endDate: {
+        type: 'ęęę',
+        //format:
+        nullable: true,
+      },
+      maxAmount: 100,
+      available: true,
     },
   ];
 
@@ -77,8 +147,8 @@ export default function CardInfoScreen({ navigation, Card }) {
             setState(1);
           }}
         >
-          <Tile style={{ alignItems: 'center', justifyContent: 'center', width: 175, height: 60 }}>
-            <Text>Business</Text>
+          <Tile style={styles.button}>
+            <Text style={styles.text}>Business</Text>
           </Tile>
         </Pressable>
         <Pressable
@@ -86,8 +156,8 @@ export default function CardInfoScreen({ navigation, Card }) {
             setState(0);
           }}
         >
-          <Tile style={{ alignItems: 'center', justifyContent: 'center', width: 175, height: 60 }}>
-            <Text>Benefits</Text>
+          <Tile style={styles.button}>
+            <Text style={styles.text}>Benefits</Text>
           </Tile>
         </Pressable>
         {/*
@@ -98,8 +168,8 @@ export default function CardInfoScreen({ navigation, Card }) {
       {screenState ? (
         <View style={styles.container}>
           <BoxContainer style={styles.boxContainer}>
-            <Text style={styles.text}>Business name</Text>
-            <Text style={styles.text}>Address</Text>
+            <Text style={[styles.text, { paddingBottom: 40 }]}>Business name</Text>
+            <Text style={[styles.text, { paddingBottom: 40 }]}>Address</Text>
             <Text style={styles.text}>Info</Text>
           </BoxContainer>
           {/* todo: apply proper paddings
@@ -122,23 +192,21 @@ export default function CardInfoScreen({ navigation, Card }) {
                 //to add: passing Benefit object
                 navigation.push('BenefitDescriptionScreen');
               }}
+              //backgroundColor based on affordability
+              customBenefitTileStyle={{ width: '100%' }}
             />
           </View>
-          <View style={[styles.buttonsContainer, { paddingTop: '7.5%' }]}>
-            <Pressable onPress={() => alert('Work in progress')}>
-              <Tile
-                style={{ alignItems: 'center', justifyContent: 'center', width: 175, height: 60 }}
-              >
-                <Text>Cancel</Text>
-              </Tile>
-            </Pressable>
-            <Pressable onPress={() => alert('Work in progress')}>
-              <Tile
-                style={{ alignItems: 'center', justifyContent: 'center', width: 175, height: 60 }}
-              >
-                <Text>Save</Text>
-              </Tile>
-            </Pressable>
+          <View style={[styles.buttonsContainer, { marginTop: '10%' }]}>
+            <CustomButton
+              onPress={() => alert('Work in progress')}
+              title='Cancel'
+              customButtonStyle={styles.button}
+            />
+            <CustomButton
+              onPress={() => alert('Work in progress')}
+              title='Save'
+              customButtonStyle={styles.button}
+            />
           </View>
         </View>
       )}
@@ -160,6 +228,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 100,
   },
+  benefitsContainer: {
+    width: '90%',
+    height: '70%',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginTop: '2.5%',
+    borderColor: '#000',
+    borderWidth: 1,
+  },
   boxContainer: {
     height: '53.75%',
     width: '89.72%',
@@ -168,6 +245,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.swViolet,
     borderRadius: 10,
     marginTop: '1.5%',
+  },
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 175,
+    height: 60,
   },
   buttonsContainer: {
     height: '7.875%',
@@ -193,27 +276,18 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  container: {
+    height: '60%',
+    width: '100%',
+    alignItems: 'center',
+  },
   showCard: {
     //marginTop: '2.375%',
     width: '100%',
     alignItems: 'center',
   },
   text: {
-    fontSize: 20,
+    fontSize: 24,
     padding: 10,
-  },
-  container: {
-    height: '60%',
-    width: '100%',
-    alignItems: 'center',
-  },
-  benefitsContainer: {
-    width: '90%',
-    height: '70%',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginTop: '2.5%',
-    borderColor: '#000',
-    borderWidth: 1,
   },
 });
