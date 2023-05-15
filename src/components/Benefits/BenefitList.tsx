@@ -19,8 +19,7 @@ import BenefitTile from './BenefitTile';
 import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 
 interface BenefitListProps {
-  benefits: ArrayLike<any>; //temp
-  //benefits: ArrayLike<Benefit>;
+  benefits: Benefit[];
   onPress: (event: GestureResponderEvent) => void;
   customListStyle?: StyleProp<ViewStyle>;
   customBenefitTileStyle?: StyleProp<ViewStyle>;
