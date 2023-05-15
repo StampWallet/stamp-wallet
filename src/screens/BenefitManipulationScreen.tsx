@@ -49,66 +49,65 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
     <View style={StyleBase.container}>
       <StatusBar barStyle='default' />
       <TopBar iconLeft='arrow-left' onPressLeft={() => navigation.pop()} />
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={{ marginBottom: 10, justifyContent: 'center', alignItems: 'center' }}
+      >
         <FormProvider {...methods}>
-          <BoxContainer style={styles.boxContainer}>
-            {/* show current value? */}
-            <HookFormInput
+          {/* show current value? */}
+          <HookFormInput
+            control={control}
+            rules={{ required }}
+            placeholder='name'
+            name='name'
+            isInvalid={Boolean(errors.name)}
+          />
+          <HookFormInput
+            control={control}
+            rules={{ required, validate: () => validateNumber(pointsWatch) }}
+            placeholder='number of points required'
+            name='points'
+            isInvalid={Boolean(errors.points)}
+          />
+          <HookFormInput
+            control={control}
+            rules={{ required }}
+            placeholder='short description'
+            name='desc'
+            isInvalid={Boolean(errors.desc)}
+          />
+          {/* todo: style text */}
+          <HookFormImagePicker
+            control={control}
+            rules={{ required }}
+            name='benefitIcon'
+            isInvalid={Boolean(errors.benefitIcon)}
+          />
+          <View style={styles.containerDatepicker}>
+            <HookFormDatePicker
               control={control}
-              rules={{ required }}
-              placeholder='name'
-              name='name'
-              isInvalid={Boolean(errors.name)}
+              rules={{}}
+              name='dateFrom'
+              isInvalid={false}
+              placeholder='date from'
             />
-            <HookFormInput
+            <HookFormDatePicker
               control={control}
-              rules={{ required, validate: () => validateNumber(pointsWatch) }}
-              placeholder='number of points required'
-              name='points'
-              isInvalid={Boolean(errors.points)}
+              rules={{}}
+              name='dateTo'
+              isInvalid={false}
+              placeholder='date to'
             />
-            <HookFormInput
-              control={control}
-              rules={{ required }}
-              placeholder='short description'
-              name='desc'
-              isInvalid={Boolean(errors.desc)}
-            />
-            {/* todo: style text */}
-            <HookFormImagePicker
-              control={control}
-              rules={{ required }}
-              name='benefitIcon'
-              isInvalid={Boolean(errors.benefitIcon)}
-            />
-            <View style={styles.containerDatepicker}>
-              <HookFormDatePicker
-                control={control}
-                rules={{}}
-                name='dateFrom'
-                isInvalid={false}
-                placeholder='date from'
-              />
-              <HookFormDatePicker
-                control={control}
-                rules={{}}
-                name='dateTo'
-                isInvalid={false}
-                placeholder='date to'
-              />
-              <Text>first datepicker</Text>
-              <Text>second datepicker</Text>
-            </View>
-            <HookFormInput
-              control={control}
-              rules={{ required, validate: () => validateNumber(benefitsWatch) }}
-              placeholder='maximum number of benefits in inventory'
-              name='benefits'
-              isInvalid={Boolean(errors.benefits)}
-            />
-            <CustomButton title={title} onPress={onPress} />
-          </BoxContainer>
+          </View>
+          <HookFormInput
+            control={control}
+            rules={{ required, validate: () => validateNumber(benefitsWatch) }}
+            placeholder='maximum number of benefits in inventory'
+            name='benefits'
+            isInvalid={Boolean(errors.benefits)}
+          />
         </FormProvider>
+        <CustomButton title={title} onPress={onPress} customButtonStyle={{ width: '100%' }} />
       </ScrollView>
     </View>
   );
@@ -117,7 +116,9 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
 const styles = StyleSheet.create({
   scrollView: {
     //backgroundColor: '#000',
-    height: 700,
+    marginTop: '15%',
+    height: '80%',
+    width: 350,
   },
   containerDatepicker: {
     height: 100,
@@ -128,9 +129,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   boxContainer: {
-    paddingTop: 50,
-    paddingBottom: 50,
-    height: 600,
+    height: '80%',
     width: 350,
     alignItems: 'center',
     justifyContent: 'center',
