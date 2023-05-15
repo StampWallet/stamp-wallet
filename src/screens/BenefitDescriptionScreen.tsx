@@ -7,10 +7,10 @@ import useOnPressHandlers from '../hooks/useOnPressHandlers';
 
 import colors from '../constants/colors';
 
-import TopBar from '../components/TopBar';
-import TapBar from '../components/TapBar';
-import BoxContainer from '../components/BoxContainer';
-import CustomButton from '../components/CustomButton';
+import TopBar from '../components/Bars/TopBar';
+import TapBar from '../components/Bars/TapBar';
+import BoxContainer from '../components/Miscellaneous/BoxContainer';
+import CustomButton from '../components/Miscellaneous/CustomButton';
 
 export default function BenefitDescriptionScreen({ navigation, Benefit }) {
   const { onPressBack } = useOnPressHandlers();

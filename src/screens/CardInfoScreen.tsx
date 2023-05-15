@@ -6,11 +6,13 @@ import useOnPressHandlers from '../hooks/useOnPressHandlers';
 
 import StyleBase from '../styles/StyleBase';
 
+import colors from '../constants/colors';
+
 import TopBar from '../components/Bars/TopBar';
 import TapBar from '../components/Bars/TapBar';
 import CardTile from '../components/Cards/CardTile';
 import Tile from '../components/Miscellaneous/Tile';
-import BenefitTile from '../components/Benefits/BenefitTile';
+import BenefitList from '../components/Benefits/BenefitList';
 import CustomButton from '../components/Miscellaneous/CustomButton';
 import BoxContainer from '../components/Miscellaneous/BoxContainer';
 
