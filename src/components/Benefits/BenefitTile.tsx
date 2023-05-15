@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Tile from './Tile';
+import Tile from '../Miscellaneous/Tile';
 
 interface BenefitTileProps {
   name: string;

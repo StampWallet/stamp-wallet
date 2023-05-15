@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 
-import TopBar from '../components/TopBar';
-import TapBar from '../components/TapBar';
-import CardTile from '../components/CardTile';
-import Tile from '../components/Tile';
-import BenefitTile from '../components/BenefitTile';
-import CustomButton from '../components/CustomButton';
-import BoxContainer from '../components/BoxContainer';
+import TopBar from '../components/Bars/TopBar';
+import TapBar from '../components/Bars/TapBar';
+import CardTile from '../components/Cards/CardTile';
+import Tile from '../components/Miscellaneous/Tile';
+import BenefitTile from '../components/Benefits/BenefitTile';
+import CustomButton from '../components/Miscellaneous/CustomButton';
+import BoxContainer from '../components/Miscellaneous/BoxContainer';
 
 const SHOW_VIRTUAL = 1;
 
@@ -28,7 +28,7 @@ export default function CardInfoScreen({ navigation, Card }) {
       <StatusBar barStyle='default' />
       <TopBar iconLeft={'arrow-left'} onPressLeft={() => navigation.pop()} />
       {/* todo: apply paddings
-                        image as Card.businessDetails.iconImageId */}
+                        image as Cards.businessDetails.iconImageId */}
       <CardTile image={require('../assets/biedronka_homepage.jpg')} onPress={() => {}} />
       <Tile>
         <View style={styles.accountTileContainer}>

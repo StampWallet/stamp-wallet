@@ -3,7 +3,7 @@ import { Text, FlatList, TouchableWithoutFeedback, StyleSheet, View } from 'reac
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import BenefitTile from './BenefitTile';
-import ListItemSeparator from './ListItemSeparator';
+import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 
 const BenefitList = ({ benefits }) => {
   return (
@@ -17,7 +17,7 @@ const BenefitList = ({ benefits }) => {
               <View style={styles.containerRight}>
                 <View style={styles.containerInRow}>
                   <Text style={styles.text}>{item.price}</Text>
-                  <Icon name="menu-right" size={35} />
+                  <Icon name='menu-right' size={35} />
                 </View>
               </View>
             </BenefitTile>

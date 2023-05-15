@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 
-import TopBar from '../components/TopBar';
+import TopBar from '../components/Bars/TopBar';
 
 export default function MapScreen({ navigation }) {
   return (
