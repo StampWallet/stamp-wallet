@@ -2,27 +2,16 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import useOnPressHandlers from '../hooks/useOnPressHandlers';
-
-//todo: make icons size be consistent with figma prototypes
+import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 
 const TapBar = ({ navigation }) => {
+  const { onPressBack } = useOnPressHandlers();
+
   return (
     <View style={styles.TapBar}>
       <View style={styles.container}>
         <View style={styles.containerIcon}>
-          {/*onPress={useOnPressHandlers(navigation).onPressLogIn()}
-              ^doesnt work for now navigation is */}
-          <Icon
-            name='home-outline'
-            onPress={() =>
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'MainScreen' }],
-              })
-            }
-            size={30}
-          />
+          <Icon name='home-outline' onPress={() => onPressBack(navigation)} size={30} />
         </View>
         <View style={styles.containerIcon}>
           <Icon name='plus-circle-outline' onPress={() => alert('Work in progress')} size={30} />
