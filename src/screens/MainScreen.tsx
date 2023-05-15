@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, StatusBar, FlatList, Platform } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -8,6 +8,7 @@ import ListItemSeparator from '../components/Miscellaneous/ListItemSeparator';
 import CustomButton from '../components/Miscellaneous/CustomButton';
 
 import StyleBase from '../styles/StyleBase';
+import SearchBar from '../components/Bars/SearchBar/SearchBar';
 
 /*
 todo:
@@ -16,32 +17,83 @@ todo:
 
 const cards = [
   {
+    name: 'Biedronka',
     image: require('../assets/images/biedronka_homepage.jpg'),
   },
   {
-    image: require('../assets/images/biedronka_homepage.jpg'),
+    name: 'Lidl',
+    image: require('../assets/images/lidl.png'),
+  },
+  {
+    name: 'Akbar brothers',
+    image: require('../assets/images/akbar.png'),
+  },
+  {
+    name: 'Costadoro Coffee',
+    image: require('../assets/images/costadoro.png'),
+  },
+  {
+    name: 'Decathlon',
+    image: require('../assets/images/decathlon.png'),
+  },
+  {
+    name: 'Deichmann',
+    image: require('../assets/images/deichmann.png'),
+  },
+  {
+    name: 'Espirit',
+    image: require('../assets/images/espirit.png'),
+  },
+  {
+    name: 'Kaufland',
+    image: require('../assets/images/kaufland.png'),
+  },
+  {
+    name: 'Maggi spices',
+    image: require('../assets/images/maggi.png'),
+  },
+  {
+    name: 'Pollo Feliz',
+    image: require('../assets/images/pollofeliz.png'),
+  },
+  {
+    name: 'Roblox',
+    image: require('../assets/images/roblox.png'),
+  },
+  {
+    name: 'Stock',
+    image: require('../assets/images/stock.png'),
   },
 ];
 
 export default function MainScreen({ navigation }) {
-  const [text, onChangeText] = useState('');
+  const [cardQuery, setCardQuery] = useState('');
+  const [filter, setFilter] = useState(null);
+  const [filteredCards, setFilteredCards] = useState(cards);
+
+  useEffect(() => {
+    const lowerCaseCardQuery = cardQuery.toLowerCase();
+    const cardsWithSearchedName = cards.filter((card) =>
+      card.name.toLowerCase().includes(lowerCaseCardQuery)
+    );
+
+    setFilteredCards(cardsWithSearchedName);
+  }, [cardQuery]);
+
+  // useEffect(() => {}, [filter]);
 
   return (
     <View style={StyleBase.container}>
+      <StatusBar barStyle='default' />
       <TopBar
         iconLeft='menu'
         onPressLeft={() => alert('Work in progress')}
         iconRight='filter-menu-outline'
         onPressRight={() => alert('Work in progress')}
       />
-      <TextInput
-        style={styles.textInput}
-        onChangeText={onChangeText}
-        placeholder='Search'
-        value={text}
-      />
+      <SearchBar onChangeText={setCardQuery} value={cardQuery} />
       <FlatList
-        data={cards}
+        data={filteredCards}
         renderItem={({ item }) => (
           <CardTile image={item.image} onPress={() => navigation.push('CardInfoScreen')} />
         )}
@@ -64,22 +116,3 @@ export default function MainScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textInput: {
-    marginTop: 40,
-    height: 60,
-    margin: 12,
-    padding: 10,
-    fontSize: 20,
-    fontFamily: Platform.select({ ios: 'Arial', android: 'Roboto' }),
-    fontStyle: 'normal',
-    fontWeight: '300',
-  },
-});

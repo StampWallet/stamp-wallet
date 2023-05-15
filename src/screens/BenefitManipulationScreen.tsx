@@ -50,7 +50,7 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
 
   return (
     <View style={StyleBase.container}>
-      <StatusBar />
+      <StatusBar barStyle='default' />
       <TopBar iconLeft='arrow-left' onPressLeft={() => navigation.pop()} />
       <ScrollView style={styles.scrollView}>
         <FormProvider {...methods}>

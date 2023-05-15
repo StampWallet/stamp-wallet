@@ -29,7 +29,7 @@ export default function CardInfoScreen({ navigation, Card }) {
       <TopBar iconLeft={'arrow-left'} onPressLeft={() => navigation.pop()} />
       {/* todo: apply paddings
                         image as Cards.businessDetails.iconImageId */}
-      <CardTile image={require('../assets/biedronka_homepage.jpg')} onPress={() => {}} />
+      <CardTile image={require('../assets/images/biedronka_homepage.jpg')} onPress={() => {}} />
       <Tile>
         <View style={styles.accountTileContainer}>
           <Text style={styles.text}>Account balance</Text>
