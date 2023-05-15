@@ -6,6 +6,8 @@ import {
   View,
   Pressable,
   GestureResponderEvent,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -16,12 +18,13 @@ interface BenefitTileProps {
   color: string;
   children: any;
   onPress: (event: GestureResponderEvent) => void;
+  tileStyle?: StyleProp<ViewStyle>;
 }
 
-const BenefitTile = ({ name, color, children, onPress }: BenefitTileProps) => {
+const BenefitTile = ({ name, color, children, onPress, tileStyle }: BenefitTileProps) => {
   return (
     <Pressable onPress={onPress}>
-      <Tile color={color}>
+      <Tile style={[{ backgroundColor: color }, tileStyle]}>
         <View style={styles.container}>
           <View style={styles.containerLeft}>
             <Text style={styles.text}>{name}</Text>
