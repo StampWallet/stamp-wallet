@@ -24,16 +24,33 @@ export type BusinessRegistrationFormData = {
   city: string;
 };
 
+//na podstawie schematu api
+
+export type Date = {
+  //idk jak nazwac xd
+  type: string;
+  //format: date-time
+  nullable: true;
+};
+
 export type BenefitFormData = {
   name: string;
-  price: number;
+  price: number; //int
   description: string;
-  /*
-  waiting for components implem
-  imageId: string,
-  or image: ImageSourcePropType
-  startDate: string, (?)
-  endDate: string,
-  */
-  maxAmount: number; //check if int somehow
+  imageId: string;
+  startDate: Date;
+  endDate: Date;
+  maxAmount: number; //int
+};
+
+export type Benefit = {
+  publicId: string;
+  name: string;
+  price: number; //int
+  description: string;
+  imageId: string;
+  startDate: Date;
+  endDate: Date;
+  maxAmount: number; //int
+  available: boolean;
 };
