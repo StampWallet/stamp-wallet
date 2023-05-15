@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Platform, ScrollView } from 'react-native';
+import { StyleSheet, StatusBar, View, Platform, ScrollView } from 'react-native';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import StyleBase from '../styles/StyleBase';
@@ -50,7 +50,8 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
 
   return (
     <View style={StyleBase.container}>
-      <TopBar iconLeft='arrow-left' onPressLeft={() => navigation.push('MainScreen')} />
+      <StatusBar />
+      <TopBar iconLeft='arrow-left' onPressLeft={() => navigation.pop()} />
       <ScrollView style={styles.scrollView}>
         <FormProvider {...methods}>
           <BoxContainer style={styles.boxContainer}>
