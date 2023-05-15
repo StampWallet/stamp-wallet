@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, StatusBar, Pressable } from 'react-native';
 
-import useOnPressHandlers from '../hooks/useOnPressHandlers';
+import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 
-import StyleBase from '../styles/StyleBase';
+import StyleBase from '../../styles/StyleBase';
 
-import colors from '../constants/colors';
+import colors from '../../constants/colors';
 
-import { Benefit } from '../types';
+import { Benefit } from '../../types';
 
-import TopBar from '../components/Bars/TopBar';
-import TapBar from '../components/Bars/TapBar';
-import CardTile from '../components/Cards/CardTile';
-import Tile from '../components/Miscellaneous/Tile';
-import BenefitList from '../components/Benefits/BenefitList';
-import CustomButton from '../components/Miscellaneous/CustomButton';
-import BoxContainer from '../components/Miscellaneous/BoxContainer';
+import TopBar from '../../components/Bars/TopBar';
+import TapBar from '../../components/Bars/TapBar';
+import CardTile from '../../components/Cards/CardTile';
+import Tile from '../../components/Miscellaneous/Tile';
+import BenefitList from '../../components/Benefits/BenefitList';
+import CustomButton from '../../components/Miscellaneous/CustomButton';
+import BoxContainer from '../../components/Miscellaneous/BoxContainer';
 
 const SHOW_VIRTUAL = 1;
 
@@ -23,10 +23,10 @@ const SHOW_VIRTUAL = 1;
 interface ICardInfoScreen {
   navigation: any; //proper type
   Card?: any; //todo
-  benefits: ArrayLike<Benefit>;
+  benefits: Benefit[];
 }
 
-export default function CardInfoScreen({ navigation, Card, benefits }: ICardInfoScreen) {
+export default function CardInfo({ navigation, Card, benefits }: ICardInfoScreen) {
   /*
   todo:b
   check if virtual or real
@@ -42,86 +42,6 @@ export default function CardInfoScreen({ navigation, Card, benefits }: ICardInfo
 
   const { onPressBack } = useOnPressHandlers();
 
-  //mock data
-  benefits = [
-    {
-      publicId: '1',
-      name: 'test1',
-      price: 100,
-      description: 'test1',
-      imageId: 'chrumczak',
-      startDate: {
-        type: 'ąąą',
-        //format:
-        nullable: true,
-      },
-      endDate: {
-        type: 'ęęę',
-        //format:
-        nullable: true,
-      },
-      maxAmount: 100,
-      available: true,
-    },
-    {
-      publicId: '2',
-      name: 'test2',
-      price: 200,
-      description: 'test2',
-      imageId: 'chrumczak',
-      startDate: {
-        type: 'ąąą',
-        //format:
-        nullable: true,
-      },
-      endDate: {
-        type: 'ęęę',
-        //format:
-        nullable: true,
-      },
-      maxAmount: 100,
-      available: true,
-    },
-    {
-      publicId: '3',
-      name: 'test3',
-      price: 300,
-      description: 'test3',
-      imageId: 'chrumczak',
-      startDate: {
-        type: 'ąąą',
-        //format:
-        nullable: true,
-      },
-      endDate: {
-        type: 'ęęę',
-        //format:
-        nullable: true,
-      },
-      maxAmount: 100,
-      available: true,
-    },
-    {
-      publicId: '4',
-      name: 'test4',
-      price: 400,
-      description: 'test4',
-      imageId: 'chrumczak',
-      startDate: {
-        type: 'ąąą',
-        //format:
-        nullable: true,
-      },
-      endDate: {
-        type: 'ęęę',
-        //format:
-        nullable: true,
-      },
-      maxAmount: 100,
-      available: true,
-    },
-  ];
-
   return SHOW_VIRTUAL ? (
     <View style={StyleBase.container}>
       <StatusBar barStyle='default' />
@@ -130,7 +50,10 @@ export default function CardInfoScreen({ navigation, Card, benefits }: ICardInfo
                 image as Card.businessDetails.iconImageId */}
       {/*temp solution - Tile of CardTile style override */}
       <View style={styles.cardTile}>
-        <CardTile image={require('../assets/biedronka_homepage.jpg')} onPress={() => {}} />
+        <CardTile
+          image={require('../../assets/images/biedronka_homepage.jpg')}
+          onPress={() => {}}
+        />
       </View>
       <Tile style={styles.cardInfo}>
         <View style={styles.accountTileContainer}>

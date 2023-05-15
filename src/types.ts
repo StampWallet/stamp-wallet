@@ -30,7 +30,7 @@ export type Date = {
   //idk jak nazwac xd
   type: string;
   //format: date-time
-  nullable: true;
+  nullable: boolean;
 };
 
 export type BenefitFormData = {
