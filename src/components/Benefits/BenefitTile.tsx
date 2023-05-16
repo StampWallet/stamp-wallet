@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   StyleSheet,
   Text,
@@ -15,16 +15,15 @@ import Tile from '../Miscellaneous/Tile';
 
 interface BenefitTileProps {
   name: string;
-  color: string;
-  children: any;
+  children: ReactNode;
   onPress: (event: GestureResponderEvent) => void;
   tileStyle?: StyleProp<ViewStyle>;
 }
 
-const BenefitTile = ({ name, color, children, onPress, tileStyle }: BenefitTileProps) => {
+const BenefitTile = ({ name, children, onPress, tileStyle }: BenefitTileProps) => {
   return (
     <Pressable onPress={onPress}>
-      <Tile style={[{ backgroundColor: color }, tileStyle]}>
+      <Tile style={tileStyle}>
         <View style={styles.container}>
           <View style={styles.containerLeft}>
             <Text style={styles.text}>{name}</Text>

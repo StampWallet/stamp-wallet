@@ -116,7 +116,7 @@ export default function CardInfo({ navigation, Card, benefits }: ICardInfoScreen
                 navigation.push('BenefitDescriptionScreen');
               }}
               //backgroundColor based on affordability
-              customBenefitTileStyle={{ width: '100%' }}
+              customBenefitTileStyle={{ width: '100%', height: 60 }}
             />
           </View>
           <View style={[styles.buttonsContainer, { marginTop: '10%' }]}>

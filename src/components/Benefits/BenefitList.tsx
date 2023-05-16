@@ -40,12 +40,7 @@ const BenefitList = ({
         data={benefits}
         keyExtractor={(benefit) => benefit.publicId}
         renderItem={({ item }) => (
-          <BenefitTile
-            name={item.name}
-            color={'#7BFF78'}
-            onPress={onPress}
-            tileStyle={benefitStyle}
-          >
+          <BenefitTile name={item.name} onPress={onPress} tileStyle={benefitStyle}>
             <View style={styles.containerRight}>
               <View style={styles.containerInRow}>
                 <Text style={styles.text}>{item.price}</Text>

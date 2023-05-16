@@ -111,7 +111,6 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
               name='benefits'
               isInvalid={Boolean(errors.benefits)}
             />
-            <CustomButton title={title} onPress={onPress} />
           </BoxContainer>
         </FormProvider>
         <CustomButton title={title} onPress={onPress} customButtonStyle={{ width: '100%' }} />
