@@ -7,7 +7,9 @@ import StyleBase from '../../styles/StyleBase';
 
 import colors from '../../constants/colors';
 
-import { Benefit } from '../../types';
+import { Benefit, Card } from '../../types';
+
+import { BENEFIT_DESC_ROUTE } from '../../constants/paths';
 
 import TopBar from '../../components/Bars/TopBar';
 import TapBar from '../../components/Bars/TapBar';
@@ -19,14 +21,14 @@ import BoxContainer from '../../components/Miscellaneous/BoxContainer';
 
 const SHOW_VIRTUAL = 1;
 
-//temp
-interface ICardInfoScreen {
+interface CardInfoScreenProps {
   navigation: any; //proper type
-  Card?: any; //todo
+  Card?: Card;
   benefits: Benefit[];
 }
 
-export default function CardInfo({ navigation, Card, benefits }: ICardInfoScreen) {
+//tood: przekazywanie karty
+export default function CardInfo({ navigation, Card, benefits }: CardInfoScreenProps) {
   /*
   todo:b
   check if virtual or real
@@ -38,10 +40,13 @@ export default function CardInfo({ navigation, Card, benefits }: ICardInfoScreen
   proper everything (after api implementation)
   */
 
-  const [screenState, setState] = useState(1);
+  type CardInfoScreenState = 'benefits' | 'business';
+
+  const [screenState, setState] = useState<CardInfoScreenState>('business');
 
   const { onPressBack } = useOnPressHandlers();
 
+  //Card.type === 'virtual'
   return SHOW_VIRTUAL ? (
     <View style={StyleBase.container}>
       <StatusBar barStyle='default' />
@@ -49,12 +54,10 @@ export default function CardInfo({ navigation, Card, benefits }: ICardInfoScreen
       {/* todo: apply paddings
                 image as Card.businessDetails.iconImageId */}
       {/*temp solution - Tile of CardTile style override */}
-      <View style={styles.cardTile}>
-        <CardTile
-          image={require('../../assets/images/biedronka_homepage.jpg')}
-          onPress={() => {}}
-        />
-      </View>
+      <CardTile
+        containerStyle={styles.cardTile}
+        image={require('../../assets/images/biedronka_homepage.jpg')}
+      />
       <Tile style={styles.cardInfo}>
         <View style={styles.accountTileContainer}>
           <Text style={styles.text}>Account balance</Text>
@@ -67,7 +70,7 @@ export default function CardInfo({ navigation, Card, benefits }: ICardInfoScreen
                           implement onPress   */}
         <Pressable
           onPress={() => {
-            setState(1);
+            setState('business');
           }}
         >
           <Tile style={styles.button}>
@@ -76,7 +79,7 @@ export default function CardInfo({ navigation, Card, benefits }: ICardInfoScreen
         </Pressable>
         <Pressable
           onPress={() => {
-            setState(0);
+            setState('benefits');
           }}
         >
           <Tile style={styles.button}>
@@ -88,7 +91,7 @@ export default function CardInfo({ navigation, Card, benefits }: ICardInfoScreen
                         <CustomButton onPress={() => alert('Work in progress')} title='Benefits' /> */}
       </View>
       {/* everything below is in temp form, what is rendered will be based on button^ pressed */}
-      {screenState ? (
+      {screenState === 'business' ? (
         <View style={styles.container}>
           <BoxContainer style={styles.boxContainer}>
             <Text style={[styles.text, { paddingBottom: 40 }]}>Business name</Text>
@@ -108,12 +111,11 @@ export default function CardInfo({ navigation, Card, benefits }: ICardInfoScreen
         <View style={styles.container}>
           <View style={styles.benefitsContainer}>
             <Text style={styles.text}>List of benefits</Text>
-            {/*todo: style the tiles in list */}
             <BenefitList
               benefits={benefits}
               onPress={() => {
                 //to add: passing Benefit object
-                navigation.push('BenefitDescriptionScreen');
+                navigation.push(BENEFIT_DESC_ROUTE);
               }}
               //backgroundColor based on affordability
               customBenefitTileStyle={{ width: '100%', height: 60 }}

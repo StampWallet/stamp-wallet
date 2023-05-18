@@ -54,3 +54,30 @@ export type Benefit = {
   maxAmount: number; //int
   available: boolean;
 };
+
+export type BusinessDetails = {
+  publicId: string;
+  name: string;
+  description: string;
+  gpsCoordinates: string;
+  bannerImageId: string;
+  iconImageId: string;
+};
+
+export type VirtualCard = {
+  businessDetails: BusinessDetails;
+  points: number; //int
+};
+
+export type LocalCard = {
+  publicId: string;
+  name: string;
+  type: string;
+  code: string;
+};
+
+//idk czy to dobry pomysl, potencjalnie do zmiany
+export type Card = {
+  type: 'virtual' | 'local';
+  card: VirtualCard | LocalCard;
+};

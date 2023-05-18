@@ -87,22 +87,26 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
               isInvalid={Boolean(errors.benefitIcon)}
             />
             <View style={styles.containerDatepicker}>
-              <HookFormDatePicker
-                control={control}
-                name='dateFrom'
-                rules={{ required }}
-                minDate={MIN_DATE}
-                maxDate={dateToWatch || MAX_DATE}
-                isInvalid={Boolean(errors.dateFrom)}
-              />
-              <HookFormDatePicker
-                control={control}
-                name='dateTo'
-                rules={{ required }}
-                minDate={dateFromWatch || MIN_DATE}
-                maxDate={MAX_DATE}
-                isInvalid={Boolean(errors.dateTo)}
-              />
+              <View style={styles.datePicker}>
+                <HookFormDatePicker
+                  control={control}
+                  name='dateFrom'
+                  rules={{ required }}
+                  minDate={MIN_DATE}
+                  maxDate={dateToWatch || MAX_DATE}
+                  isInvalid={Boolean(errors.dateFrom)}
+                />
+              </View>
+              <View style={styles.datePicker}>
+                <HookFormDatePicker
+                  control={control}
+                  name='dateTo'
+                  rules={{ required }}
+                  minDate={dateFromWatch || MIN_DATE}
+                  maxDate={MAX_DATE}
+                  isInvalid={Boolean(errors.dateTo)}
+                />
+              </View>
             </View>
             <HookFormInput
               control={control}
@@ -129,10 +133,11 @@ const styles = StyleSheet.create({
   containerDatepicker: {
     height: 100,
     width: '90%',
-    gap: 50,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    marginBottom: 10,
+    //backgroundColor: '#000',
   },
   boxContainer: {
     height: '80%',
@@ -145,5 +150,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '200',
     textDecorationLine: 'underline',
+  },
+  datePicker: {
+    width: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
