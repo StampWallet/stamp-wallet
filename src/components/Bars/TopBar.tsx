@@ -9,28 +9,26 @@ interface TopBarProps {
   onPressRight?: any;
 }
 
-const TopBar = ({ iconLeft, onPressLeft, iconRight, onPressRight }: TopBarProps) => {
-  return (
-    <View style={styles.TopBar}>
-      <View style={styles.container}>
-        <View style={styles.containerIcon}>
-          <Icon name={iconLeft} size={30} onPress={onPressLeft} />
-        </View>
-        <View style={styles.containerIcon}>
-          {iconRight && <Icon name={iconRight} size={30} onPress={onPressRight} />}
-        </View>
+const TopBar = ({ iconLeft, onPressLeft, iconRight, onPressRight }: TopBarProps) => (
+  <View style={styles.topBar}>
+    <View style={styles.container}>
+      <View style={styles.containerIcon}>
+        <Icon name={iconLeft} size={30} onPress={onPressLeft} />
+      </View>
+      <View style={styles.containerIcon}>
+        {iconRight && <Icon name={iconRight} size={30} onPress={onPressRight} />}
       </View>
     </View>
-  );
-};
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    gap: 300,
+    justifyContent: 'space-between',
   },
-  TopBar: {
+  topBar: {
     height: 40, //temp
     //height: '6.125%',
     width: '100%',
@@ -41,6 +39,7 @@ const styles = StyleSheet.create({
   },
   containerIcon: {
     paddingLeft: 20,
+    paddingRight: 20,
     justifyContent: 'center',
   },
 });

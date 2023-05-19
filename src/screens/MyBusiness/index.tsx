@@ -37,8 +37,6 @@ export default function MyBusinessScreen({ navigation }) {
   const [businessRegistrationFormValues, setBusinessRegistrationFormValues] =
     useState<BusinessRegistrationFormData>(null);
 
-  navigation.navigate('BenefitManipulationScreen');
-
   const { ...methods } = useForm({
     defaultValues: mockFormData,
   });
