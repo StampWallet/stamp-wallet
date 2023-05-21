@@ -1,25 +1,37 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import React, { ReactNode } from 'react';
+import {
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+  Pressable,
+  GestureResponderEvent,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Tile from '../Miscellaneous/Tile';
 
 interface BenefitTileProps {
   name: string;
-  color: string;
-  children: any;
+  children: ReactNode;
+  onPress: (event: GestureResponderEvent) => void;
+  tileStyle?: StyleProp<ViewStyle>;
 }
 
-const BenefitTile = ({ name, color, children }: BenefitTileProps) => {
+const BenefitTile = ({ name, children, onPress, tileStyle }: BenefitTileProps) => {
   return (
-    <Tile color={color}>
-      <View style={styles.container}>
-        <View style={styles.containerLeft}>
-          <Text style={styles.text}>{name}</Text>
+    <Pressable onPress={onPress}>
+      <Tile style={tileStyle}>
+        <View style={styles.container}>
+          <View style={styles.containerLeft}>
+            <Text style={styles.text}>{name}</Text>
+          </View>
+          {children}
         </View>
-        {children}
-      </View>
-    </Tile>
+      </Tile>
+    </Pressable>
   );
 };
 

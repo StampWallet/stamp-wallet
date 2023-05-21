@@ -52,7 +52,10 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
     <View style={StyleBase.container}>
       <StatusBar barStyle='default' />
       <TopBar iconLeft='arrow-left' onPressLeft={() => navigation.pop()} />
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={{ marginBottom: 10, justifyContent: 'center', alignItems: 'center' }}
+      >
         <FormProvider {...methods}>
           <BoxContainer style={styles.boxContainer}>
             {/* show current value? */}
@@ -84,22 +87,26 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
               isInvalid={Boolean(errors.benefitIcon)}
             />
             <View style={styles.containerDatepicker}>
-              <HookFormDatePicker
-                control={control}
-                name='dateFrom'
-                rules={{ required }}
-                minDate={MIN_DATE}
-                maxDate={dateToWatch || MAX_DATE}
-                isInvalid={Boolean(errors.dateFrom)}
-              />
-              <HookFormDatePicker
-                control={control}
-                name='dateTo'
-                rules={{ required }}
-                minDate={dateFromWatch || MIN_DATE}
-                maxDate={MAX_DATE}
-                isInvalid={Boolean(errors.dateTo)}
-              />
+              <View style={styles.datePicker}>
+                <HookFormDatePicker
+                  control={control}
+                  name='dateFrom'
+                  rules={{ required }}
+                  minDate={MIN_DATE}
+                  maxDate={dateToWatch || MAX_DATE}
+                  isInvalid={Boolean(errors.dateFrom)}
+                />
+              </View>
+              <View style={styles.datePicker}>
+                <HookFormDatePicker
+                  control={control}
+                  name='dateTo'
+                  rules={{ required }}
+                  minDate={dateFromWatch || MIN_DATE}
+                  maxDate={MAX_DATE}
+                  isInvalid={Boolean(errors.dateTo)}
+                />
+              </View>
             </View>
             <HookFormInput
               control={control}
@@ -108,7 +115,7 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
               name='benefits'
               isInvalid={Boolean(errors.benefits)}
             />
-            <CustomButton title={title} onPress={onPress} />
+            <CustomButton title={title} onPress={onPress} customButtonStyle={{ width: '100%' }} />
           </BoxContainer>
         </FormProvider>
       </ScrollView>
@@ -119,20 +126,21 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
 const styles = StyleSheet.create({
   scrollView: {
     //backgroundColor: '#000',
-    height: 700,
+    marginTop: '15%',
+    height: '80%',
+    width: 350,
   },
   containerDatepicker: {
     height: 100,
     width: '90%',
-    gap: 50,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    marginBottom: 10,
+    //backgroundColor: '#000',
   },
   boxContainer: {
-    paddingTop: 50,
-    paddingBottom: 50,
-    height: 600,
+    height: '80%',
     width: 350,
     alignItems: 'center',
     justifyContent: 'center',
@@ -142,5 +150,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '200',
     textDecorationLine: 'underline',
+  },
+  datePicker: {
+    width: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
