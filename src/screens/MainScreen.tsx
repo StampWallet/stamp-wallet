@@ -5,6 +5,11 @@ import TopBar from '../components/Bars/TopBar';
 import CardTile from '../components/Cards/CardTile';
 import ListItemSeparator from '../components/Miscellaneous/ListItemSeparator';
 import CustomButton from '../components/Miscellaneous/CustomButton';
+
+import useOnPressHandlers from '../hooks/useOnPressHandlers';
+
+import { cards } from '../assets/mockData/Cards';
+
 import StyleBase from '../styles/StyleBase';
 import SearchBar from '../components/Bars/SearchBar/SearchBar';
 import SortOptions from '../components/Bars/SearchBar/SortOptions';
@@ -13,80 +18,23 @@ import { OptionKey } from '../components/Bars/SearchBar/OptionRow';
 
 import filterCards from '../utils/filterCards';
 
-/*
-todo:
-      make search maintain proper screen composition
-*/
+function getName(card) {
+  if (card.type === 'virtual') return card.content.businessDetails.name;
+  return card.content.name;
+}
 
-const cards = [
-  {
-    name: 'Biedronka',
-    image: require('../assets/images/biedronka_homepage.jpg'),
-    type: 'virtual',
-  },
-  {
-    name: 'Lidl',
-    image: require('../assets/images/lidl.png'),
-    type: 'virtual',
-  },
-  {
-    name: 'Akbar brothers',
-    image: require('../assets/images/akbar.png'),
-    type: 'real',
-  },
-  {
-    name: 'Costadoro Coffee',
-    image: require('../assets/images/costadoro.png'),
-    type: 'virtual',
-  },
-  {
-    name: 'Decathlon',
-    image: require('../assets/images/decathlon.png'),
-    type: 'real',
-  },
-  {
-    name: 'Deichmann',
-    image: require('../assets/images/deichmann.png'),
-    type: 'real',
-  },
-  {
-    name: 'Espirit',
-    image: require('../assets/images/espirit.png'),
-    type: 'virtual',
-  },
-  {
-    name: 'Kaufland',
-    image: require('../assets/images/kaufland.png'),
-    type: 'real',
-  },
-  {
-    name: 'Maggi spices',
-    image: require('../assets/images/maggi.png'),
-    type: 'virtual',
-  },
-  {
-    name: 'Pollo Feliz',
-
-    image: require('../assets/images/pollofeliz.png'),
-    type: 'real',
-  },
-  {
-    name: 'Roblox',
-    image: require('../assets/images/roblox.png'),
-    type: 'real',
-  },
-  {
-    name: 'Stock',
-    image: require('../assets/images/stock.png'),
-    type: 'virtual',
-  },
-];
+function getImage(card) {
+  if (card.type === 'virtual') return card.content.businessDetails.bannerImageId;
+  return card.content.image;
+}
 
 export default function MainScreen({ navigation }) {
   const [cardQuery, setCardQuery] = useState('');
   const [isFilterDropdownOpen, setFilterDropdownVisibility] = useState(false);
   const [filter, setFilter] = useState<OptionKey | null>(null);
   const [filteredCards, setFilteredCards] = useState(cards);
+
+  const { onPressCard } = useOnPressHandlers();
 
   useEffect(() => {
     let cardList = cards;
@@ -98,7 +46,7 @@ export default function MainScreen({ navigation }) {
 
     const lowerCaseCardQuery = cardQuery.toLowerCase();
     const cardsWithSearchedName = cardList.filter((card) =>
-      card.name.toLowerCase().includes(lowerCaseCardQuery)
+      getName(card).toLowerCase().includes(lowerCaseCardQuery)
     );
     setFilteredCards(cardsWithSearchedName);
   }, [filter, cardQuery]);
@@ -132,7 +80,7 @@ export default function MainScreen({ navigation }) {
           <FlatList
             data={filteredCards}
             renderItem={({ item }) => (
-              <CardTile image={item.image} onPress={() => navigation.push('CardInfoScreen')} />
+              <CardTile image={getImage(item)} onPress={() => onPressCard(navigation, item)} />
             )}
             ItemSeparatorComponent={ListItemSeparator}
           />

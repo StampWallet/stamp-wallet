@@ -1,8 +1,13 @@
 import { OptionName, OptionType } from '../components/Bars/SearchBar/OptionRow';
 
+//temp
+function getName(card) {
+  if (card.type === 'virtual') return card.content.businessDetails.name;
+  return card.content.name;
+}
 const compareNamesAsc = (a, b) => {
-  const nameA = a.name.toUpperCase();
-  const nameB = b.name.toUpperCase();
+  const nameA = getName(a).toUpperCase();
+  const nameB = getName(b).toUpperCase();
 
   if (nameA > nameB) {
     return -1;
@@ -15,8 +20,8 @@ const compareNamesAsc = (a, b) => {
   return 0;
 };
 const compareNamesDesc = (a, b) => {
-  const nameA = a.name.toUpperCase();
-  const nameB = b.name.toUpperCase();
+  const nameA = getName(a).toUpperCase();
+  const nameB = getName(b).toUpperCase();
 
   if (nameA < nameB) {
     return -1;

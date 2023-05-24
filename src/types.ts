@@ -43,8 +43,10 @@ export type BenefitFormData = {
   maxAmount: number; //int
 };
 
+type UUID = string;
+
 export type Benefit = {
-  publicId: string;
+  publicId: UUID;
   name: string;
   price: number; //int
   description: string;
@@ -64,9 +66,15 @@ export type BusinessDetails = {
   iconImageId: string;
 };
 
+//
 export type VirtualCard = {
   businessDetails: BusinessDetails;
-  points: number; //int
+  points?: number; //int
+  benefits: Benefit[]; //avaliable benefits
+  inventory?: {
+    id: UUID;
+    amount: number;
+  }[];
 };
 
 export type LocalCard = {
@@ -74,10 +82,11 @@ export type LocalCard = {
   name: string;
   type: string;
   code: string;
+  image: string; //temp
 };
 
-//idk czy to dobry pomysl, potencjalnie do zmiany
 export type Card = {
+  isAdded: boolean;
   type: 'virtual' | 'local';
-  card: VirtualCard | LocalCard;
+  content: VirtualCard | LocalCard;
 };
