@@ -1,6 +1,3 @@
-import { Benefit } from '../../types';
-
-//mock data
 export const benefits = [
   {
     publicId: '1',
