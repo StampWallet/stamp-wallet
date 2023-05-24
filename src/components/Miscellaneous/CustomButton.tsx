@@ -14,7 +14,7 @@ import colors from '../../constants/colors';
 interface CustomButtonProps {
   // eslint-disable-next-line no-unused-vars
   onPress: (event: GestureResponderEvent) => void;
-  title: string;
+  title?: string;
   type?: string;
   customButtonStyle?: StyleProp<ViewStyle>;
   customTextStyle?: StyleProp<TextStyle>;
@@ -22,8 +22,8 @@ interface CustomButtonProps {
 }
 const CustomButton = ({
   onPress,
-  title,
-  type,
+  title = '',
+  type = 'primary',
   customButtonStyle,
   customTextStyle,
   children,
@@ -44,10 +44,6 @@ const CustomButton = ({
       {!title && children}
     </Pressable>
   );
-};
-
-CustomButton.defaultProps = {
-  type: 'primary',
 };
 
 const styles = StyleSheet.create({
