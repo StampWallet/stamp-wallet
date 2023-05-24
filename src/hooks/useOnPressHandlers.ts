@@ -1,4 +1,4 @@
-import { REGISTER_ROUTE, LOGIN_ROUTE } from '../constants/paths';
+import { REGISTER_ROUTE, LOGIN_ROUTE, CARD_ROUTE } from '../constants/paths';
 
 const useOnPressHandlers = () => {
   const onPressLogIn = (navigation, data) => {
@@ -22,7 +22,11 @@ const useOnPressHandlers = () => {
     navigation.pop();
   };
 
-  return { onPressLogIn, onPressRegister, onPressBack };
+  const onPressCard = (navigation, card) => {
+    navigation.push(CARD_ROUTE, { Card: card });
+  };
+
+  return { onPressLogIn, onPressRegister, onPressBack, onPressCard };
 };
 
 export default useOnPressHandlers;

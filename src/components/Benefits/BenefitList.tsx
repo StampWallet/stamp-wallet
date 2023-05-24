@@ -20,9 +20,12 @@ import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 
 interface BenefitListProps {
   benefits: Benefit[];
-  onPress: (event: GestureResponderEvent) => void;
+  onPress?: (event: GestureResponderEvent) => void;
   customListStyle?: StyleProp<ViewStyle>;
   customBenefitTileStyle?: StyleProp<ViewStyle>;
+  setBenefit?: any; //temp
+  setState?: any;
+  mode: 'addToInventory' | 'addToRealization';
 }
 
 const BenefitList = ({
@@ -30,6 +33,8 @@ const BenefitList = ({
   onPress,
   customListStyle,
   customBenefitTileStyle,
+  setBenefit,
+  setState,
 }: BenefitListProps) => {
   const listStyle = StyleSheet.flatten([styles.container, customListStyle]);
   const benefitStyle = StyleSheet.flatten([styles.benefit, customBenefitTileStyle]);
@@ -40,7 +45,18 @@ const BenefitList = ({
         data={benefits}
         keyExtractor={(benefit) => benefit.publicId}
         renderItem={({ item }) => (
-          <BenefitTile name={item.name} onPress={onPress} tileStyle={benefitStyle}>
+          <BenefitTile
+            name={item.name}
+            onPress={
+              onPress
+                ? onPress
+                : () => {
+                    setBenefit(item);
+                    setState('benefit');
+                  }
+            }
+            tileStyle={benefitStyle}
+          >
             <View style={styles.containerRight}>
               <View style={styles.containerInRow}>
                 <Text style={styles.text}>{item.price}</Text>
