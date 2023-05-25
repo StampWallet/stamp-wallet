@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from 'react-native/types';
+
 export type LoginFormData = {
   email: string;
   password: string;
@@ -62,7 +64,7 @@ export type BusinessDetails = {
   name: string;
   description: string;
   gpsCoordinates: string;
-  bannerImageId: string;
+  bannerImageId: ImageSourcePropType; //temp, string od api (adapter)?
   iconImageId: string;
 };
 
@@ -82,11 +84,13 @@ export type LocalCard = {
   name: string;
   type: string;
   code: string;
-  image: string; //temp
+  image: ImageSourcePropType; //jw
 };
+
+export type CardType = 'virtual' | 'local';
 
 export type Card = {
   isAdded: boolean;
-  type: 'virtual' | 'local';
+  type: CardType;
   content: VirtualCard | LocalCard;
 };

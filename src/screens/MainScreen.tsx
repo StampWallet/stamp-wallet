@@ -7,6 +7,7 @@ import ListItemSeparator from '../components/Miscellaneous/ListItemSeparator';
 import CustomButton from '../components/Miscellaneous/CustomButton';
 
 import useOnPressHandlers from '../hooks/useOnPressHandlers';
+import { getName, getImage } from '../utils/cardGetters';
 
 import { cards } from '../assets/mockData/Cards';
 
@@ -17,16 +18,6 @@ import SortOptions from '../components/Bars/SearchBar/SortOptions';
 import { OptionKey } from '../components/Bars/SearchBar/OptionRow';
 
 import filterCards from '../utils/filterCards';
-
-function getName(card) {
-  if (card.type === 'virtual') return card.content.businessDetails.name;
-  return card.content.name;
-}
-
-function getImage(card) {
-  if (card.type === 'virtual') return card.content.businessDetails.bannerImageId;
-  return card.content.image;
-}
 
 export default function MainScreen({ navigation }) {
   const [cardQuery, setCardQuery] = useState('');

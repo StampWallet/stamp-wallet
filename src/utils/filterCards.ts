@@ -1,10 +1,6 @@
 import { OptionName, OptionType } from '../components/Bars/SearchBar/OptionRow';
+import { getName } from './cardGetters';
 
-//temp
-function getName(card) {
-  if (card.type === 'virtual') return card.content.businessDetails.name;
-  return card.content.name;
-}
 const compareNamesAsc = (a, b) => {
   const nameA = getName(a).toUpperCase();
   const nameB = getName(b).toUpperCase();

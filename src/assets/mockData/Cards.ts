@@ -1,6 +1,7 @@
+import { Card } from '../../types';
 import { benefits } from './Benefits';
 
-export const cards = [
+export const cards: Card[] = [
   {
     type: 'local',
     content: {
@@ -12,6 +13,7 @@ export const cards = [
     },
     isAdded: true,
   },
+
   {
     type: 'virtual',
     content: {
