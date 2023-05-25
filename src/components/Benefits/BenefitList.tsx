@@ -22,8 +22,10 @@ interface BenefitListProps {
   onPress?: (event: GestureResponderEvent) => void;
   customListStyle?: StyleProp<ViewStyle>;
   customBenefitTileStyle?: StyleProp<ViewStyle>;
-  setBenefit?: Dispatch<SetStateAction<Benefit>>; //temp
-  setScreen?: Dispatch<SetStateAction<string>>;
+  //setBenefit?: Dispatch<SetStateAction<Benefit>>; //temp
+  //setScreen?: Dispatch<SetStateAction<string>>;
+  //reducer?: any;
+  dispatch?: any;
   mode: 'addToInventory' | 'addToRealization';
 }
 
@@ -32,8 +34,9 @@ const BenefitList = ({
   onPress,
   customListStyle,
   customBenefitTileStyle,
-  setBenefit,
-  setScreen,
+  //setBenefit,
+  //setScreen,
+  dispatch,
 }: BenefitListProps) => {
   const listStyle = StyleSheet.flatten([styles.container, customListStyle]);
   const benefitStyle = StyleSheet.flatten([styles.benefit, customBenefitTileStyle]);
@@ -50,8 +53,10 @@ const BenefitList = ({
               onPress
                 ? onPress
                 : () => {
-                    setBenefit(item);
-                    setScreen('benefit');
+                    dispatch({ type: 'setBenefit', benefit: item });
+                    dispatch({ type: 'setScreen', screenState: 'benefit' });
+                    //setBenefit(item);
+                    //setScreen('benefit');
                   }
             }
             tileStyle={benefitStyle}

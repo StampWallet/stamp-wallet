@@ -6,7 +6,7 @@ import HomeScreen from '../screens/HomeScreen';
 import MainScreen from '../screens/MainScreen';
 import MapScreen from '../screens/MapScreen';
 import EmailConfirmationScreen from '../screens/EmailConfirmationScreen';
-import CardScreen from '../screens/CardScreen';
+import CardScreen from '../screens/CardScreen/CardScreen';
 import BenefitManipulationScreen from '../screens/BenefitManipulationScreen';
 import CardAdditionScreen from '../screens/CardAdditionScreen';
 import RegistrationScreen from '../screens/RegistrationScreen';

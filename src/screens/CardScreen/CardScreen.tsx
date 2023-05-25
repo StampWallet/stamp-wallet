@@ -1,27 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { StyleSheet, Text, View, StatusBar, Pressable } from 'react-native';
 
-import useOnPressHandlers from '../hooks/useOnPressHandlers';
+import { reducer, INITIAL_STATE, handleSave } from './util/reducer';
 
-import StyleBase from '../styles/StyleBase';
+import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 
-import colors from '../constants/colors';
+import { getName } from '../../utils/cardGetters';
 
-import { Benefit } from '../types';
+import StyleBase from '../../styles/StyleBase';
 
-import TopBar from '../components/Bars/TopBar';
-import TapBar from '../components/Bars/TapBar';
-import CardTile from '../components/Cards/CardTile';
-import Tile from '../components/Miscellaneous/Tile';
-import BenefitList from '../components/Benefits/BenefitList';
-import CustomButton from '../components/Miscellaneous/CustomButton';
-import BoxContainer from '../components/Miscellaneous/BoxContainer';
+import colors from '../../constants/colors';
 
-const SHOW_VIRTUAL = 1;
+import TopBar from '../../components/Bars/TopBar';
+import TapBar from '../../components/Bars/TapBar';
+import CardTile from '../../components/Cards/CardTile';
+import Tile from '../../components/Miscellaneous/Tile';
+import BenefitList from '../../components/Benefits/BenefitList';
+import CustomButton from '../../components/Miscellaneous/CustomButton';
+import BoxContainer from '../../components/Miscellaneous/BoxContainer';
 
 //chaos
-
-let benefitsToAdd = [];
 
 interface CardInfoScreenProps {
   navigation: any; //proper type
@@ -40,76 +38,42 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   proper everything (after api implementation)
   */
 
-  const { Card } = route.params;
+  const { Card: selectedCard } = route.params;
+  const {
+    content: { businessDetails, inventory },
+  } = selectedCard;
 
-  type CardInfoScreenState = 'benefits' | 'business';
-  type ScreenState = 'card' | 'benefit' | 'claimBenefits';
-
-  const [cardInfoState, setInfo] = useState<CardInfoScreenState>('business');
-  const [screenState, setScreen] = useState<ScreenState>('card');
-  const [benefit, setBenefit] = useState<Benefit>();
-  const [accountBalance, setBalance] = useState(Card.content.points);
-
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const { onPressBack } = useOnPressHandlers();
 
-  const AddBenefit = (benefit) => {
-    if (accountBalance < benefit.price) {
-      alert('Insufficient points'); //temp
-      return;
-    }
-    let item = benefitsToAdd.find((x) => x.id === benefit.publicId);
-    item ? item.amount++ : benefitsToAdd.push({ id: benefit.publicId, amount: 1 });
-    setBalance(accountBalance - benefit.price);
-    console.log(benefitsToAdd);
-  };
-
-  const OnSave = () => {
-    benefitsToAdd.forEach((benefit) => {
-      let obj = Card.content.inventory.find((x) => x.id === benefit.id);
-      obj ? (obj.amount += benefit.amount) : Card.content.inventory.push(benefit);
-    });
-    Card.content.points = accountBalance;
-    benefitsToAdd = [];
-    //console.log(Card.content.inventory);
-  };
-
-  const OnCancel = () => {
-    benefitsToAdd = [];
-    setBalance(Card.content.points);
-  };
-
-  return Card.type === 'virtual' ? (
+  return selectedCard.type === 'virtual' ? (
     <View style={StyleBase.container}>
       <StatusBar barStyle='default' />
-      {screenState === 'card' && (
+      {state.screenState === 'card' && (
         <>
           <TopBar iconLeft={'arrow-left'} onPressLeft={() => onPressBack(navigation)} />
           {/* todo: image as Card.businessDetails.iconImageId */}
           <CardTile
-            containerStyle={[styles.cardTile, !Card.isAdded && { paddingBottom: 75 }]}
-            image={Card.content.businessDetails.bannerImageId}
+            containerStyle={[styles.cardTile, !selectedCard.isAdded && { paddingBottom: 75 }]}
+            image={selectedCard.content.businessDetails.bannerImageId}
             tileStyle={{ width: '88.66%' }}
           />
-          {Card.isAdded && (
+          {selectedCard.isAdded && (
             <Tile style={styles.cardInfo}>
               <View style={styles.accountTileContainer}>
                 <Text style={styles.text}>Account balance</Text>
                 <View style={{ width: '35%', alignItems: 'flex-end' }}>
-                  <Text style={styles.text}>{accountBalance}</Text>
+                  <Text style={styles.text}>{state.balanceAfterTransaction}</Text>
                 </View>
               </View>
             </Tile>
           )}
           <View style={styles.buttonsContainer}>
-            <Pressable
-              onPress={() => {
-                setInfo('business');
-              }}
-            >
+            <Pressable onPress={() => dispatch({ type: 'setCardInfo', cardInfoState: 'business' })}>
               <Tile
                 style={[
                   styles.button,
-                  cardInfoState === 'benefits' && { backgroundColor: colors.swPaleViolet },
+                  state.cardInfoState === 'benefits' && { backgroundColor: colors.swPaleViolet },
                 ]}
               >
                 <Text style={styles.text}>Business</Text>
@@ -117,34 +81,34 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
             </Pressable>
             <Pressable
               onPress={() => {
-                setInfo('benefits');
+                dispatch({ type: 'setCardInfo', cardInfoState: 'benefits' });
               }}
             >
               <Tile
                 style={[
                   styles.button,
-                  cardInfoState === 'business' && { backgroundColor: colors.swPaleViolet },
+                  state.cardInfoState === 'business' && { backgroundColor: colors.swPaleViolet },
                 ]}
               >
                 <Text style={styles.text}>Benefits</Text>
               </Tile>
             </Pressable>
           </View>
-          <View style={[styles.container, !Card.isAdded && { height: '50%' }]}>
-            {cardInfoState === 'business' && (
+          <View style={[styles.container, !selectedCard.isAdded && { height: '50%' }]}>
+            {state.cardInfoState === 'business' && (
               <>
                 <BoxContainer style={styles.boxContainer}>
-                  <Text style={[styles.text, { paddingBottom: 40 }]}>
-                    {Card.content.businessDetails.name}
-                  </Text>
+                  <Text style={[styles.text, { paddingBottom: 40 }]}>{getName(selectedCard)}</Text>
                   <Text style={[styles.text, { paddingBottom: 40 }]}>Address</Text>
-                  <Text style={styles.text}>{Card.content.businessDetails.description}</Text>
+                  <Text style={styles.text}>{businessDetails.description}</Text>
                 </BoxContainer>
-                {Card.isAdded && (
+                {selectedCard.isAdded && (
                   <>
                     <View style={styles.claimButton}>
                       <CustomButton
-                        onPress={() => setScreen('claimBenefits')}
+                        onPress={() =>
+                          dispatch({ type: 'setScreen', screenState: 'claimBenefits' })
+                        }
                         title='Claim Benefits'
                       />
                     </View>
@@ -155,37 +119,44 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                 )}
               </>
             )}
-            {cardInfoState === 'benefits' && (
+            {state.cardInfoState === 'benefits' && (
               <>
                 <View style={styles.benefitsContainer}>
                   <Text style={styles.text}>List of benefits</Text>
-                  {Card.isAdded && (
+                  {selectedCard.isAdded && (
                     <BenefitList
-                      benefits={Card.content.benefits}
-                      setBenefit={setBenefit}
-                      setState={setScreen}
+                      benefits={selectedCard.content.benefits}
+                      dispatch={dispatch}
+                      //state={state}
+                      //dispatch={dispatch}
+                      //setBenefit={setBenefit}
+                      //setScreen={setScreen}
                       customBenefitTileStyle={{ width: '100%', height: 60 }}
                       mode='addToInventory'
                     />
                   )}
-                  {!Card.isAdded && (
+                  {!selectedCard.isAdded && (
                     <BenefitList
-                      benefits={Card.content.benefits}
+                      benefits={selectedCard.content.benefits}
                       onPress={() => {}}
                       customBenefitTileStyle={{ width: '100%', height: 60 }}
                       mode='addToInventory'
                     />
                   )}
                 </View>
-                {Card.isAdded && (
+                {selectedCard.isAdded && (
                   <View style={[styles.buttonsContainer, { marginTop: '10%' }]}>
                     <CustomButton
-                      onPress={() => OnCancel()}
+                      onPress={() => dispatch({ type: 'cancel' })}
                       title='Cancel'
                       customButtonStyle={styles.button}
                     />
                     <CustomButton
-                      onPress={() => OnSave()}
+                      onPress={() => {
+                        handleSave(state, inventory);
+                        selectedCard.content.points = state.balanceAfterTransaction;
+                        dispatch({ type: 'save' });
+                      }}
                       title='Save'
                       customButtonStyle={styles.button}
                     />
@@ -194,38 +165,40 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
               </>
             )}
           </View>
-          {!Card.isAdded && (
+          {!selectedCard.isAdded && (
             <CustomButton title='add card' onPress={() => alert('Work in progress')} />
           )}
           <TapBar navigation={navigation} />
         </>
       )}
-      {screenState === 'benefit' && (
+      {state.screenState === 'benefit' && (
         <>
           <TopBar
             iconLeft='arrow-left'
             onPressLeft={() => {
-              setInfo('benefits');
-              setScreen('card');
+              dispatch({ type: 'setCardInfo', cardInfoState: 'benefits' });
+              dispatch({ type: 'setScreen', screenState: 'card' });
             }}
           />
           <BoxContainer style={styles.benefitDesc}>
-            <Text style={styles.description}>{benefit.description}</Text>
+            <Text style={styles.description}>{state.benefit.description}</Text>
           </BoxContainer>
           <CustomButton
             title='add benefit'
-            onPress={() => AddBenefit(benefit)}
+            onPress={() => {
+              dispatch({ type: 'addBenefit' });
+            }}
             customButtonStyle={styles.benefitButton}
           />
         </>
       )}
-      {screenState === 'claimBenefits' && (
+      {state.screenState === 'claimBenefits' && (
         <>
           <TopBar
             iconLeft='arrow-left'
             onPressLeft={() => {
-              setInfo('benefits');
-              setScreen('card');
+              dispatch({ type: 'setCardInfo', cardInfoState: 'benefits' });
+              dispatch({ type: 'setScreen', screenState: 'card' });
             }}
           />
           {/* todo
