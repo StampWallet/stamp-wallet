@@ -3,7 +3,7 @@ import { describe, expect } from '@jest/globals';
 import { render, fireEvent } from 'react-native-testing-library';
 import '@testing-library/jest-native/extend-expect';
 
-import BenefitManipulationScreen from '../screens/BenefitManipulationScreen';
+import BenefitManipulationScreen from '../src/screens/BenefitManipulationScreen';
 
 describe('Benefits manipulation tests', () => {
   it('checks if rendered correctly', () => {
