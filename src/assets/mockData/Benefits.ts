@@ -1,4 +1,6 @@
-export const benefits = [
+import { Benefit } from '../../types';
+
+export const benefits: Benefit[] = [
   {
     publicId: '1',
     name: 'test1',

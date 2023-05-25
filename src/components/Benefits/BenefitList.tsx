@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import {
   Text,
   FlatList,
-  Pressable,
   StyleSheet,
   View,
   GestureResponderEvent,
@@ -23,8 +22,8 @@ interface BenefitListProps {
   onPress?: (event: GestureResponderEvent) => void;
   customListStyle?: StyleProp<ViewStyle>;
   customBenefitTileStyle?: StyleProp<ViewStyle>;
-  setBenefit?: any; //temp
-  setState?: any;
+  setBenefit?: Dispatch<SetStateAction<Benefit>>; //temp
+  setScreen?: Dispatch<SetStateAction<string>>;
   mode: 'addToInventory' | 'addToRealization';
 }
 
@@ -34,7 +33,7 @@ const BenefitList = ({
   customListStyle,
   customBenefitTileStyle,
   setBenefit,
-  setState,
+  setScreen,
 }: BenefitListProps) => {
   const listStyle = StyleSheet.flatten([styles.container, customListStyle]);
   const benefitStyle = StyleSheet.flatten([styles.benefit, customBenefitTileStyle]);
@@ -52,7 +51,7 @@ const BenefitList = ({
                 ? onPress
                 : () => {
                     setBenefit(item);
-                    setState('benefit');
+                    setScreen('benefit');
                   }
             }
             tileStyle={benefitStyle}
