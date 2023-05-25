@@ -30,7 +30,13 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to allow you selecting images for your business."
+          "photosPermission": "The Stamp Wallet accesses your photos to allow you selecting images for your business."
+        }
+      ],
+      [
+        "expo-barcode-scanner",
+        {
+          "cameraPermission": "Allow Stamp Wallet to access camera."
         }
       ]
     ]
