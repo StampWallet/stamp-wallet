@@ -68,15 +68,17 @@ export type BusinessDetails = {
   iconImageId: string;
 };
 
-//
+export type InventoryElem = {
+  publicId: UUID;
+  amount: number;
+  name: string;
+};
+
 export type VirtualCard = {
   businessDetails: BusinessDetails;
   points?: number; //int
   benefits: Benefit[]; //avaliable benefits
-  inventory?: {
-    id: UUID;
-    amount: number;
-  }[];
+  inventory?: InventoryElem[];
 };
 
 export type LocalCard = {

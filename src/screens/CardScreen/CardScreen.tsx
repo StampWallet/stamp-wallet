@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { StyleSheet, Text, View, StatusBar, Pressable } from 'react-native';
 
-import { reducer, INITIAL_STATE, handleSave } from './util/reducer';
+import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
 
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 
-import { getName } from '../../utils/cardGetters';
+import { getName, getImage } from '../../utils/cardGetters';
 
 import StyleBase from '../../styles/StyleBase';
 
@@ -40,10 +40,18 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
 
   const { Card: selectedCard } = route.params;
   const {
-    content: { businessDetails, inventory },
+    content: { businessDetails },
+  } = selectedCard;
+  let {
+    content: { points, inventory },
   } = selectedCard;
 
-  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const [state, dispatch] = useReducer(reducer, {
+    ...INITIAL_STATE,
+    balance: points,
+    balanceAfterTransaction: points,
+    inventory: inventory,
+  });
   const { onPressBack } = useOnPressHandlers();
 
   return selectedCard.type === 'virtual' ? (
@@ -55,7 +63,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           {/* todo: image as Card.businessDetails.iconImageId */}
           <CardTile
             containerStyle={[styles.cardTile, !selectedCard.isAdded && { paddingBottom: 75 }]}
-            image={selectedCard.content.businessDetails.bannerImageId}
+            image={getImage(selectedCard)}
             tileStyle={{ width: '88.66%' }}
           />
           {selectedCard.isAdded && (
@@ -69,7 +77,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
             </Tile>
           )}
           <View style={styles.buttonsContainer}>
-            <Pressable onPress={() => dispatch({ type: 'setCardInfo', cardInfoState: 'business' })}>
+            <Pressable onPress={() => dispatch({ type: 'setCardInfo', payload: 'business' })}>
               <Tile
                 style={[
                   styles.button,
@@ -81,7 +89,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
             </Pressable>
             <Pressable
               onPress={() => {
-                dispatch({ type: 'setCardInfo', cardInfoState: 'benefits' });
+                dispatch({ type: 'setCardInfo', payload: 'benefits' });
               }}
             >
               <Tile
@@ -106,9 +114,9 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                   <>
                     <View style={styles.claimButton}>
                       <CustomButton
-                        onPress={() =>
-                          dispatch({ type: 'setScreen', screenState: 'claimBenefits' })
-                        }
+                        onPress={() => {
+                          dispatch({ type: 'setScreen', payload: 'claimBenefits' });
+                        }}
                         title='Claim Benefits'
                       />
                     </View>
@@ -127,10 +135,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                     <BenefitList
                       benefits={selectedCard.content.benefits}
                       dispatch={dispatch}
-                      //state={state}
-                      //dispatch={dispatch}
-                      //setBenefit={setBenefit}
-                      //setScreen={setScreen}
+                      dispatchType={ACTIONS.SET_BENEFIT_SCREEN}
                       customBenefitTileStyle={{ width: '100%', height: 60 }}
                       mode='addToInventory'
                     />
@@ -147,15 +152,14 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                 {selectedCard.isAdded && (
                   <View style={[styles.buttonsContainer, { marginTop: '10%' }]}>
                     <CustomButton
-                      onPress={() => dispatch({ type: 'cancel' })}
+                      onPress={() => dispatch({ type: ACTIONS.TRANSACTION_CANCEL })}
                       title='Cancel'
                       customButtonStyle={styles.button}
                     />
                     <CustomButton
                       onPress={() => {
-                        handleSave(state, inventory);
-                        selectedCard.content.points = state.balanceAfterTransaction;
-                        dispatch({ type: 'save' });
+                        //lekko upo
+                        dispatch({ type: ACTIONS.TRANSACTION_SAVE, payload: selectedCard });
                       }}
                       title='Save'
                       customButtonStyle={styles.button}
@@ -176,8 +180,10 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           <TopBar
             iconLeft='arrow-left'
             onPressLeft={() => {
-              dispatch({ type: 'setCardInfo', cardInfoState: 'benefits' });
-              dispatch({ type: 'setScreen', screenState: 'card' });
+              dispatch({
+                type: ACTIONS.ON_BACK_BENEFITS,
+                payload: { screenState: 'card', cardInfoState: 'benefits' },
+              });
             }}
           />
           <BoxContainer style={styles.benefitDesc}>
@@ -186,7 +192,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           <CustomButton
             title='add benefit'
             onPress={() => {
-              dispatch({ type: 'addBenefit' });
+              dispatch({ type: ACTIONS.TRANSACTION_ADD_BENEFIT });
             }}
             customButtonStyle={styles.benefitButton}
           />
@@ -197,17 +203,18 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           <TopBar
             iconLeft='arrow-left'
             onPressLeft={() => {
-              dispatch({ type: 'setCardInfo', cardInfoState: 'benefits' });
-              dispatch({ type: 'setScreen', screenState: 'card' });
+              dispatch({
+                type: ACTIONS.ON_BACK_BENEFITS,
+                payload: { screenState: 'card', cardInfoState: 'business' },
+              });
             }}
           />
-          {/* todo
           <BenefitList
-            benefits={Card.content.inventory}
+            benefits={inventory}
+            onPress={() => {}}
             mode='addToInventory'
             customListStyle={{ paddingTop: 100 }}
           />
-          */}
         </>
       )}
       <TapBar navigation={navigation} />
