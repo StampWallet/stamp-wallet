@@ -1,8 +1,13 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { ReactNode } from 'react';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
-const Tile = (props) => {
-  return <View style={{ ...styles.tile, ...props.style }}>{props.children}</View>;
+interface TileProps {
+  children: ReactNode;
+  style?: StyleProp<ViewStyle>;
+}
+
+const Tile = ({ style, children }: TileProps) => {
+  return <View style={[styles.tile, style]}>{children}</View>;
 };
 
 const styles = StyleSheet.create({

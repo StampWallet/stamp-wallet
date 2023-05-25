@@ -1,27 +1,53 @@
 import React from 'react';
-import { Text, FlatList, TouchableWithoutFeedback, StyleSheet, View } from 'react-native';
+import {
+  Text,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  View,
+  GestureResponderEvent,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import { Benefit } from '../../types';
+
+import colors from '../../constants/colors';
 
 import BenefitTile from './BenefitTile';
 import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 
-const BenefitList = ({ benefits }) => {
+interface BenefitListProps {
+  benefits: Benefit[];
+  onPress: (event: GestureResponderEvent) => void;
+  customListStyle?: StyleProp<ViewStyle>;
+  customBenefitTileStyle?: StyleProp<ViewStyle>;
+}
+
+const BenefitList = ({
+  benefits,
+  onPress,
+  customListStyle,
+  customBenefitTileStyle,
+}: BenefitListProps) => {
+  const listStyle = StyleSheet.flatten([styles.container, customListStyle]);
+  const benefitStyle = StyleSheet.flatten([styles.benefit, customBenefitTileStyle]);
+
   return (
-    <View style={styles.container}>
+    <View style={listStyle}>
       <FlatList
         data={benefits}
         keyExtractor={(benefit) => benefit.publicId}
         renderItem={({ item }) => (
-          <TouchableWithoutFeedback onPress={() => alert('Work in progress')}>
-            <BenefitTile name={item.name} color={'#7BFF78'}>
-              <View style={styles.containerRight}>
-                <View style={styles.containerInRow}>
-                  <Text style={styles.text}>{item.price}</Text>
-                  <Icon name='menu-right' size={35} />
-                </View>
+          <BenefitTile name={item.name} onPress={onPress} tileStyle={benefitStyle}>
+            <View style={styles.containerRight}>
+              <View style={styles.containerInRow}>
+                <Text style={styles.text}>{item.price}</Text>
+                <Icon name='menu-right' size={35} />
               </View>
-            </BenefitTile>
-          </TouchableWithoutFeedback>
+            </View>
+          </BenefitTile>
         )}
         ItemSeparatorComponent={ListItemSeparator}
       />
@@ -30,11 +56,15 @@ const BenefitList = ({ benefits }) => {
 };
 
 const styles = StyleSheet.create({
+  benefit: {
+    backgroundColor: colors.swStrongGreen,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
-    paddingTop: 100,
+    marginRight: '5%',
+    marginLeft: '5%',
+    marginBottom: 3,
   },
   containerRight: {
     padding: 10,
