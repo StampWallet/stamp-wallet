@@ -3,6 +3,8 @@ export type LoginFormData = {
   password: string;
 };
 
+export type CardType = 'virtual' | 'real';
+
 export type RegistrationFormData = {
   name: string;
   email: string;
