@@ -1,62 +1,68 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
-import useOnPressHandlers from '../hooks/useOnPressHandlers';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { useForm } from 'react-hook-form';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import CustomButton from '../components/CustomButton';
-import InputField from '../components/InputField';
-import BoxContainer from '../components/BoxContainer';
+import useOnPressHandlers from '../hooks/useOnPressHandlers';
+
+import CustomButton from '../components/Miscellaneous/CustomButton';
+import HookFormInput from '../components/HookFormComponents/HookFormInput';
+import BoxContainer from '../components/Miscellaneous/BoxContainer';
+
+import StyleBase from '../styles/StyleBase';
+
+import { required, validateEmail } from '../utils/validators';
+import { LoginFormData } from '../types';
 
 export default function LogInScreen({ navigation }) {
-  // this use state is only a temporary solution
-  // think about react hook form for this form
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { onPressLogIn, onPressBack } = useOnPressHandlers();
 
-  // TODO this yields undefined on navigation, find a workaround
-  // const {onPressLogIn, onPressBack} = useOnPressHandlers(navigation);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="default" />
+    <View style={StyleBase.container}>
       <Icon
-        name={'arrow-left'}
+        name='arrow-left'
         size={30}
-        style={styles.backButton}
-        onPress={() => navigation.pop()}
-        title="back"
+        style={StyleBase.backArrow}
+        onPress={() => onPressBack(navigation)}
       />
       <BoxContainer>
-        <InputField placeholder="email" value={email} setValue={setEmail} />
-        <InputField
-          placeholder="password"
-          value={password}
-          setValue={setPassword}
-          secureTextEntry
+        <HookFormInput
+          control={control}
+          rules={{
+            required,
+            pattern: validateEmail,
+          }}
+          name='email'
+          placeholder='email'
+          isInvalid={Boolean(errors.email)}
         />
-        <Text style={styles.forgotPassword}>can't log in?</Text>
+        <HookFormInput
+          control={control}
+          rules={{
+            required,
+          }}
+          name='password'
+          placeholder='password'
+          secureTextEntry
+          isInvalid={Boolean(errors.password)}
+        />
+        <Text style={styles.forgotPassword}>can&apos;t log in?</Text>
       </BoxContainer>
       <CustomButton
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'MainScreen' }],
-          })
-        }
-        title="Log in"
+        onPress={handleSubmit((data: LoginFormData) => onPressLogIn(navigation, data))}
+        title='Log in'
       />
-      <Text style={styles.footer}>terms of service</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   forgotPassword: {
     width: '100%',
     textAlign: 'right',
@@ -65,13 +71,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 15,
     fontSize: 16,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    width: 50,
-    alignItems: 'center',
-    borderRadius: 10,
   },
 });
