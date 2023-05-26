@@ -1,7 +1,6 @@
 import { Benefit } from '../../types';
 
-//mock data
-export const benefits = [
+export const benefits: Benefit[] = [
   {
     publicId: '1',
     name: 'test1',

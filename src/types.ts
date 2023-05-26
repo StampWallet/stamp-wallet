@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from 'react-native/types';
+
 export type LoginFormData = {
   email: string;
   password: string;
@@ -45,8 +47,10 @@ export type BenefitFormData = {
   maxAmount: number; //int
 };
 
+type UUID = string;
+
 export type Benefit = {
-  publicId: string;
+  publicId: UUID;
   name: string;
   price: number; //int
   description: string;
@@ -62,13 +66,21 @@ export type BusinessDetails = {
   name: string;
   description: string;
   gpsCoordinates: string;
-  bannerImageId: string;
+  bannerImageId: ImageSourcePropType; //temp, string od api (adapter)?
   iconImageId: string;
+};
+
+export type InventoryElem = {
+  publicId: UUID;
+  amount: number;
+  name: string;
 };
 
 export type VirtualCard = {
   businessDetails: BusinessDetails;
-  points: number; //int
+  points?: number; //int
+  benefits: Benefit[]; //avaliable benefits
+  inventory?: InventoryElem[];
 };
 
 export type LocalCard = {
@@ -76,10 +88,13 @@ export type LocalCard = {
   name: string;
   type: string;
   code: string;
+  image: ImageSourcePropType; //jw
 };
 
-//idk czy to dobry pomysl, potencjalnie do zmiany
+export type CardType = 'virtual' | 'local';
+
 export type Card = {
-  type: 'virtual' | 'local';
-  card: VirtualCard | LocalCard;
+  isAdded: boolean;
+  type: CardType;
+  content: VirtualCard | LocalCard;
 };

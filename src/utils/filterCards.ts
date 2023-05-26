@@ -1,8 +1,9 @@
 import { OptionName, OptionType } from '../components/Bars/SearchBar/OptionRow';
+import { getName } from './cardGetters';
 
 const compareNamesAsc = (a, b) => {
-  const nameA = a.name.toUpperCase();
-  const nameB = b.name.toUpperCase();
+  const nameA = getName(a).toUpperCase();
+  const nameB = getName(b).toUpperCase();
 
   if (nameA > nameB) {
     return -1;
@@ -15,8 +16,8 @@ const compareNamesAsc = (a, b) => {
   return 0;
 };
 const compareNamesDesc = (a, b) => {
-  const nameA = a.name.toUpperCase();
-  const nameB = b.name.toUpperCase();
+  const nameA = getName(a).toUpperCase();
+  const nameB = getName(b).toUpperCase();
 
   if (nameA < nameB) {
     return -1;

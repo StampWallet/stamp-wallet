@@ -6,3 +6,4 @@ export const HOME_ROUTE = 'HomeScreen';
 export const BUSINESS_ROUTE = 'MyBusiness';
 export const CARD_INFO_ROUTE = 'CardInfoScreen';
 export const BENEFIT_DESC_ROUTE = 'BenefitDescriptionScreen';
+export const CARD_ROUTE = 'CardScreen';

@@ -4,6 +4,12 @@ import { View, StatusBar, StyleSheet } from 'react-native';
 import TopBar from '../components/Bars/TopBar';
 import CardList from '../components/Cards/CardList';
 import CustomButton from '../components/Miscellaneous/CustomButton';
+
+import useOnPressHandlers from '../hooks/useOnPressHandlers';
+import { getName, getImage } from '../utils/cardGetters';
+
+import { cards } from '../assets/mockData/Cards';
+
 import StyleBase from '../styles/StyleBase';
 import SearchBar from '../components/Bars/SearchBar/SearchBar';
 import SortOptions from '../components/Bars/SearchBar/SortOptions';
@@ -33,6 +39,8 @@ export default function MainScreen({ navigation }) {
   const [deletionMode, setDeletionMode] = useState(false);
   const [mainScreenMode, setMainScreenMode] = useState<'customer' | 'business'>('customer');
 
+  const { onPressCard } = useOnPressHandlers();
+
   // filters cards based on search query + current filter
   useEffect(() => {
     let cardList = cards;
@@ -44,7 +52,7 @@ export default function MainScreen({ navigation }) {
 
     const lowerCaseCardQuery = cardQuery.toLowerCase();
     const cardsWithSearchedName = cardList.filter((card) =>
-      card.name.toLowerCase().includes(lowerCaseCardQuery)
+      getName(card).toLowerCase().includes(lowerCaseCardQuery)
     );
     setFilteredCards(cardsWithSearchedName);
   }, [filter, cardQuery]);
