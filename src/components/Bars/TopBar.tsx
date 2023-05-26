@@ -2,21 +2,37 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-interface TopBarProps {
-  iconLeft: any;
+interface Props {
+  iconLeft: string;
+  iconLeftColor?: string;
   onPressLeft: any;
-  iconRight?: any;
+  iconRight?: string;
+  iconRightColor?: string;
   onPressRight?: any;
 }
 
-const TopBar = ({ iconLeft, onPressLeft, iconRight, onPressRight }: TopBarProps) => (
+const TopBar = ({
+  iconLeft,
+  iconLeftColor = 'white',
+  onPressLeft,
+  iconRight,
+  iconRightColor = 'white',
+  onPressRight,
+}: Props) => (
   <View style={styles.topBar}>
     <View style={styles.container}>
       <View style={styles.containerIcon}>
-        <Icon name={iconLeft} size={30} onPress={onPressLeft} />
+        <Icon name={iconLeft} size={30} onPress={onPressLeft} style={{ color: iconLeftColor }} />
       </View>
       <View style={styles.containerIcon}>
-        {iconRight && <Icon name={iconRight} size={30} onPress={onPressRight} />}
+        {iconRight && (
+          <Icon
+            name={iconRight}
+            size={30}
+            onPress={onPressRight}
+            style={{ color: iconRightColor }}
+          />
+        )}
       </View>
     </View>
   </View>

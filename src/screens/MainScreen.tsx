@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, StatusBar, FlatList, Text, StyleSheet } from 'react-native';
+import { View, StatusBar, StyleSheet } from 'react-native';
 
 import TopBar from '../components/Bars/TopBar';
-import CardTile from '../components/Cards/CardTile';
-import ListItemSeparator from '../components/Miscellaneous/ListItemSeparator';
+import CardList from '../components/Cards/CardList';
 import CustomButton from '../components/Miscellaneous/CustomButton';
 
 import useOnPressHandlers from '../hooks/useOnPressHandlers';
@@ -14,19 +13,35 @@ import { cards } from '../assets/mockData/Cards';
 import StyleBase from '../styles/StyleBase';
 import SearchBar from '../components/Bars/SearchBar/SearchBar';
 import SortOptions from '../components/Bars/SearchBar/SortOptions';
+import CustomModal from '../components/Modals/CustomModal';
 
 import { OptionKey } from '../components/Bars/SearchBar/OptionRow';
 
 import filterCards from '../utils/filterCards';
+
+import cards from '../mockData/cards';
+import colors from '../constants/colors';
+
+/*
+todo:
+      make search maintain proper screen composition
+
+todo:
+      get cards from database entity
+*/
 
 export default function MainScreen({ navigation }) {
   const [cardQuery, setCardQuery] = useState('');
   const [isFilterDropdownOpen, setFilterDropdownVisibility] = useState(false);
   const [filter, setFilter] = useState<OptionKey | null>(null);
   const [filteredCards, setFilteredCards] = useState(cards);
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [deletionMode, setDeletionMode] = useState(false);
+  const [mainScreenMode, setMainScreenMode] = useState<'customer' | 'business'>('customer');
 
   const { onPressCard } = useOnPressHandlers();
 
+  // filters cards based on search query + current filter
   useEffect(() => {
     let cardList = cards;
 
@@ -42,9 +57,34 @@ export default function MainScreen({ navigation }) {
     setFilteredCards(cardsWithSearchedName);
   }, [filter, cardQuery]);
 
+  const handleOnDelete = () => {
+    console.log('delete');
+  };
+
   return (
     <View style={StyleBase.container}>
       <StatusBar barStyle='default' />
+      <CustomModal
+        header='Are you sure you want to delete this benefit?'
+        description='Your clients will have their points returned.'
+        confirmOption={
+          <CustomButton
+            onPress={() => handleOnDelete}
+            title='Delete'
+            customButtonStyle={styles.modalButton}
+            customTextStyle={styles.modalButtonText}
+          />
+        }
+        cancelOption={
+          <CustomButton
+            onPress={() => setIsModalOpen(false)}
+            title='Cancel'
+            customButtonStyle={styles.modalButton}
+            customTextStyle={styles.modalButtonText}
+          />
+        }
+        isModalOpen={isModalOpen}
+      />
       <TopBar
         iconLeft='menu'
         onPressLeft={() => alert('Work in progress')}
@@ -52,7 +92,6 @@ export default function MainScreen({ navigation }) {
         onPressRight={() => setFilterDropdownVisibility((prevState) => !prevState)}
       />
       <SearchBar onChangeText={setCardQuery} value={cardQuery} />
-
       {isFilterDropdownOpen && (
         <SortOptions
           setFilter={setFilter}
@@ -64,23 +103,18 @@ export default function MainScreen({ navigation }) {
         style={[
           StyleBase.container,
           isFilterDropdownOpen && styles.listOpacity,
-          styles.listContainer,
+          StyleBase.listContainer,
         ]}
       >
-        {filteredCards.length ? (
-          <FlatList
-            data={filteredCards}
-            renderItem={({ item }) => (
-              <CardTile image={getImage(item)} onPress={() => onPressCard(navigation, item)} />
-            )}
-            ItemSeparatorComponent={ListItemSeparator}
-          />
-        ) : (
-          <Text style={styles.emptyList}>No cards found</Text>
-        )}
+        <CardList
+          cards={filteredCards}
+          onLongCardPress={() => setDeletionMode(true)}
+          deletionMode={deletionMode}
+        />
+        {/* TODO: swap this button with tap bars addition option*/}
         <CustomButton
-          onPress={() => navigation.push('BenefitManipulationScreen')}
-          title='To benefit manipulation'
+          onPress={() => navigation.push('CardAdditionScreen')}
+          title='To card addition'
         />
         <CustomButton
           onPress={() =>
@@ -91,6 +125,7 @@ export default function MainScreen({ navigation }) {
           }
           title='Back to home'
         />
+        {deletionMode && <CustomButton onPress={() => setDeletionMode(false)} title='Cancel' />}
       </View>
       <StatusBar barStyle='default' />
     </View>
@@ -104,8 +139,13 @@ const styles = StyleSheet.create({
   listOpacity: {
     opacity: 0.5,
   },
-  listContainer: {
-    display: 'flex',
-    justifyContent: 'flex-start',
+  modalButton: {
+    width: '120%',
+    height: 50,
+    backgroundColor: colors.swWhite,
+  },
+  modalButtonText: {
+    color: colors.swBlack,
+    fontSize: 24,
   },
 });

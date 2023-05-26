@@ -19,6 +19,10 @@ const StyleBase = StyleSheet.create({
     textAlign: 'right',
     marginBottom: 5,
   },
+  listContainer: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+  },
 });
 
 export default StyleBase;

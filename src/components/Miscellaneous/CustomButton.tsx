@@ -1,19 +1,10 @@
-import React, { ReactNode } from 'react';
-import {
-  StyleSheet,
-  Pressable,
-  Text,
-  GestureResponderEvent,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
+import React, { ReactNode, useState } from 'react';
+import { StyleSheet, Pressable, Text, StyleProp, ViewStyle, TextStyle } from 'react-native';
 
 import colors from '../../constants/colors';
 
 interface CustomButtonProps {
-  // eslint-disable-next-line no-unused-vars
-  onPress: (event: GestureResponderEvent) => void;
+  onPress: () => void;
   title?: string;
   type?: string;
   customButtonStyle?: StyleProp<ViewStyle>;
@@ -28,6 +19,7 @@ const CustomButton = ({
   customTextStyle,
   children,
 }: CustomButtonProps) => {
+  const [buttonColor, setButtonColor] = useState<string>(null);
   const buttonStyle = StyleSheet.flatten([
     styles.buttonContainer,
     // sets primary or secondary button version, can be overloaded with custom style
@@ -35,11 +27,19 @@ const CustomButton = ({
     customButtonStyle,
     // this removes padding and border for image being present
     { ...(!title && { padding: 0 }) },
+    { ...(buttonColor && { backgroundColor: buttonColor }) },
   ]);
   const textStyle = StyleSheet.flatten([styles.buttonText, customTextStyle]);
 
   return (
-    <Pressable onPress={onPress} style={buttonStyle}>
+    <Pressable
+      onPressIn={() => setButtonColor(colors.swLightBlue)}
+      onPressOut={() => {
+        setButtonColor(colors.swDarkBlue);
+        onPress();
+      }}
+      style={buttonStyle}
+    >
       {title && <Text style={textStyle}>{title}</Text>}
       {!title && children}
     </Pressable>
