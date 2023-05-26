@@ -41,7 +41,7 @@ export const cards: Card[] = [
         bannerImageId: require('../images/akbar.png'),
         iconImageId: 'test',
       },
-      points: 100,
+      points: 10000,
       benefits: benefits,
       inventory: [],
     },

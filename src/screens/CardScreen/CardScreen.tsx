@@ -143,9 +143,8 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                   {!selectedCard.isAdded && (
                     <BenefitList
                       benefits={selectedCard.content.benefits}
-                      onPress={() => {}}
                       customBenefitTileStyle={{ width: '100%', height: 60 }}
-                      mode='addToInventory'
+                      mode='preview'
                     />
                   )}
                 </View>
@@ -209,11 +208,15 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
               });
             }}
           />
-          <BenefitList
-            benefits={inventory}
-            onPress={() => {}}
-            mode='addToInventory'
-            customListStyle={{ paddingTop: 100 }}
+          <View style={{ alignItems: 'center', height: '75%' }}>
+            {inventory.length !== 0 && <Text style={styles.headline}>Available Benefits</Text>}
+            {inventory.length === 0 && <Text style={styles.headline}>No available benefits</Text>}
+            <BenefitList benefits={inventory} mode='addToRealization' />
+          </View>
+          <CustomButton
+            onPress={() => alert('Work in progress!')}
+            title='generate code'
+            customButtonStyle={[styles.button, { width: '80%' }]}
           />
         </>
       )}
@@ -315,5 +318,10 @@ const styles = StyleSheet.create({
     width: '85%',
     height: '8%',
     justifyContent: 'center',
+  },
+  headline: {
+    fontSize: 25,
+    paddingBottom: 30,
+    textDecorationLine: 'underline',
   },
 });

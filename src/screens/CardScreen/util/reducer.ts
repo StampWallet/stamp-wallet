@@ -1,8 +1,10 @@
+//WIP
 export const INITIAL_STATE = {
   screenState: 'card',
   cardInfoState: 'business',
   benefit: null,
   benefitsToAdd: [],
+  benefitsToRealize: [],
 };
 
 export const ACTIONS = {
@@ -16,15 +18,40 @@ export const ACTIONS = {
   REPLACE_STATE: 'replaceState',
   ON_BACK_BENEFITS: 'backBenefits',
   SET_BENEFIT_SCREEN: 'setBenefitScreen',
+  //CREATE_INVENTORY_MAP: 'createInventoryMap',
+  REALIZATION_INCREMENT: 'incrementAmountOfBenefit',
+  REALIZATION_SUB: 'substractAmountOfBenefit',
+  //REALIZATION_ADD: 'addBenefitToRealization',
+  //REALIZATION_REMOVE: 'removeBenefitFromRealization',
 };
+
+//todo: map arrays
+function findInArr(benefit, benefitArr) {
+  return benefitArr.find((obj) => obj.publicId === benefit.publicId);
+}
+
+function addToArr(benefit, benefitArr) {
+  let item = findInArr(benefit, benefitArr);
+  item
+    ? item.amount++
+    : benefitArr.push({ publicId: benefit.publicId, amount: 1, name: benefit.name });
+}
+
+function rmFromArr(benefit, benefitArr) {
+  let item = findInArr(benefit, benefitArr);
+  if (!item) return;
+  if (item.amount === 1) benefitArr.splice(item.findIndex(), 1);
+  else item.amount--;
+}
 
 function completeTransaction(state, payload) {
   let inventory = state.inventory.slice();
   let cardContent = payload.content;
   state.benefitsToAdd.forEach((benefit) => {
-    let obj = inventory.find((x) => x.id === benefit.id);
+    let obj = inventory.find((x) => x.publicId === benefit.publicId);
     obj ? (obj.amount += benefit.amount) : inventory.push(benefit);
   });
+  //wait for dispatch to end and do in CardScreen?
   cardContent.inventory = inventory;
   cardContent.points = state.balanceAfterTransaction;
   return inventory;
@@ -38,12 +65,21 @@ function addToTransaction(state) {
     alert('insufficient funds');
   } else {
     balance -= benefit.price;
-    let item = benefitsToAdd.find((x) => x.id === benefit.publicId);
-    item
-      ? item.amount++
-      : benefitsToAdd.push({ id: benefit.publicId, amount: 1, name: benefit.name });
+    addToArr(benefit, benefitsToAdd);
   }
   return [benefitsToAdd, balance];
+}
+
+function addToRealization(state, benefit) {
+  let benefitToRealize = state.benefitToRealize.slice();
+  addToArr(benefit, benefitToRealize);
+  return benefitToRealize;
+}
+
+function rmFromRealization(state, benefit) {
+  let benefitToRealize = state.benefitToRealize.slice();
+  rmFromArr(benefit, benefitToRealize);
+  return benefitToRealize;
 }
 
 export function reducer(state, action) {
@@ -115,6 +151,20 @@ export function reducer(state, action) {
         ...state,
         screenState: payload.screenState,
         benefit: payload.benefit,
+      };
+    }
+    case ACTIONS.REALIZATION_INCREMENT: {
+      const benefitsToRealize = addToRealization(state, action.payload);
+      return {
+        ...state,
+        benefitsToRealize: benefitsToRealize,
+      };
+    }
+    case ACTIONS.REALIZATION_SUB: {
+      const benefitsToRealize = rmFromRealization(state, action.payload);
+      return {
+        ...state,
+        benefitsToRealize: benefitsToRealize,
       };
     }
   }
