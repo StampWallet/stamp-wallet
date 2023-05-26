@@ -6,13 +6,12 @@ interface TileProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const Tile = ({ style, children }: TileProps) => {
-  return <View style={[styles.tile, style]}>{children}</View>;
-};
+const Tile = ({ style, children }: TileProps) => (
+  <View style={[styles.tile, style]}>{children}</View>
+);
 
 const styles = StyleSheet.create({
   tile: {
-    backgroundColor: '#C9CDFF', //temp
     height: 75,
     width: 350,
     borderRadius: 15,
