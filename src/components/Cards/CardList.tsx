@@ -1,11 +1,11 @@
 import React, { SetStateAction } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/AntDesign';
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 import CardTile from './CardTile';
 import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 import StyleBase from '../../styles/StyleBase';
+import { getImage } from '../../utils/cardGetters';
 
 interface Props {
   // todo change the type
@@ -18,7 +18,7 @@ interface Props {
 
 export default function CardList({ cards, onLongCardPress, deletionMode = false }: Props) {
   const navigation = useNavigation();
-  const { onPressCardInfo } = useOnPressHandlers();
+  const { onPressCard } = useOnPressHandlers();
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -29,9 +29,9 @@ export default function CardList({ cards, onLongCardPress, deletionMode = false 
           renderItem={({ item }) => (
             <View>
               <CardTile
-                image={item.image}
-                onPress={() => onPressCardInfo(navigation)}
+                image={getImage(item)}
                 onLongCardPress={onLongCardPress}
+                onPress={() => onPressCard(navigation, item)}
               />
               {/* TODO position correctly the icon*/}
               {/*{deletionMode && <Icon name='delete' style={styles.deleteIcon} size={25} />}*/}
