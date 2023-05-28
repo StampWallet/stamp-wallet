@@ -19,7 +19,7 @@ import { OptionKey } from '../components/Bars/SearchBar/OptionRow';
 
 import filterCards from '../utils/filterCards';
 
-import cards from '../mockData/cards';
+//<import cards from '../mockData/cards';
 import colors from '../constants/colors';
 
 /*
