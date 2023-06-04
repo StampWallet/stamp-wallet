@@ -8,7 +8,6 @@ import SearchBar from '../components/Bars/SearchBar/SearchBar';
 import cards from '../mockData/cards';
 import CardList from '../components/Cards/CardList';
 import useOnPressHandlers from '../hooks/useOnPressHandlers';
-import Scanner from '../components/Scanner';
 
 export default function CardAdditionScreen({ navigation }) {
   const [cardType, setCardType] = useState<'virtual' | 'real' | null>(null);
@@ -16,15 +15,19 @@ export default function CardAdditionScreen({ navigation }) {
   const [availableCards, setAvailableCards] = useState(cards);
   const { onPressBack } = useOnPressHandlers();
 
-  // useEffect(() => {
-  //   if (!cardType === 'virtual') {
-  //     return;
-  //   }
-  //
-  //   const cardList = cards;
-  //
+  useEffect(() => {
+    if (!cardType) {
+      return;
+    }
 
-  // }, [cardQuery]);
+    // cards should come from endpoint - then set it to specific type (or maybe there is a better way to handle it???
+    // if (cardType === 'virtual') {
+    //   setAvailableCards(cards.virtualCards);
+    //   return;
+    // }
+    //
+    // setAvailableCards(cards.realCards);
+  }, [cardQuery, cardType]);
 
   useEffect(() => {
     if (!cardType) {
@@ -44,14 +47,12 @@ export default function CardAdditionScreen({ navigation }) {
     <View style={StyleBase.container}>
       <StatusBar barStyle='default' />
       <TopBar iconLeft='arrow-left' onPressLeft={() => onPressBack(navigation)} />
-      {cardType === 'virtual' && (
+      {cardType && (
         <>
           <SearchBar onChangeText={setCardQuery} value={cardQuery} />
           <CardList cards={availableCards} />
         </>
       )}
-
-      {cardType === 'real' && <Scanner />}
 
       {!cardType && (
         <>
