@@ -10,6 +10,7 @@ interface CustomButtonProps {
   customButtonStyle?: StyleProp<ViewStyle>;
   customTextStyle?: StyleProp<TextStyle>;
   children?: ReactNode;
+  mutableColor?: boolean;
 }
 const CustomButton = ({
   onPress,
@@ -18,6 +19,7 @@ const CustomButton = ({
   customButtonStyle,
   customTextStyle,
   children,
+  mutableColor = true,
 }: CustomButtonProps) => {
   const [buttonColor, setButtonColor] = useState<string>(null);
   const buttonStyle = StyleSheet.flatten([
@@ -33,8 +35,17 @@ const CustomButton = ({
 
   return (
     <Pressable
-      onPressIn={() => setButtonColor(colors.swLightBlue)}
+      onPressIn={() => {
+        if (!mutableColor) {
+          return;
+        }
+        setButtonColor(colors.swLightBlue);
+      }}
       onPressOut={() => {
+        if (!mutableColor) {
+          onPress();
+          return;
+        }
         setButtonColor(colors.swDarkBlue);
         onPress();
       }}
