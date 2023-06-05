@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useForm } from 'react-hook-form';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -24,7 +24,7 @@ export default function LogInScreen({ navigation }) {
   } = useForm();
 
   return (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <Icon
         name='arrow-left'
         size={30}
@@ -58,7 +58,7 @@ export default function LogInScreen({ navigation }) {
         onPress={handleSubmit((data: LoginFormData) => onPressLogIn(navigation, data))}
         title='Log in'
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
