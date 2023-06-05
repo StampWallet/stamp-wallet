@@ -1,13 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Text,
-  FlatList,
-  StyleSheet,
-  View,
-  GestureResponderEvent,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
+import React from 'react';
+import { Text, FlatList, StyleSheet, View, StyleProp, ViewStyle } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { ACTIONS } from '../../screens/CardScreen/util/reducer';
@@ -20,54 +12,30 @@ import BenefitTile from './BenefitTile';
 import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 
 interface BenefitListProps {
-  benefits: (Benefit | InventoryElem | any)[];
-  //onPress?: (event: GestureResponderEvent) => void;
+  benefits: (Benefit | InventoryElem | any)[]; //temp
   customListStyle?: StyleProp<ViewStyle>;
   customBenefitTileStyle?: StyleProp<ViewStyle>;
-  dispatch?: any;
-  dispatchType?: string;
+  dispatch?: React.Dispatch<any>;
   mode: 'addToInventory' | 'addToRealization' | 'preview';
-  state?: any; //temp
 }
 
-//giga upo
-//todo: move setAmount to reducer hook
 const BenefitList = ({
   benefits,
-  //onPress,
   customListStyle,
   customBenefitTileStyle,
   dispatch,
-  dispatchType,
   mode,
-  state,
 }: BenefitListProps) => {
   const listStyle = StyleSheet.flatten([styles.container, customListStyle]);
 
-  const containerRight =
-    mode === 'addToRealization' ? [styles.containerRight, {}] : styles.containerRight;
-  const [benefitsList, setBenefitsList] = useState(benefits);
-  //doesnt work properly, sets amount for all benefits in flatlist
-  const [realize, onRealize] = useState<boolean>(false);
-  const [benefitStyle, setBenefitStyle] = useState(
-    StyleSheet.flatten([styles.benefit, customBenefitTileStyle])
-  );
-
   function getBenefitStyle(item) {
+    const benefitStyle = StyleSheet.flatten([styles.benefit, customBenefitTileStyle]);
     if (mode === 'addToRealization' && item.amountToRealize === 0)
       return [benefitStyle, { backgroundColor: colors.swPaleGreen }];
     return benefitStyle;
   }
 
-  /*
-  const benefitStyle = [
-    StyleSheet.flatten([styles.benefit, customBenefitTileStyle]),
-    mode === 'addToRealization' && amount === 0 && { backgroundColor: colors.swPaleGreen },
-  ];
-  */
   const isAddingToInventory = mode === 'addToInventory';
-
-  //useEffect(() => {} [item.toRealize])
 
   return (
     <View style={listStyle}>
@@ -81,16 +49,15 @@ const BenefitList = ({
               isAddingToInventory
                 ? () =>
                     dispatch({
-                      type: dispatchType,
+                      type: ACTIONS.SET_BENEFIT_SCREEN,
                       payload: { screenState: 'benefit', benefit: item },
                     })
                 : () => {}
             }
             tileStyle={getBenefitStyle(item)}
           >
-            {/* error on item.price if {mode === 'addtoInventory' &&}   */}
             {'price' in item && (
-              <View style={containerRight}>
+              <View style={styles.containerRight}>
                 <View style={styles.containerInRow}>
                   <Text style={styles.text}>{item.price}</Text>
                   <Icon name='menu-right' size={35} />
@@ -98,19 +65,13 @@ const BenefitList = ({
               </View>
             )}
             {'amount' in item && (
-              <View style={[containerRight, { width: '30%' }]}>
+              <View style={[styles.containerRight, { width: '30%' }]}>
                 <View style={styles.containerInRow}>
                   <Icon
                     name='minus-circle-outline'
                     size={25}
                     onPress={() => {
                       dispatch({ type: ACTIONS.REALIZATION_SUB, payload: item });
-                      /*
-                      if (item.toRealize > 0) {
-                        item.toRealize--;
-                        onRealize((prev) => !prev);
-                      }
-                      */
                     }}
                   />
                   <Text style={{ fontSize: 25, padding: 10 }}>

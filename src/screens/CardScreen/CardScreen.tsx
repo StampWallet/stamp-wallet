@@ -142,7 +142,6 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                     <BenefitList
                       benefits={selectedCard.content.benefits}
                       dispatch={dispatch}
-                      dispatchType={ACTIONS.SET_BENEFIT_SCREEN}
                       customBenefitTileStyle={{ width: '100%', height: 60 }}
                       mode='addToInventory'
                     />
@@ -220,7 +219,6 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
             <BenefitList
               benefits={state.benefitsToRealize}
               mode='addToRealization'
-              state={state}
               dispatch={dispatch}
             />
           </View>
