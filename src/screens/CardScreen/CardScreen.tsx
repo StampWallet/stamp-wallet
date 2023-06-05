@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import { StyleSheet, Text, View, StatusBar, Pressable } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Pressable, SafeAreaView } from 'react-native';
 
 import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
 
@@ -30,6 +30,9 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   /*
 
   todo:
+  add visible response for specific buttons (save, cancel, add benefit)
+  code generation
+  some alert if doing stuff with benefits to add pending
   needs some styling
   tested on pixel 6 pro (1440x3120), components MAY NOT fit properly on other models
 
@@ -55,7 +58,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   const { onPressBack } = useOnPressHandlers();
 
   return selectedCard.type === 'virtual' ? (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <StatusBar barStyle='default' />
       {state.screenState === 'card' && (
         <>
@@ -115,6 +118,10 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                     <View style={styles.claimButton}>
                       <CustomButton
                         onPress={() => {
+                          dispatch({
+                            type: ACTIONS.SET_BENEFITS_TO_REALIZE,
+                            payload: inventory,
+                          });
                           dispatch({ type: 'setScreen', payload: 'claimBenefits' });
                         }}
                         title='Claim Benefits'
@@ -211,17 +218,26 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           <View style={{ alignItems: 'center', height: '75%' }}>
             {inventory.length !== 0 && <Text style={styles.headline}>Available Benefits</Text>}
             {inventory.length === 0 && <Text style={styles.headline}>No available benefits</Text>}
-            <BenefitList benefits={inventory} mode='addToRealization' />
+            <BenefitList
+              benefits={state.benefitsToRealize}
+              mode='addToRealization'
+              state={state}
+              dispatch={dispatch}
+            />
           </View>
           <CustomButton
-            onPress={() => alert('Work in progress!')}
+            onPress={() => {
+              dispatch({ type: ACTIONS.REALIZE_BENEFITS });
+              alert('dummy text');
+              //todo
+            }}
             title='generate code'
             customButtonStyle={[styles.button, { width: '80%' }]}
           />
         </>
       )}
       <TapBar navigation={navigation} />
-    </View>
+    </SafeAreaView>
   ) : (
     <View style={StyleBase.container}>
       <TopBar iconLeft={'arrow-left'} onPressLeft={() => onPressBack(navigation)} />

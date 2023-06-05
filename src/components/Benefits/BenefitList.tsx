@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   FlatList,
@@ -28,14 +28,24 @@ function getPayload(dispatchType, item) {
   }
 }
 
+function handleSubstraction(item) {
+  if (item.toRealize > 0) item.toRealize--;
+  console.log('clicked!');
+}
+
+function handleAddition(item) {
+  if (item.amount > item.toRealize) item.toRealize++;
+}
+
 interface BenefitListProps {
-  benefits: (Benefit | InventoryElem)[];
+  benefits: (Benefit | InventoryElem | any)[];
   //onPress?: (event: GestureResponderEvent) => void;
   customListStyle?: StyleProp<ViewStyle>;
   customBenefitTileStyle?: StyleProp<ViewStyle>;
   dispatch?: any;
   dispatchType?: string;
   mode: 'addToInventory' | 'addToRealization' | 'preview';
+  state?: any; //temp
 }
 
 //giga upo
@@ -48,18 +58,34 @@ const BenefitList = ({
   dispatch,
   dispatchType,
   mode,
+  state,
 }: BenefitListProps) => {
   const listStyle = StyleSheet.flatten([styles.container, customListStyle]);
 
   const containerRight =
     mode === 'addToRealization' ? [styles.containerRight, {}] : styles.containerRight;
+  const [benefitsList, setBenefitsList] = useState(benefits);
   //doesnt work properly, sets amount for all benefits in flatlist
-  const [amount, setAmount] = useState(0);
+  const [realize, onRealize] = useState<boolean>(false);
+  const [benefitStyle, setBenefitStyle] = useState(
+    StyleSheet.flatten([styles.benefit, customBenefitTileStyle])
+  );
+
+  function getBenefitStyle(item) {
+    if (mode === 'addToRealization' && item.amountToRealize === 0)
+      return [benefitStyle, { backgroundColor: colors.swPaleGreen }];
+    return benefitStyle;
+  }
+
+  /*
   const benefitStyle = [
     StyleSheet.flatten([styles.benefit, customBenefitTileStyle]),
     mode === 'addToRealization' && amount === 0 && { backgroundColor: colors.swPaleGreen },
   ];
+  */
   const isPressable = mode === 'addToInventory';
+
+  //useEffect(() => {} [item.toRealize])
 
   return (
     <View style={listStyle}>
@@ -74,7 +100,7 @@ const BenefitList = ({
                 ? () => dispatch({ type: dispatchType, payload: getPayload(dispatchType, item) })
                 : () => {}
             }
-            tileStyle={benefitStyle}
+            tileStyle={getBenefitStyle(item)}
           >
             {/* error on item.price if {mode === 'addtoInventory' &&}   */}
             {'price' in item && (
@@ -92,17 +118,23 @@ const BenefitList = ({
                     name='minus-circle-outline'
                     size={25}
                     onPress={() => {
-                      if (amount > 0) setAmount((prev) => --prev);
+                      dispatch({ type: ACTIONS.REALIZATION_SUB, payload: item });
+                      /*
+                      if (item.toRealize > 0) {
+                        item.toRealize--;
+                        onRealize((prev) => !prev);
+                      }
+                      */
                     }}
                   />
                   <Text style={{ fontSize: 25, padding: 10 }}>
-                    {amount} / {item.amount}
+                    {item.amountToRealize} / {item.amount}
                   </Text>
                   <Icon
                     name='plus-circle-outline'
                     size={25}
                     onPress={() => {
-                      if (item.amount > amount) setAmount((prev) => ++prev);
+                      dispatch({ type: ACTIONS.REALIZATION_INCREMENT, payload: item });
                     }}
                     style={{ paddingRight: 25 }}
                   />

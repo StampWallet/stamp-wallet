@@ -12,6 +12,7 @@ export const ACTIONS = {
   SET_INFO: 'setCardInfo',
   SET_BENEFIT: 'setBenefit',
   SET_BALANCE: 'setBalance',
+  SET_BENEFITS_TO_REALIZE: 'setBenefitsToRealize',
   TRANSACTION_ADD_BENEFIT: 'addBenefit',
   TRANSACTION_SAVE: 'save',
   TRANSACTION_CANCEL: 'cancel',
@@ -21,6 +22,7 @@ export const ACTIONS = {
   //CREATE_INVENTORY_MAP: 'createInventoryMap',
   REALIZATION_INCREMENT: 'incrementAmountOfBenefit',
   REALIZATION_SUB: 'substractAmountOfBenefit',
+  REALIZE_BENEFITS: 'realizeBenefits',
   //REALIZATION_ADD: 'addBenefitToRealization',
   //REALIZATION_REMOVE: 'removeBenefitFromRealization',
 };
@@ -37,21 +39,15 @@ function addToArr(benefit, benefitArr) {
     : benefitArr.push({ publicId: benefit.publicId, amount: 1, name: benefit.name });
 }
 
-function rmFromArr(benefit, benefitArr) {
-  let item = findInArr(benefit, benefitArr);
-  if (!item) return;
-  if (item.amount === 1) benefitArr.splice(item.findIndex(), 1);
-  else item.amount--;
-}
-
 function completeTransaction(state, payload) {
   let inventory = state.inventory.slice();
   let cardContent = payload.content;
   state.benefitsToAdd.forEach((benefit) => {
-    let obj = inventory.find((x) => x.publicId === benefit.publicId);
+    let obj = findInArr(benefit, inventory);
     obj ? (obj.amount += benefit.amount) : inventory.push(benefit);
   });
-  //wait for dispatch to end and do in CardScreen?
+  //api request
+  //temp solution
   cardContent.inventory = inventory;
   cardContent.points = state.balanceAfterTransaction;
   return inventory;
@@ -71,14 +67,16 @@ function addToTransaction(state) {
 }
 
 function addToRealization(state, benefit) {
-  let benefitToRealize = state.benefitToRealize.slice();
-  addToArr(benefit, benefitToRealize);
+  let benefitToRealize = state.benefitsToRealize.slice();
+  let item = findInArr(benefit, benefitToRealize);
+  if (item.amountToRealize < item.amount) item.amountToRealize++;
   return benefitToRealize;
 }
 
-function rmFromRealization(state, benefit) {
-  let benefitToRealize = state.benefitToRealize.slice();
-  rmFromArr(benefit, benefitToRealize);
+function subFromRealization(state, benefit) {
+  let benefitToRealize = state.benefitsToRealize.slice();
+  let item = findInArr(benefit, benefitToRealize);
+  if (item.amountToRealize > 0) item.amountToRealize--;
   return benefitToRealize;
 }
 
@@ -161,10 +159,23 @@ export function reducer(state, action) {
       };
     }
     case ACTIONS.REALIZATION_SUB: {
-      const benefitsToRealize = rmFromRealization(state, action.payload);
+      const benefitsToRealize = subFromRealization(state, action.payload);
       return {
         ...state,
         benefitsToRealize: benefitsToRealize,
+      };
+    }
+    case ACTIONS.SET_BENEFITS_TO_REALIZE: {
+      return {
+        ...state,
+        benefitsToRealize: payload.map((obj) => ({ ...obj, amountToRealize: 0 })),
+      };
+    }
+    case ACTIONS.REALIZE_BENEFITS: {
+      //backend
+      return {
+        ...state,
+        benefitsToRealize: [],
       };
     }
   }
