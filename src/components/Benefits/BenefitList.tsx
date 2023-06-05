@@ -19,24 +19,6 @@ import colors from '../../constants/colors';
 import BenefitTile from './BenefitTile';
 import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 
-//upo
-function getPayload(dispatchType, item) {
-  switch (dispatchType) {
-    case ACTIONS.SET_BENEFIT_SCREEN: {
-      return { screenState: 'benefit', benefit: item };
-    }
-  }
-}
-
-function handleSubstraction(item) {
-  if (item.toRealize > 0) item.toRealize--;
-  console.log('clicked!');
-}
-
-function handleAddition(item) {
-  if (item.amount > item.toRealize) item.toRealize++;
-}
-
 interface BenefitListProps {
   benefits: (Benefit | InventoryElem | any)[];
   //onPress?: (event: GestureResponderEvent) => void;
@@ -83,7 +65,7 @@ const BenefitList = ({
     mode === 'addToRealization' && amount === 0 && { backgroundColor: colors.swPaleGreen },
   ];
   */
-  const isPressable = mode === 'addToInventory';
+  const isAddingToInventory = mode === 'addToInventory';
 
   //useEffect(() => {} [item.toRealize])
 
@@ -96,8 +78,12 @@ const BenefitList = ({
           <BenefitTile
             name={item.name}
             onPress={
-              isPressable
-                ? () => dispatch({ type: dispatchType, payload: getPayload(dispatchType, item) })
+              isAddingToInventory
+                ? () =>
+                    dispatch({
+                      type: dispatchType,
+                      payload: { screenState: 'benefit', benefit: item },
+                    })
                 : () => {}
             }
             tileStyle={getBenefitStyle(item)}

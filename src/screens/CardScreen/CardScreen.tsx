@@ -164,7 +164,6 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                     />
                     <CustomButton
                       onPress={() => {
-                        //lekko upo
                         dispatch({ type: ACTIONS.TRANSACTION_SAVE, payload: selectedCard });
                       }}
                       title='Save'
