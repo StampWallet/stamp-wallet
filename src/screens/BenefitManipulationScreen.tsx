@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, StatusBar, View, Platform, ScrollView } from 'react-native';
+import { StyleSheet, StatusBar, View, Platform, ScrollView, SafeAreaView } from 'react-native';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import StyleBase from '../styles/StyleBase';
@@ -49,7 +49,7 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
     : handleSubmit(() => alert('Work on creation in progress'));
 
   return (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <StatusBar barStyle='default' />
       <TopBar iconLeft='arrow-left' onPressLeft={() => navigation.pop()} />
       <ScrollView
@@ -119,7 +119,7 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
           </BoxContainer>
         </FormProvider>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StatusBar, StyleSheet } from 'react-native';
+import { View, StatusBar, StyleSheet, SafeAreaView } from 'react-native';
 
 import TopBar from '../components/Bars/TopBar';
 import CardList from '../components/Cards/CardList';
@@ -62,7 +62,7 @@ export default function MainScreen({ navigation }) {
   };
 
   return (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <StatusBar barStyle='default' />
       <CustomModal
         header='Are you sure you want to delete this benefit?'
@@ -128,7 +128,7 @@ export default function MainScreen({ navigation }) {
         {deletionMode && <CustomButton onPress={() => setDeletionMode(false)} title='Cancel' />}
       </View>
       <StatusBar barStyle='default' />
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
 import CustomButton from '../components/Miscellaneous/CustomButton';
 
 import StyleBase from '../styles/StyleBase';
@@ -42,7 +42,7 @@ export default function CardAdditionScreen({ navigation }) {
   }, [cardQuery, cardType]);
 
   return (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <StatusBar barStyle='default' />
       <TopBar iconLeft='arrow-left' onPressLeft={() => onPressBack(navigation)} />
       {cardType === 'virtual' && (
@@ -61,7 +61,7 @@ export default function CardAdditionScreen({ navigation }) {
           <CustomButton onPress={() => setCardType('real')} title='real card' />
         </>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 
