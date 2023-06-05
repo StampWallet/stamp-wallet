@@ -48,7 +48,9 @@ export default function CardAdditionScreen({ navigation }) {
       {cardType === 'virtual' && (
         <>
           <SearchBar onChangeText={setCardQuery} value={cardQuery} />
-          <CardList cards={availableCards} />
+          {/*<CardList cards={availableCards} />*/}
+          {/* for testing purpose */}
+          <CardList cards={availableCards.map((obj) => ({ ...obj, isAdded: false }))} />
         </>
       )}
 
