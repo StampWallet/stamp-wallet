@@ -5,10 +5,11 @@ import CustomButton from '../components/Miscellaneous/CustomButton';
 import StyleBase from '../styles/StyleBase';
 import TopBar from '../components/Bars/TopBar';
 import SearchBar from '../components/Bars/SearchBar/SearchBar';
-import cards from '../mockData/cards';
+import { cards } from '../../src/assets/mockData/Cards';
 import CardList from '../components/Cards/CardList';
 import useOnPressHandlers from '../hooks/useOnPressHandlers';
 import Scanner from '../components/Scanner';
+import { getName } from '../utils/cardGetters';
 
 export default function CardAdditionScreen({ navigation }) {
   const [cardType, setCardType] = useState<'virtual' | 'real' | null>(null);
@@ -35,7 +36,7 @@ export default function CardAdditionScreen({ navigation }) {
 
     const lowerCaseCardQuery = cardQuery.toLowerCase();
     const cardsWithSearchedName = cardList.filter((card) =>
-      card.name.toLowerCase().includes(lowerCaseCardQuery)
+      getName(card).toLowerCase().includes(lowerCaseCardQuery)
     );
     setAvailableCards(cardsWithSearchedName);
   }, [cardQuery, cardType]);
