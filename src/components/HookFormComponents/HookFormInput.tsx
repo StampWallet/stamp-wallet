@@ -38,6 +38,7 @@ const HookFormInput = ({
               onBlur={onBlur}
               placeholder={placeholder}
               secureTextEntry={secureTextEntry}
+              autoCapitalize='none'
             />
           </View>
           <ErrorField isVisible={isInvalid} error={error?.message || 'Validation error'} />

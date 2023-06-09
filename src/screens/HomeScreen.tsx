@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, SafeAreaView } from 'react-native';
 
 import CustomButton from '../components/Miscellaneous/CustomButton';
 import StyleBase from '../styles/StyleBase';
 
 export default function HomeScreen({ navigation }) {
   return (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <Text>Welcome to Stamp-Wallet!</Text>
       <CustomButton
         onPress={() => {
@@ -20,6 +20,6 @@ export default function HomeScreen({ navigation }) {
         }}
         title='Register'
       />
-    </View>
+    </SafeAreaView>
   );
 }

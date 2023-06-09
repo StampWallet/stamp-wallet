@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import { StyleSheet, Text, View, StatusBar, Pressable } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Pressable, SafeAreaView } from 'react-native';
 
 import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
 
@@ -55,7 +55,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   const { onPressBack } = useOnPressHandlers();
 
   return selectedCard.type === 'virtual' ? (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <StatusBar barStyle='default' />
       {state.screenState === 'card' && (
         <>
@@ -221,12 +221,12 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
         </>
       )}
       <TapBar navigation={navigation} />
-    </View>
+    </SafeAreaView>
   ) : (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <TopBar iconLeft={'arrow-left'} onPressLeft={() => onPressBack(navigation)} />
       <Text>This is real card info</Text>
-    </View>
+    </SafeAreaView>
   );
 }
 
