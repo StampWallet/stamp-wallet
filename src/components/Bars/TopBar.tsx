@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
     top: 0,
   },
   containerIcon: {
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: 30,
+    paddingRight: 30,
     justifyContent: 'center',
   },
 });

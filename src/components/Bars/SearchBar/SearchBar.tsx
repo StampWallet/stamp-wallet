@@ -1,20 +1,31 @@
 import React, { SetStateAction } from 'react';
-import { Platform, StyleSheet, TextInput, View } from 'react-native';
+import { Platform, StyleSheet, TextInput, View, Text } from 'react-native';
 
 interface SearchBarProps {
   onChangeText: SetStateAction<any> | (() => void);
   value: string;
   placeholder?: string;
+  deletionMode?: boolean;
 }
 
-const SearchBar = ({ onChangeText, value, placeholder = 'Search...' }: SearchBarProps) => (
+const SearchBar = ({
+  onChangeText,
+  value,
+  placeholder = 'Search...',
+  deletionMode = false,
+}: SearchBarProps) => (
   <View style={styles.container}>
-    <TextInput
-      style={styles.searchBar}
-      onChangeText={onChangeText}
-      value={value}
-      placeholder={placeholder}
-    />
+    {deletionMode ? (
+      <Text style={styles.deleteHeader}>Tap the card you want to delete.</Text>
+    ) : (
+      <TextInput
+        style={styles.searchBar}
+        onChangeText={onChangeText}
+        value={value}
+        placeholder={placeholder}
+        placeholderTextColor='black'
+      />
+    )}
   </View>
 );
 
@@ -32,9 +43,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: Platform.select({ ios: 'Arial', android: 'Roboto' }),
     fontStyle: 'italic',
-    fontWeight: 'bold',
     textAlign: 'center',
     lineHeight: 36,
+  },
+  deleteHeader: {
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 

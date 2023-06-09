@@ -11,12 +11,13 @@ interface Props {
   // todo change the type
   cards: any[];
   onLongCardPress?: () => SetStateAction<any>;
+  onPress?: () => void;
   deletionMode?: boolean;
 }
 
 // can use FLASH LIST
 
-export default function CardList({ cards, onLongCardPress, deletionMode = false }: Props) {
+export default function CardList({ cards, onLongCardPress, deletionMode = false, onPress }: Props) {
   const navigation = useNavigation();
   const { onPressCard } = useOnPressHandlers();
 
@@ -31,7 +32,7 @@ export default function CardList({ cards, onLongCardPress, deletionMode = false 
               <CardTile
                 image={getImage(item)}
                 onLongCardPress={onLongCardPress}
-                onPress={() => onPressCard(navigation, item)}
+                onPress={deletionMode ? () => onPress() : () => onPressCard(navigation, item)}
               />
               {/* TODO position correctly the icon*/}
               {/*{deletionMode && <Icon name='delete' style={styles.deleteIcon} size={25} />}*/}

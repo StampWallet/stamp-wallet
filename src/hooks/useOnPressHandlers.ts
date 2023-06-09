@@ -1,4 +1,15 @@
-import { REGISTER_ROUTE, LOGIN_ROUTE, CARD_INFO_ROUTE, CARD_ROUTE } from '../constants/paths';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+
+import {
+  REGISTER_ROUTE,
+  LOGIN_ROUTE,
+  CARD_INFO_ROUTE,
+  CARD_ROUTE,
+  HOME_ROUTE,
+  MAIN_ROUTE,
+  ADD_CARD_ROUTE,
+} from '../constants/paths';
+import MainScreen from '../screens/MainScreen';
 
 const useOnPressHandlers = () => {
   const onPressLogIn = (navigation, data) => {
@@ -22,16 +33,36 @@ const useOnPressHandlers = () => {
     navigation.pop();
   };
 
+  const onPressBackHome = (navigation) => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [{ name: MAIN_ROUTE }],
+      })
+    );
+  };
+
+  const onPressCardAddition = (navigation) => {
+    navigation.push(ADD_CARD_ROUTE);
+  };
+
   const onPressCard = (navigation, card) => {
     navigation.push(CARD_ROUTE, { Card: card });
   };
 
-  return { onPressLogIn, onPressRegister, onPressBack, onPressCard };
   const onPressCardInfo = (navigation) => {
     navigation.push(CARD_INFO_ROUTE);
   };
 
-  return { onPressLogIn, onPressRegister, onPressBack, onPressCardInfo };
+  return {
+    onPressLogIn,
+    onPressRegister,
+    onPressBack,
+    onPressCardInfo,
+    onPressCard,
+    onPressBackHome,
+    onPressCardAddition,
+  };
 };
 
 export default useOnPressHandlers;
