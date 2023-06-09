@@ -16,11 +16,15 @@ import SortOptions from '../components/Bars/SearchBar/SortOptions';
 import CustomModal from '../components/Modals/CustomModal';
 
 import { OptionKey } from '../components/Bars/SearchBar/OptionRow';
+import * as api from '../api';
 
 import filterCards from '../utils/filterCards';
 
 import colors from '../constants/colors';
 import TapBar from '../components/Bars/TapBar';
+import AuthTokenHolder from '../database/AuthTokenHolder';
+import { Configuration } from '../api';
+import { SERVER_ADDRESS } from '../constants/numericAndStringConstants';
 
 /*
 todo:
@@ -61,9 +65,19 @@ export default function MainScreen({ navigation }) {
     setIsModalOpen(true);
   };
 
+  useEffect(() => {
+    const token = AuthTokenHolder.token;
+    console.log(token);
+    const CA = new api.CardsApi(new Configuration({ apiKey: token }), SERVER_ADDRESS);
+    try {
+      const response = CA.getUserCards(AuthTokenHolder.getAuthHeader());
+    } catch (e) {
+      console.log(e.response.data);
+    }
+  }, []);
+
   return (
     <SafeAreaView style={StyleBase.container}>
-      <StatusBar barStyle='default' />
       <CustomModal
         header='Are you sure you want to delete this benefit?'
         description='Your clients will have their points returned.'

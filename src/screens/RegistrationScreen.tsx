@@ -1,9 +1,11 @@
 import React from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { CommonActions } from '@react-navigation/native';
 
 import { useForm } from 'react-hook-form';
 import useOnPressHandlers from '../hooks/useOnPressHandlers';
+import * as api from '../api';
 
 import StyleBase from '../styles/StyleBase';
 
@@ -13,6 +15,10 @@ import BoxContainer from '../components/Miscellaneous/BoxContainer';
 
 import { validateEmail, validateMatchingPasswords, required } from '../utils/validators';
 import { RegistrationFormData } from '../types';
+import { SERVER_ADDRESS } from '../constants/numericAndStringConstants';
+import { Configuration } from '../api';
+import AuthTokenHolder from '../database/AuthTokenHolder';
+import { LOGIN_ROUTE } from '../constants/paths';
 
 export default function RegistrationScreen({ navigation }) {
   const { onPressRegister } = useOnPressHandlers();
@@ -23,6 +29,31 @@ export default function RegistrationScreen({ navigation }) {
     formState: { errors },
     watch,
   } = useForm();
+
+  const handleRegistration = async (data: RegistrationFormData) => {
+    const { email, password } = data;
+    const AccountApi = new api.AccountApi(new Configuration(), SERVER_ADDRESS);
+
+    try {
+      const registerResponse = await AccountApi.createAccount({ email, password });
+      const { token } = registerResponse.data;
+      AuthTokenHolder.token = token;
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'EmailConfirmationScreen',
+              params: { email },
+            },
+          ],
+        })
+      );
+    } catch (e) {
+      console.log(e);
+      console.log(e.response.data);
+    }
+  };
 
   const password = watch('password');
   const passwordRepeated = watch('passwordRepeated');
@@ -74,7 +105,7 @@ export default function RegistrationScreen({ navigation }) {
         />
       </BoxContainer>
       <CustomButton
-        onPress={handleSubmit((data: RegistrationFormData) => onPressRegister(navigation, data))}
+        onPress={handleSubmit((data: RegistrationFormData) => handleRegistration(data))}
         title='Register'
       />
     </SafeAreaView>
