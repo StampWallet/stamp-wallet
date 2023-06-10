@@ -7,13 +7,14 @@ import {
   GestureResponderEvent,
   StyleProp,
   ViewStyle,
+  Text,
 } from 'react-native';
 
 import Tile from '../Miscellaneous/Tile';
 import colors from '../../constants/colors';
 
 interface CardTileProps {
-  image: ImageSourcePropType;
+  // image: ImageSourcePropType;
   onPress?: (event: GestureResponderEvent) => void;
   containerStyle?: StyleProp<ViewStyle>;
   tileStyle?: StyleProp<ViewStyle>;
@@ -21,7 +22,7 @@ interface CardTileProps {
 }
 
 const CardTile = ({
-  image,
+  // image,
   onPress,
   containerStyle,
   tileStyle,
@@ -29,7 +30,8 @@ const CardTile = ({
 }: CardTileProps) => (
   <Pressable onPress={onPress} style={containerStyle} onLongPress={onLongCardPress}>
     <Tile style={tileStyle}>
-      <Image style={styles.image} source={image} resizeMode='cover' />
+      {/*<Image style={styles.image} source={image} resizeMode='cover' />*/}
+      <Text style={styles.image}></Text>
     </Tile>
   </Pressable>
 );
