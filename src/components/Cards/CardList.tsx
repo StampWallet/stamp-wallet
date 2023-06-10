@@ -1,5 +1,5 @@
 import React, { SetStateAction } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 import CardTile from './CardTile';
@@ -24,25 +24,21 @@ export default function CardList({ cards, onLongCardPress, deletionMode = false,
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <View style={[StyleBase.container, { paddingTop: 10 }]}>
-      {cards.length ? (
-        <FlatList
-          data={cards}
-          renderItem={({ item }) => (
-            <View>
-              <CardTile
-                image={getImage(item)}
-                onLongCardPress={onLongCardPress}
-                onPress={deletionMode ? () => onPress() : () => onPressCard(navigation, item)}
-              />
-              {/* TODO position correctly the icon*/}
-              {/*{deletionMode && <Icon name='delete' style={styles.deleteIcon} size={25} />}*/}
-            </View>
-          )}
-          ItemSeparatorComponent={ListItemSeparator}
-        />
-      ) : (
-        <Text>No cards found</Text>
-      )}
+      <FlatList
+        data={cards}
+        renderItem={({ item }) => (
+          <View>
+            <CardTile
+              // image={getImage(item)}
+              onLongCardPress={onLongCardPress}
+              onPress={deletionMode ? () => onPress() : () => onPressCard(navigation, item)}
+            />
+            {/* TODO position correctly the icon*/}
+            {/*{deletionMode && <Icon name='delete' style={styles.deleteIcon} size={25} />}*/}
+          </View>
+        )}
+        ItemSeparatorComponent={ListItemSeparator}
+      />
     </View>
   );
 }

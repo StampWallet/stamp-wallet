@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Platform, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Props {
@@ -45,13 +45,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   topBar: {
-    height: 40, //temp
+    height: 55, //temp
     //height: '6.125%',
     width: '100%',
     backgroundColor: '#50AAEB',
     position: 'absolute',
     left: 0,
     top: 0,
+    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   containerIcon: {
     paddingLeft: 30,
