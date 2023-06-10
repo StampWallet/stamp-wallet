@@ -11,6 +11,7 @@ interface CustomButtonProps {
   customTextStyle?: StyleProp<TextStyle>;
   children?: ReactNode;
   mutableColor?: boolean;
+  disabled?: boolean;
 }
 const CustomButton = ({
   onPress,
@@ -20,6 +21,7 @@ const CustomButton = ({
   customTextStyle,
   children,
   mutableColor = true,
+  disabled = false,
 }: CustomButtonProps) => {
   const [buttonColor, setButtonColor] = useState<string>(null);
   const buttonStyle = StyleSheet.flatten([
@@ -50,6 +52,7 @@ const CustomButton = ({
         onPress();
       }}
       style={buttonStyle}
+      disabled={disabled}
     >
       {title && <Text style={textStyle}>{title}</Text>}
       {!title && children}

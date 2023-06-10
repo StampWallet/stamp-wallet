@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StatusBar, StyleSheet, SafeAreaView } from 'react-native';
+import { View, StatusBar, StyleSheet, SafeAreaView, Text } from 'react-native';
 
 import TopBar from '../components/Bars/TopBar';
 import CardList from '../components/Cards/CardList';
@@ -8,32 +8,36 @@ import CustomButton from '../components/Miscellaneous/CustomButton';
 import useOnPressHandlers from '../hooks/useOnPressHandlers';
 import { getName, getImage } from '../utils/cardGetters';
 
-import { cards } from '../assets/mockData/Cards';
-
 import StyleBase from '../styles/StyleBase';
 import SearchBar from '../components/Bars/SearchBar/SearchBar';
 import SortOptions from '../components/Bars/SearchBar/SortOptions';
 import CustomModal from '../components/Modals/CustomModal';
 
 import { OptionKey } from '../components/Bars/SearchBar/OptionRow';
+import * as api from '../api';
 
 import filterCards from '../utils/filterCards';
+import fetchLocalCards from '../utils/fetchCards';
 
 import colors from '../constants/colors';
 import TapBar from '../components/Bars/TapBar';
+
+import { cards } from '../assets/mockData/Cards';
 
 /*
 todo:
       make search maintain proper screen composition
 
 todo:
-      get cards from database entity
+      get cards from database entity - REMOVE MOCK DATA CARDS in favour of state
 */
 
 export default function MainScreen({ navigation }) {
   const [cardQuery, setCardQuery] = useState('');
   const [isFilterDropdownOpen, setFilterDropdownVisibility] = useState(false);
   const [filter, setFilter] = useState<OptionKey | null>(null);
+  // const [cards, setCards] = useState([]);
+  // const [benefits, setBenefits] = useState([]);
   const [filteredCards, setFilteredCards] = useState(cards);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deletionMode, setDeletionMode] = useState(false);
@@ -43,6 +47,9 @@ export default function MainScreen({ navigation }) {
 
   // filters cards based on search query + current filter
   useEffect(() => {
+    if (!cards) {
+      return;
+    }
     let cardList = cards;
 
     if (filter) {
@@ -55,15 +62,19 @@ export default function MainScreen({ navigation }) {
       getName(card).toLowerCase().includes(lowerCaseCardQuery)
     );
     setFilteredCards(cardsWithSearchedName);
-  }, [filter, cardQuery]);
+  }, [cards, filter, cardQuery]);
 
   const handleOnDelete = () => {
     setIsModalOpen(true);
   };
 
+  // TODO FIX GETTERS and then check if works properly
+  // useEffect(() => {
+  //   fetchCards(setCards);
+  // }, []);
+
   return (
     <SafeAreaView style={StyleBase.container}>
-      <StatusBar barStyle='default' />
       <CustomModal
         header='Are you sure you want to delete this benefit?'
         description='Your clients will have their points returned.'
@@ -106,12 +117,16 @@ export default function MainScreen({ navigation }) {
           StyleBase.listContainer,
         ]}
       >
-        <CardList
-          cards={filteredCards}
-          onLongCardPress={() => setDeletionMode(true)}
-          onPress={() => handleOnDelete()}
-          deletionMode={deletionMode}
-        />
+        {filteredCards?.length ? (
+          <CardList
+            cards={filteredCards.map((obj) => ({ ...obj, isAdded: false }))}
+            onLongCardPress={() => setDeletionMode(true)}
+            onPress={() => handleOnDelete()}
+            deletionMode={deletionMode}
+          />
+        ) : (
+          <Text>Add your first card!</Text>
+        )}
       </View>
       <TapBar
         callbackFn={() => setDeletionMode((prev) => !prev)}
