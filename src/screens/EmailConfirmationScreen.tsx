@@ -6,7 +6,6 @@ import TopBar from '../components/Bars/TopBar';
 
 export default function EmailConfirmationScreen({ navigation, route }) {
   const { email } = route.params;
-
   return (
     <SafeAreaView style={styles.container}>
       <TopBar
@@ -22,7 +21,7 @@ export default function EmailConfirmationScreen({ navigation, route }) {
         <Text style={styles.confirmationHead}>Your account has been successfully created!</Text>
         <Text style={styles.confirmationBody}>
           To start using the StampWallet, please verify your email address by clicking the link sent
-          to your email. Otherwise functionalities will not be available.
+          to your email. Otherwise, app functionalities will not be available.
         </Text>
       </BoxContainer>
       <Text style={styles.email}>{email}</Text>

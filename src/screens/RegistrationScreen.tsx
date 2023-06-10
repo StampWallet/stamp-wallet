@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { CommonActions } from '@react-navigation/native';
@@ -13,43 +13,55 @@ import CustomButton from '../components/Miscellaneous/CustomButton';
 import HookFormInput from '../components/HookFormComponents/HookFormInput';
 import BoxContainer from '../components/Miscellaneous/BoxContainer';
 
-import { validateEmail, validateMatchingPasswords, required } from '../utils/validators';
+import {
+  validateEmail,
+  validateMatchingPasswords,
+  required,
+  validatePassword,
+} from '../utils/validators';
 import { RegistrationFormData } from '../types';
 import { SERVER_ADDRESS } from '../constants/numericAndStringConstants';
 import { Configuration } from '../api';
-import AuthTokenHolder from '../database/AuthTokenHolder';
-import { LOGIN_ROUTE } from '../constants/paths';
+import Auth from '../database/Auth';
+import { REGISTER_ROUTE } from '../constants/paths';
 
 export default function RegistrationScreen({ navigation }) {
-  const { onPressRegister } = useOnPressHandlers();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
     watch,
+    trigger,
   } = useForm();
 
   const handleRegistration = async (data: RegistrationFormData) => {
+    setIsSubmitting(true);
     const { email, password } = data;
     const AccountApi = new api.AccountApi(new Configuration(), SERVER_ADDRESS);
 
     try {
       const registerResponse = await AccountApi.createAccount({ email, password });
       const { token } = registerResponse.data;
-      AuthTokenHolder.token = token;
+      Auth.token = token;
+      Auth.apiConfig = new Configuration({ apiKey: token });
+      Auth.email = email;
+      setIsSubmitting(false);
+
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
           routes: [
             {
-              name: 'EmailConfirmationScreen',
+              name: REGISTER_ROUTE,
               params: { email },
             },
           ],
         })
       );
     } catch (e) {
+      setIsSubmitting(false);
       console.log(e);
       console.log(e.response.data);
     }
@@ -57,6 +69,12 @@ export default function RegistrationScreen({ navigation }) {
 
   const password = watch('password');
   const passwordRepeated = watch('passwordRepeated');
+
+  useEffect(() => {
+    if (password && passwordRepeated) {
+      trigger('passwordRepeated');
+    }
+  }, [passwordRepeated, password, trigger]);
 
   return (
     <SafeAreaView style={StyleBase.container}>
@@ -86,7 +104,7 @@ export default function RegistrationScreen({ navigation }) {
         />
         <HookFormInput
           control={control}
-          rules={{ required }}
+          rules={{ required, pattern: validatePassword }}
           name='password'
           placeholder='password'
           isInvalid={Boolean(errors.password)}
@@ -107,6 +125,7 @@ export default function RegistrationScreen({ navigation }) {
       <CustomButton
         onPress={handleSubmit((data: RegistrationFormData) => handleRegistration(data))}
         title='Register'
+        disabled={isSubmitting}
       />
     </SafeAreaView>
   );
