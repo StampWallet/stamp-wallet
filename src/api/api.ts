@@ -106,6 +106,12 @@ export interface GetBusinessAccountResponse {
      * @type {string}
      * @memberof GetBusinessAccountResponse
      */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetBusinessAccountResponse
+     */
     'iconImageId'?: string;
     /**
      * 
@@ -290,6 +296,12 @@ export interface GetUserLocalCardTypesResponseTypesInner {
      * @memberof GetUserLocalCardTypesResponseTypesInner
      */
     'code'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetUserLocalCardTypesResponseTypesInner
+     */
+    'imageUrl'?: string;
 }
 /**
  * 
@@ -327,7 +339,7 @@ export interface GetUserVirtualCardTransactionResponse {
      * @type {string}
      * @memberof GetUserVirtualCardTransactionResponse
      */
-    'itemId'?: string;
+    'publicId'?: string;
     /**
      * 
      * @type {TransactionStateEnum}
@@ -377,6 +389,7 @@ export interface ItemActionAPIModel {
  */
 
 export const ItemActionTypeEnum = {
+    NoAction: 'NO_ACTION',
     Redeemed: 'REDEEMED',
     Recalled: 'RECALLED',
     Cancelled: 'CANCELLED'
@@ -508,6 +521,12 @@ export interface PatchBusinessAccountRequest {
      * @memberof PatchBusinessAccountRequest
      */
     'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchBusinessAccountRequest
+     */
+    'description'?: string;
 }
 /**
  * 
@@ -716,6 +735,12 @@ export interface PostBusinessAccountRequest {
      * @memberof PostBusinessAccountRequest
      */
     'gpsCoordinates'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostBusinessAccountRequest
+     */
+    'description'?: string;
     /**
      * 
      * @type {string}
@@ -983,6 +1008,12 @@ export interface PublicBusinessDetailsAPIModel {
      * @type {string}
      * @memberof PublicBusinessDetailsAPIModel
      */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PublicBusinessDetailsAPIModel
+     */
     'iconImageId'?: string;
     /**
      * 
@@ -1088,7 +1119,8 @@ export const TransactionStateEnum = {
     Started: 'STARTED',
     Processing: 'PROCESSING',
     Finished: 'FINISHED',
-    Expired: 'EXPIRED'
+    Expired: 'EXPIRED',
+    Failed: 'FAILED'
 } as const;
 
 export type TransactionStateEnum = typeof TransactionStateEnum[keyof typeof TransactionStateEnum];
@@ -3297,6 +3329,44 @@ export class TransactionsApi extends BaseAPI {
 export const UserApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * This endpoint is used to get info about a business
+         * @summary Get business info
+         * @param {string} businessId Public id of the business
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBusiness: async (businessId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'businessId' is not null or undefined
+            assertParamExists('getBusiness', 'businessId', businessId)
+            const localVarPath = `/user/businesses/{businessId}`
+                .replace(`{${"businessId"}}`, encodeURIComponent(String(businessId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionToken required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * This endpoint is used to search businesses that match the provided text query or are close to a specified point.
          * @summary Search businesses
          * @param {string} [text] Filter by business name
@@ -3356,6 +3426,17 @@ export const UserApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UserApiAxiosParamCreator(configuration)
     return {
         /**
+         * This endpoint is used to get info about a business
+         * @summary Get business info
+         * @param {string} businessId Public id of the business
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getBusiness(businessId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PublicBusinessDetailsAPIModel>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getBusiness(businessId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * This endpoint is used to search businesses that match the provided text query or are close to a specified point.
          * @summary Search businesses
          * @param {string} [text] Filter by business name
@@ -3379,6 +3460,16 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = UserApiFp(configuration)
     return {
         /**
+         * This endpoint is used to get info about a business
+         * @summary Get business info
+         * @param {string} businessId Public id of the business
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBusiness(businessId: string, options?: any): AxiosPromise<PublicBusinessDetailsAPIModel> {
+            return localVarFp.getBusiness(businessId, options).then((request) => request(axios, basePath));
+        },
+        /**
          * This endpoint is used to search businesses that match the provided text query or are close to a specified point.
          * @summary Search businesses
          * @param {string} [text] Filter by business name
@@ -3400,6 +3491,18 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
  * @extends {BaseAPI}
  */
 export class UserApi extends BaseAPI {
+    /**
+     * This endpoint is used to get info about a business
+     * @summary Get business info
+     * @param {string} businessId Public id of the business
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public getBusiness(businessId: string, options?: AxiosRequestConfig) {
+        return UserApiFp(this.configuration).getBusiness(businessId, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * This endpoint is used to search businesses that match the provided text query or are close to a specified point.
      * @summary Search businesses
@@ -3435,7 +3538,7 @@ export const VirtualCardsApiAxiosParamCreator = function (configuration?: Config
             assertParamExists('buyItem', 'businessId', businessId)
             // verify required parameter 'itemDefinitionId' is not null or undefined
             assertParamExists('buyItem', 'itemDefinitionId', itemDefinitionId)
-            const localVarPath = `/user/cards/virtual/{businessId}/items/{itemDefinitionId}`
+            const localVarPath = `/user/cards/virtual/{businessId}/itemsDefinitions/{itemDefinitionId}`
                 .replace(`{${"businessId"}}`, encodeURIComponent(String(businessId)))
                 .replace(`{${"itemDefinitionId"}}`, encodeURIComponent(String(itemDefinitionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
