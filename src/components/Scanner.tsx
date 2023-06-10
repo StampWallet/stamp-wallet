@@ -1,37 +1,112 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import StyleBase from '../styles/StyleBase';
+import CustomButton from './Miscellaneous/CustomButton';
 
 export default function Scanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [barcodeData, setBarcodeData] = useState(null);
+  const [text, setText] = useState('Not yet scanned...');
+
+  const getBarCodeScannerPermissions = async () => {
+    const { status } = await BarCodeScanner.requestPermissionsAsync();
+    setHasPermission(status === 'granted');
+  };
 
   useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
-    };
-
     getBarCodeScannerPermissions();
   }, []);
 
   const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(data);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    setScanned(true);
+    setBarcodeData({ type, data });
+    setText('Successfully scanned');
   };
 
+  if (hasPermission === null) {
+    return (
+      <View style={styles.container}>
+        <Text>Requesting for camera permission...</Text>
+      </View>
+    );
+  }
+
+  if (hasPermission === false) {
+    return (
+      <View style={styles.container}>
+        <Text style={{ margin: 10 }}>No access to camera</Text>
+        <Button title='Allow camera' onPress={() => getBarCodeScannerPermissions()} />
+      </View>
+    );
+  }
+
   return (
-    <View style={StyleBase.container}>
-      {hasPermission === null && <Text>Requesting for camera permission</Text>}
-      {hasPermission === false && <Text>No access to camera</Text>}
-      {hasPermission && (
+    <View style={styles.container}>
+      <View>
+        <Text style={styles.header}>Scan the barcode!</Text>
+      </View>
+      <View style={styles.barcodeBox}>
         <BarCodeScanner
-          style={StyleSheet.absoluteFillObject}
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={{ height: 400, width: 400 }}
         />
+      </View>
+      <Text style={styles.footer}>{text}</Text>
+      {scanned && (
+        <View style={styles.horizontalContainer}>
+          <CustomButton
+            title='Scan again?'
+            onPress={() => {
+              setText('Not yet scanned...');
+              setScanned(false);
+              setBarcodeData(null);
+            }}
+            customButtonStyle={styles.customButton}
+            type='secondary'
+          />
+          <CustomButton
+            title='Add card!'
+            onPress={() => setScanned(false)}
+            customButtonStyle={styles.customButton}
+          />
+        </View>
       )}
-      {scanned && <Button title='Tap to Scan Again' onPress={() => setScanned(undefined)} />}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  header: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  barcodeBox: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 400,
+    width: 400,
+    overflow: 'hidden',
+    borderRadius: 30,
+    backgroundColor: 'tomato',
+  },
+  footer: {
+    fontSize: 16,
+    margin: 20,
+    textAlign: 'center',
+  },
+  horizontalContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 20,
+  },
+  customButton: {
+    width: 150,
+  },
+});

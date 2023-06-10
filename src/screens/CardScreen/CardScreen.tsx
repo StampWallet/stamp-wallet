@@ -236,10 +236,10 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
       <TapBar navigation={navigation} />
     </SafeAreaView>
   ) : (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <TopBar iconLeft={'arrow-left'} onPressLeft={() => onPressBack(navigation)} />
       <Text>This is real card info</Text>
-    </View>
+    </SafeAreaView>
   );
 }
 

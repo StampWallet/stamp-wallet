@@ -17,15 +17,19 @@ export default function CardAdditionScreen({ navigation }) {
   const [availableCards, setAvailableCards] = useState(cards);
   const { onPressBack } = useOnPressHandlers();
 
-  // useEffect(() => {
-  //   if (!cardType === 'virtual') {
-  //     return;
-  //   }
-  //
-  //   const cardList = cards;
-  //
+  useEffect(() => {
+    if (!cardType) {
+      return;
+    }
 
-  // }, [cardQuery]);
+    // cards should come from endpoint - then set it to specific type (or maybe there is a better way to handle it???
+    // if (cardType === 'virtual') {
+    //   setAvailableCards(cards.virtualCards);
+    //   return;
+    // }
+    //
+    // setAvailableCards(cards.realCards);
+  }, [cardQuery, cardType]);
 
   useEffect(() => {
     if (!cardType) {
@@ -48,7 +52,9 @@ export default function CardAdditionScreen({ navigation }) {
       {cardType === 'virtual' && (
         <>
           <SearchBar onChangeText={setCardQuery} value={cardQuery} />
-          <CardList cards={availableCards} />
+          {/*<CardList cards={availableCards} />*/}
+          {/* for testing purpose */}
+          <CardList cards={availableCards.map((obj) => ({ ...obj, isAdded: false }))} />
         </>
       )}
 

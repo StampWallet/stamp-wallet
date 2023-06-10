@@ -68,6 +68,7 @@ export default function OptionRow({
             styles.customButtonStyle,
             matchesSelectedFilter(filter, leftOption) && styles.chosenOption,
           ]}
+          mutableColor={false}
         >
           {icon ? (
             <Icon
@@ -99,6 +100,7 @@ export default function OptionRow({
 
             matchesSelectedFilter(filter, rightOption) && styles.chosenOption,
           ]}
+          mutableColor={false}
         >
           {icon ? (
             <Icon
