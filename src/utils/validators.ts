@@ -1,6 +1,8 @@
 const EMAIL_REGEX =
   /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
 export const PHONE_REGEX = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
 
 export const PASSWORD_MINLENGTH = 8;
@@ -28,6 +30,12 @@ export const validateEmail = {
 export const validatePhoneNumber = {
   value: PHONE_REGEX,
   message: 'Invalid phone number.',
+};
+
+export const validatePassword = {
+  value: PASSWORD_REGEX,
+  message:
+    'Password is too weak. Your password needs at least 1 capital, 1 small and 1 number. It should be 8 characters long.',
 };
 
 export const validateMatchingPasswords = (
