@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { useForm } from 'react-hook-form';
@@ -28,7 +28,7 @@ export default function RegistrationScreen({ navigation }) {
   const passwordRepeated = watch('passwordRepeated');
 
   return (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <Icon
         name='arrow-left'
         size={30}
@@ -77,6 +77,6 @@ export default function RegistrationScreen({ navigation }) {
         onPress={handleSubmit((data: RegistrationFormData) => onPressRegister(navigation, data))}
         title='Register'
       />
-    </View>
+    </SafeAreaView>
   );
 }

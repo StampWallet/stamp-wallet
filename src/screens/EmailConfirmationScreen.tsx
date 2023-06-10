@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import CustomButton from '../components/Miscellaneous/CustomButton';
 import BoxContainer from '../components/Miscellaneous/BoxContainer';
 
@@ -9,7 +9,7 @@ export default function EmailConfirmationScreen({ navigation, route }) {
   const { email } = route.params;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <CustomButton
         onPress={() =>
           navigation.reset({
@@ -30,7 +30,7 @@ export default function EmailConfirmationScreen({ navigation, route }) {
         <CustomButton onPress={() => navigation.replace('HomeScreen')} title='Log out' />
         <CustomButton onPress={() => setIsChangingEmail(true)} title='Change email' />
       </BoxContainer>
-    </View>
+    </SafeAreaView>
   );
 }
 

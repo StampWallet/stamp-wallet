@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import { useForm, FormProvider } from 'react-hook-form';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -53,7 +53,7 @@ export default function MyBusinessScreen({ navigation }) {
     navigation.push('MainScreen');
   };
   return (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <Text style={styles.stepCounter}>{`Step ${step}/3`}</Text>
       {step > 1 && (
         <Icon
@@ -70,7 +70,7 @@ export default function MyBusinessScreen({ navigation }) {
         {step === 3 && <BusinessImagesForm />}
         <CustomButton onPress={handleSubmit(onPressStepForm)} title={getTitle(step)} />
       </FormProvider>
-    </View>
+    </SafeAreaView>
   );
 }
 

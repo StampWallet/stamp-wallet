@@ -1,15 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, SafeAreaView } from 'react-native';
 
 import TopBar from '../components/Bars/TopBar';
 
 export default function MapScreen({ navigation }) {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TopBar iconLeft='arrow-left' onPressLeft={() => navigation.pop()} />
       <Text>This is map view</Text>
       <StatusBar barStyle='default' />
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StatusBar, StyleSheet } from 'react-native';
+import { View, StatusBar, StyleSheet, SafeAreaView } from 'react-native';
 
 import TopBar from '../components/Bars/TopBar';
 import CardList from '../components/Cards/CardList';
@@ -19,8 +19,8 @@ import { OptionKey } from '../components/Bars/SearchBar/OptionRow';
 
 import filterCards from '../utils/filterCards';
 
-//<import cards from '../mockData/cards';
 import colors from '../constants/colors';
+import TapBar from '../components/Bars/TapBar';
 
 /*
 todo:
@@ -35,7 +35,7 @@ export default function MainScreen({ navigation }) {
   const [isFilterDropdownOpen, setFilterDropdownVisibility] = useState(false);
   const [filter, setFilter] = useState<OptionKey | null>(null);
   const [filteredCards, setFilteredCards] = useState(cards);
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [deletionMode, setDeletionMode] = useState(false);
   const [mainScreenMode, setMainScreenMode] = useState<'customer' | 'business'>('customer');
 
@@ -58,11 +58,11 @@ export default function MainScreen({ navigation }) {
   }, [filter, cardQuery]);
 
   const handleOnDelete = () => {
-    console.log('delete');
+    setIsModalOpen(true);
   };
 
   return (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <StatusBar barStyle='default' />
       <CustomModal
         header='Are you sure you want to delete this benefit?'
@@ -91,7 +91,7 @@ export default function MainScreen({ navigation }) {
         iconRight='filter-menu-outline'
         onPressRight={() => setFilterDropdownVisibility((prevState) => !prevState)}
       />
-      <SearchBar onChangeText={setCardQuery} value={cardQuery} />
+      <SearchBar onChangeText={setCardQuery} value={cardQuery} deletionMode={deletionMode} />
       {isFilterDropdownOpen && (
         <SortOptions
           setFilter={setFilter}
@@ -109,26 +109,16 @@ export default function MainScreen({ navigation }) {
         <CardList
           cards={filteredCards}
           onLongCardPress={() => setDeletionMode(true)}
+          onPress={() => handleOnDelete()}
           deletionMode={deletionMode}
         />
-        {/* TODO: swap this button with tap bars addition option*/}
-        <CustomButton
-          onPress={() => navigation.push('CardAdditionScreen')}
-          title='To card addition'
-        />
-        <CustomButton
-          onPress={() =>
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'HomeScreen' }],
-            })
-          }
-          title='Back to home'
-        />
-        {deletionMode && <CustomButton onPress={() => setDeletionMode(false)} title='Cancel' />}
       </View>
+      <TapBar
+        callbackFn={() => setDeletionMode((prev) => !prev)}
+        tapBarState={deletionMode ? 'deletion' : 'default'}
+      />
       <StatusBar barStyle='default' />
-    </View>
+    </SafeAreaView>
   );
 }
 

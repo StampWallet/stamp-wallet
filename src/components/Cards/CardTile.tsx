@@ -29,7 +29,7 @@ const CardTile = ({
 }: CardTileProps) => (
   <Pressable onPress={onPress} style={containerStyle} onLongPress={onLongCardPress}>
     <Tile style={tileStyle}>
-      <Image style={styles.image} source={image} resizeMode='contain' />
+      <Image style={styles.image} source={image} resizeMode='cover' />
     </Tile>
   </Pressable>
 );

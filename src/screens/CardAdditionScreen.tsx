@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
 import CustomButton from '../components/Miscellaneous/CustomButton';
 
 import StyleBase from '../styles/StyleBase';
 import TopBar from '../components/Bars/TopBar';
 import SearchBar from '../components/Bars/SearchBar/SearchBar';
-import cards from '../mockData/cards';
+import { cards } from '../../src/assets/mockData/Cards';
 import CardList from '../components/Cards/CardList';
 import useOnPressHandlers from '../hooks/useOnPressHandlers';
 import Scanner from '../components/Scanner';
+import { getName } from '../utils/cardGetters';
 
 export default function CardAdditionScreen({ navigation }) {
   const [cardType, setCardType] = useState<'virtual' | 'real' | null>(null);
@@ -16,15 +17,19 @@ export default function CardAdditionScreen({ navigation }) {
   const [availableCards, setAvailableCards] = useState(cards);
   const { onPressBack } = useOnPressHandlers();
 
-  // useEffect(() => {
-  //   if (!cardType === 'virtual') {
-  //     return;
-  //   }
-  //
-  //   const cardList = cards;
-  //
+  useEffect(() => {
+    if (!cardType) {
+      return;
+    }
 
-  // }, [cardQuery]);
+    // cards should come from endpoint - then set it to specific type (or maybe there is a better way to handle it???
+    // if (cardType === 'virtual') {
+    //   setAvailableCards(cards.virtualCards);
+    //   return;
+    // }
+    //
+    // setAvailableCards(cards.realCards);
+  }, [cardQuery, cardType]);
 
   useEffect(() => {
     if (!cardType) {
@@ -35,19 +40,21 @@ export default function CardAdditionScreen({ navigation }) {
 
     const lowerCaseCardQuery = cardQuery.toLowerCase();
     const cardsWithSearchedName = cardList.filter((card) =>
-      card.name.toLowerCase().includes(lowerCaseCardQuery)
+      getName(card).toLowerCase().includes(lowerCaseCardQuery)
     );
     setAvailableCards(cardsWithSearchedName);
   }, [cardQuery, cardType]);
 
   return (
-    <View style={StyleBase.container}>
+    <SafeAreaView style={StyleBase.container}>
       <StatusBar barStyle='default' />
       <TopBar iconLeft='arrow-left' onPressLeft={() => onPressBack(navigation)} />
       {cardType === 'virtual' && (
         <>
           <SearchBar onChangeText={setCardQuery} value={cardQuery} />
-          <CardList cards={availableCards} />
+          {/*<CardList cards={availableCards} />*/}
+          {/* for testing purpose */}
+          <CardList cards={availableCards.map((obj) => ({ ...obj, isAdded: false }))} />
         </>
       )}
 
@@ -60,7 +67,7 @@ export default function CardAdditionScreen({ navigation }) {
           <CustomButton onPress={() => setCardType('real')} title='real card' />
         </>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 
