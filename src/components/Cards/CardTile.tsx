@@ -32,7 +32,7 @@ const CardTile = ({
   <Pressable onPress={onPress} style={containerStyle} onLongPress={onLongCardPress}>
     <Tile style={tileStyle}>
       <Image
-        style={[styles.image, deletionMode && { width: '80%', borderColor: colors.swRed }]}
+        style={[styles.image, deletionMode && { width: '80%'}]}
         source={{ uri: imageUrl }}
         resizeMode='cover'
       />
