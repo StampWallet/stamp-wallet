@@ -1,13 +1,5 @@
-import React, { useState } from 'react';
-import {
-  Text,
-  FlatList,
-  StyleSheet,
-  View,
-  GestureResponderEvent,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
+import React from 'react';
+import { Text, FlatList, StyleSheet, View, StyleProp, ViewStyle } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { ACTIONS } from '../../screens/CardScreen/util/reducer';
@@ -19,47 +11,31 @@ import colors from '../../constants/colors';
 import BenefitTile from './BenefitTile';
 import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 
-//upo
-function getPayload(dispatchType, item) {
-  switch (dispatchType) {
-    case ACTIONS.SET_BENEFIT_SCREEN: {
-      return { screenState: 'benefit', benefit: item };
-    }
-  }
-}
-
 interface BenefitListProps {
-  benefits: (Benefit | InventoryElem)[];
-  //onPress?: (event: GestureResponderEvent) => void;
+  benefits: (Benefit | InventoryElem | any)[]; //temp
   customListStyle?: StyleProp<ViewStyle>;
   customBenefitTileStyle?: StyleProp<ViewStyle>;
-  dispatch?: any;
-  dispatchType?: string;
+  dispatch?: React.Dispatch<any>;
   mode: 'addToInventory' | 'addToRealization' | 'preview';
 }
 
-//giga upo
-//todo: move setAmount to reducer hook
 const BenefitList = ({
   benefits,
-  //onPress,
   customListStyle,
   customBenefitTileStyle,
   dispatch,
-  dispatchType,
   mode,
 }: BenefitListProps) => {
   const listStyle = StyleSheet.flatten([styles.container, customListStyle]);
 
-  const containerRight =
-    mode === 'addToRealization' ? [styles.containerRight, {}] : styles.containerRight;
-  //doesnt work properly, sets amount for all benefits in flatlist
-  const [amount, setAmount] = useState(0);
-  const benefitStyle = [
-    StyleSheet.flatten([styles.benefit, customBenefitTileStyle]),
-    mode === 'addToRealization' && amount === 0 && { backgroundColor: colors.swPaleGreen },
-  ];
-  const isPressable = mode === 'addToInventory';
+  function getBenefitStyle(item) {
+    const benefitStyle = StyleSheet.flatten([styles.benefit, customBenefitTileStyle]);
+    if (mode === 'addToRealization' && item.amountToRealize === 0)
+      return [benefitStyle, { backgroundColor: colors.swPaleGreen }];
+    return benefitStyle;
+  }
+
+  const isAddingToInventory = mode === 'addToInventory';
 
   return (
     <View style={listStyle}>
@@ -70,15 +46,18 @@ const BenefitList = ({
           <BenefitTile
             name={item.name}
             onPress={
-              isPressable
-                ? () => dispatch({ type: dispatchType, payload: getPayload(dispatchType, item) })
+              isAddingToInventory
+                ? () =>
+                    dispatch({
+                      type: ACTIONS.SET_BENEFIT_SCREEN,
+                      payload: { screenState: 'benefit', benefit: item },
+                    })
                 : () => {}
             }
-            tileStyle={benefitStyle}
+            tileStyle={getBenefitStyle(item)}
           >
-            {/* error on item.price if {mode === 'addtoInventory' &&}   */}
             {'price' in item && (
-              <View style={containerRight}>
+              <View style={styles.containerRight}>
                 <View style={styles.containerInRow}>
                   <Text style={styles.text}>{item.price}</Text>
                   <Icon name='menu-right' size={35} />
@@ -86,23 +65,23 @@ const BenefitList = ({
               </View>
             )}
             {'amount' in item && (
-              <View style={[containerRight, { width: '30%' }]}>
+              <View style={[styles.containerRight, { width: '30%' }]}>
                 <View style={styles.containerInRow}>
                   <Icon
                     name='minus-circle-outline'
                     size={25}
                     onPress={() => {
-                      if (amount > 0) setAmount((prev) => prev - 1);
+                      dispatch({ type: ACTIONS.REALIZATION_SUB, payload: item });
                     }}
                   />
                   <Text style={{ fontSize: 25, padding: 10 }}>
-                    {amount} / {item.amount}
+                    {item.amountToRealize} / {item.amount}
                   </Text>
                   <Icon
                     name='plus-circle-outline'
                     size={25}
                     onPress={() => {
-                      if (item.amount > amount) setAmount((prev) => prev + 1);
+                      dispatch({ type: ACTIONS.REALIZATION_INCREMENT, payload: item });
                     }}
                     style={{ paddingRight: 25 }}
                   />
