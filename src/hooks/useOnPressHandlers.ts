@@ -30,6 +30,7 @@ const useOnPressHandlers = () => {
   };
 
   const onPressBack = (navigation) => {
+    console.log('aaa');
     navigation.pop();
   };
 

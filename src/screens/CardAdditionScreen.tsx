@@ -5,59 +5,29 @@ import CustomButton from '../components/Miscellaneous/CustomButton';
 import StyleBase from '../styles/StyleBase';
 import TopBar from '../components/Bars/TopBar';
 import SearchBar from '../components/Bars/SearchBar/SearchBar';
-// import { cards } from '../assets/mockData/Cards';
 import CardList from '../components/Cards/CardList';
 import useOnPressHandlers from '../hooks/useOnPressHandlers';
-import Scanner from '../components/Scanner';
-import { getName } from '../utils/cardGetters';
 
 import * as api from '../api';
-import { fetchLocalCards, fetchVirtualCards } from '../utils/fetchCards';
+import { fetchNonAddedCards, fetchVirtualCards } from '../utils/fetchCards';
+import CenteredLoader from '../components/CenteredLoader';
 
 type AdditionScreenMode = 'search' | 'scan' | 'virtual' | 'real' | null;
 
 export default function CardAdditionScreen({ navigation }) {
-  const [screenMode, setScreenMode] = useState<AdditionScreenMode>(null);
+  const [screenMode, setScreenMode] = useState<AdditionScreenMode>('search');
   const [cardQuery, setCardQuery] = useState('');
-  const [availableCards, setAvailableCards] = useState([]);
+  const [availableCards, setAvailableCards] = useState(null);
+  const [filteredCards, setFilteredCards] = useState(availableCards);
   const { onPressBack } = useOnPressHandlers();
 
-  // useEffect(() => {
-  //   if (!cardType) {
-  //     return;
-  //   }
-  //
-  //   // cards should come from endpoint - then set it to specific type (or maybe there is a better way to handle it???
-  //   // if (cardType === 'virtual') {
-  //   //   setAvailableCards(cards.virtualCards);
-  //   //   return;
-  //   // }
-  //   //
-  //   // setAvailableCards(cards.realCards);
-  // }, [cardQuery, cardType]);
-
-  // useEffect(() => {
-  //   if (!cardType) {
-  //     return;
-  //   }
-  //
-  //   const cardList = cards;
-  //
-  //   const lowerCaseCardQuery = cardQuery.toLowerCase();
-  //   const cardsWithSearchedName = cardList.filter((card) =>
-  //     getName(card).toLowerCase().includes(lowerCaseCardQuery)
-  //   );
-  //   setAvailableCards(cardsWithSearchedName);
-  // }, [cardQuery, cardType]);
-
   useEffect(() => {
-    // console.log(availableCards);
     if (!screenMode) {
       return;
     }
 
     if (screenMode === 'real') {
-      fetchLocalCards(setAvailableCards);
+      fetchNonAddedCards(setAvailableCards);
     }
 
     if (screenMode === 'virtual') {
@@ -65,15 +35,31 @@ export default function CardAdditionScreen({ navigation }) {
     }
   }, [screenMode, cardQuery, setAvailableCards]);
 
+  // filters cards based on search query + current filter
+  useEffect(() => {
+    if (!availableCards) {
+      return;
+    }
+
+    const lowerCaseCardQuery = cardQuery.toLowerCase();
+    const cardsWithSearchedName = availableCards.filter((card) => {
+      const cardName = card.name ? card.name : card.businessDetails.name;
+      return cardName.toLowerCase().includes(lowerCaseCardQuery);
+    });
+    setFilteredCards(cardsWithSearchedName);
+  }, [availableCards, cardQuery]);
+
   return (
     <SafeAreaView style={StyleBase.container}>
       <StatusBar barStyle='default' />
       <TopBar
         iconLeft='arrow-left'
-        onPressLeft={!screenMode ? () => onPressBack(navigation) : () => setScreenMode(null)}
+        onPressLeft={
+          screenMode === 'search' ? () => onPressBack(navigation) : () => setScreenMode('search')
+        }
       />
 
-      {!screenMode && (
+      {screenMode === 'search' && (
         <>
           <Text style={styles.text}>Choose card type</Text>
           <CustomButton onPress={() => setScreenMode('virtual')} title='virtual card' />
@@ -84,23 +70,19 @@ export default function CardAdditionScreen({ navigation }) {
       {(screenMode === 'virtual' || screenMode === 'real') && (
         <>
           <SearchBar onChangeText={setCardQuery} value={cardQuery} />
-          {/*<CardList cards={availableCards} />*/}
-          {/* for testing purpose */}
-          {availableCards?.length ? (
+          {filteredCards === null && <CenteredLoader animation='loader' />}
+          {filteredCards?.length && (
             <CardList
-              cards={availableCards.map((obj) => ({
+              cards={filteredCards.map((obj) => ({
                 ...obj,
                 isAdded: false,
                 type: screenMode === 'virtual' ? 'virtual' : 'local',
               }))}
             />
-          ) : (
-            <Text>No cards found</Text>
           )}
+          {filteredCards !== null && !filteredCards.length && <Text>No cards found</Text>}
         </>
       )}
-
-      {/*{cardType === 'real' && <Scanner />}*/}
     </SafeAreaView>
   );
 }

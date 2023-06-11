@@ -3,7 +3,12 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import CustomButton from './Miscellaneous/CustomButton';
 
-export default function Scanner() {
+interface Props {
+  onPressAdd: (data) => void;
+  disabled: boolean;
+}
+
+export default function Scanner({ onPressAdd, disabled }: Props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [barcodeData, setBarcodeData] = useState(null);
@@ -64,11 +69,13 @@ export default function Scanner() {
             }}
             customButtonStyle={styles.customButton}
             type='secondary'
+            disabled={disabled}
           />
           <CustomButton
             title='Add card!'
-            onPress={() => setScanned(false)}
+            onPress={() => onPressAdd(barcodeData)}
             customButtonStyle={styles.customButton}
+            disabled={disabled}
           />
         </View>
       )}

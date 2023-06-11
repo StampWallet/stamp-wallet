@@ -20,6 +20,8 @@ import { LoginFormData } from '../types';
 import { SERVER_ADDRESS } from '../constants/numericAndStringConstants';
 import { Configuration } from '../api';
 import { LOGIN_ROUTE } from '../constants/paths';
+import Loader from '../components/Loader';
+import CenteredLoader from '../components/CenteredLoader';
 
 const mockFormData = {
   email: 'k-bania@tlen.pl',
@@ -68,40 +70,46 @@ export default function LogInScreen({ navigation }) {
 
   return (
     <SafeAreaView style={StyleBase.container}>
-      <Icon
-        name='arrow-left'
-        size={30}
-        style={StyleBase.backArrow}
-        onPress={() => onPressBack(navigation)}
-      />
-      <BoxContainer>
-        <HookFormInput
-          control={control}
-          rules={{
-            required,
-            pattern: validateEmail,
-          }}
-          name='email'
-          placeholder='email'
-          isInvalid={Boolean(errors.email)}
-        />
-        <HookFormInput
-          control={control}
-          rules={{
-            required,
-          }}
-          name='password'
-          placeholder='password'
-          secureTextEntry
-          isInvalid={Boolean(errors.password)}
-        />
-        <Text style={styles.forgotPassword}>can&apos;t log in?</Text>
-      </BoxContainer>
-      <CustomButton
-        onPress={handleSubmit((data: LoginFormData) => handleLogIn(data))}
-        title='Log in'
-        disabled={isSubmitting}
-      />
+      {isSubmitting ? (
+        <CenteredLoader animation='loader' />
+      ) : (
+        <>
+          <Icon
+            name='arrow-left'
+            size={30}
+            style={StyleBase.backArrow}
+            onPress={() => onPressBack(navigation)}
+          />
+          <BoxContainer>
+            <HookFormInput
+              control={control}
+              rules={{
+                required,
+                pattern: validateEmail,
+              }}
+              name='email'
+              placeholder='email'
+              isInvalid={Boolean(errors.email)}
+            />
+            <HookFormInput
+              control={control}
+              rules={{
+                required,
+              }}
+              name='password'
+              placeholder='password'
+              secureTextEntry
+              isInvalid={Boolean(errors.password)}
+            />
+            <Text style={styles.forgotPassword}>can&apos;t log in?</Text>
+          </BoxContainer>
+          <CustomButton
+            onPress={handleSubmit((data: LoginFormData) => handleLogIn(data))}
+            title='Log in'
+            disabled={isSubmitting}
+          />
+        </>
+      )}
     </SafeAreaView>
   );
 }

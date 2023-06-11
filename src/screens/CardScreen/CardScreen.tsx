@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { StyleSheet, Text, View, StatusBar, Pressable, SafeAreaView } from 'react-native';
-
+import { CommonActions } from '@react-navigation/native';
 import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
 
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
@@ -21,8 +21,9 @@ import BoxContainer from '../../components/Miscellaneous/BoxContainer';
 
 import * as api from '../../api';
 import Auth from '../../database/Auth';
-import { CommonActions } from '@react-navigation/native';
+
 import { MAIN_ROUTE } from '../../constants/paths';
+import Scanner from '../../components/Scanner';
 
 //chaos
 
@@ -55,7 +56,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   });
   const { onPressBack } = useOnPressHandlers();
 
-  const handleAddCard = async () => {
+  const handleAddCard = async (cardData) => {
     dispatch({ type: ACTIONS.SET_SUBMITTING, payload: !state.isSubmitting });
     let response = null;
     const header = Auth.getAuthHeader();
@@ -72,21 +73,15 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
     if (selectedCard.type === 'local') {
       const LCA = new api.LocalCardsApi();
 
-      // TODO GET DATA FROM SCANNER
-      const code = '12345678';
-
       try {
-        console.log('data', selectedCard.name, selectedCard.publicId);
         response = await LCA.createLocalCard(
-          { name: selectedCard.name, type: selectedCard.publicId, code },
+          { name: selectedCard.name, type: selectedCard.publicId, code: cardData.data },
           header
         );
       } catch (e) {
         response = e.response.code;
       }
     }
-
-    console.log(response);
 
     dispatch({ type: ACTIONS.SET_SUBMITTING, payload: !state.isSubmitting });
     navigation.dispatch(
@@ -271,7 +266,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
       {!selectedCard.isAdded && (
         <CustomButton
           title='add card'
-          onPress={() => handleAddCard()}
+          onPress={() => handleAddCard(null)}
           disabled={state.isSubmitting}
         />
       )}
@@ -280,13 +275,8 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   ) : (
     <SafeAreaView style={StyleBase.container}>
       <TopBar iconLeft='arrow-left' onPressLeft={() => onPressBack(navigation)} />
-      <Text>This is real card info</Text>
       {!selectedCard.isAdded && (
-        <CustomButton
-          title='add card'
-          onPress={() => handleAddCard()}
-          disabled={state.isSubmitting}
-        />
+        <Scanner onPressAdd={(cardData) => handleAddCard(cardData)} disabled={state.isSubmitting} />
       )}
     </SafeAreaView>
   );

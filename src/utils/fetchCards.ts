@@ -65,3 +65,27 @@ export const fetchUserCards = async (callbackFn: React.Dispatch<React.SetStateAc
     return callbackFn([]);
   }
 };
+
+export const fetchNonAddedCards = async (
+  callbackFn: React.Dispatch<React.SetStateAction<any[]>>
+) => {
+  const CA = new api.CardsApi();
+  const LCA = new api.LocalCardsApi();
+  const header = Auth.getAuthHeader();
+  try {
+    const userCardsResponse = await CA.getUserCards(header);
+    const localCardsTypesResponse = await LCA.getLocalCardTypes(header);
+    if (!Object.keys(userCardsResponse.data).length) {
+      return callbackFn([...localCardsTypesResponse.data.types]);
+    }
+
+    const userLocalCards = userCardsResponse.data?.localCards || [];
+    const allLocalCards = localCardsTypesResponse?.data?.types || [];
+    const nonUserLocalCards = allLocalCards.filter((card) =>
+      userLocalCards.every((userCard) => userCard.type !== card.publicId)
+    );
+    return callbackFn([...nonUserLocalCards]);
+  } catch (e) {
+    return callbackFn([]);
+  }
+};

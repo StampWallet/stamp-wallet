@@ -21,6 +21,8 @@ import { fetchUserCards } from '../utils/fetchCards';
 import colors from '../constants/colors';
 import TapBar from '../components/Bars/TapBar';
 import Auth from '../database/Auth';
+import Loader from '../components/Loader';
+import CenteredLoader from '../components/CenteredLoader';
 
 /*
 todo:
@@ -34,7 +36,7 @@ export default function MainScreen({ navigation }) {
   const [cardQuery, setCardQuery] = useState('');
   const [isFilterDropdownOpen, setFilterDropdownVisibility] = useState(false);
   const [filter, setFilter] = useState<OptionKey | null>(null);
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState(null);
   // const [benefits, setBenefits] = useState([]);
   const [filteredCards, setFilteredCards] = useState(cards);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -176,6 +178,7 @@ export default function MainScreen({ navigation }) {
         iconRight='filter-menu-outline'
         onPressRight={() => setFilterDropdownVisibility((prevState) => !prevState)}
       />
+
       <SearchBar onChangeText={setCardQuery} value={cardQuery} deletionMode={deletionMode} />
       {isFilterDropdownOpen && (
         <SortOptions
@@ -184,6 +187,7 @@ export default function MainScreen({ navigation }) {
           setFilterDropdownVisibility={setFilterDropdownVisibility}
         />
       )}
+
       <View
         style={[
           StyleBase.container,
@@ -191,16 +195,16 @@ export default function MainScreen({ navigation }) {
           StyleBase.listContainer,
         ]}
       >
-        {filteredCards?.length ? (
+        {filteredCards === null && <Loader animation='loader' />}
+        {filteredCards?.length && (
           <CardList
-            cards={filteredCards.map((obj) => ({ ...obj, isAdded: false }))}
+            cards={filteredCards.map((obj) => ({ ...obj, isAdded: true }))}
             onLongCardPress={() => setDeletionMode(true)}
             onPress={(card) => handleOnDelete(card)}
             deletionMode={deletionMode}
           />
-        ) : (
-          <Text>Add your first card!</Text>
         )}
+        {filteredCards !== null && !filteredCards.length && <Text>Add your first card!</Text>}
       </View>
       <TapBar
         callbackFn={() => setDeletionMode((prev) => !prev)}
