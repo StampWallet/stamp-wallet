@@ -51,6 +51,7 @@ export default function CardAdditionScreen({ navigation }) {
   // }, [cardQuery, cardType]);
 
   useEffect(() => {
+    // console.log(availableCards);
     if (!screenMode) {
       return;
     }
@@ -86,7 +87,13 @@ export default function CardAdditionScreen({ navigation }) {
           {/*<CardList cards={availableCards} />*/}
           {/* for testing purpose */}
           {availableCards?.length ? (
-            <CardList cards={availableCards.map((obj) => ({ ...obj, isAdded: false }))} />
+            <CardList
+              cards={availableCards.map((obj) => ({
+                ...obj,
+                isAdded: false,
+                type: screenMode === 'virtual' ? 'virtual' : 'local',
+              }))}
+            />
           ) : (
             <Text>No cards found</Text>
           )}

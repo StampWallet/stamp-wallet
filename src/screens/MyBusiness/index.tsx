@@ -48,8 +48,6 @@ export default function MyBusinessScreen({ navigation }) {
       setCurrentStep((prev) => prev + 1);
       return;
     }
-
-    console.log(businessRegistrationFormValues);
     navigation.push('MainScreen');
   };
   return (

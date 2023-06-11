@@ -92,7 +92,7 @@ const BenefitList = ({
                     name='minus-circle-outline'
                     size={25}
                     onPress={() => {
-                      if (amount > 0) setAmount((prev) => --prev);
+                      if (amount > 0) setAmount((prev) => prev - 1);
                     }}
                   />
                   <Text style={{ fontSize: 25, padding: 10 }}>
@@ -102,7 +102,7 @@ const BenefitList = ({
                     name='plus-circle-outline'
                     size={25}
                     onPress={() => {
-                      if (item.amount > amount) setAmount((prev) => ++prev);
+                      if (item.amount > amount) setAmount((prev) => prev + 1);
                     }}
                     style={{ paddingRight: 25 }}
                   />

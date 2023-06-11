@@ -23,6 +23,7 @@ export const ACTIONS = {
   REALIZATION_SUB: 'substractAmountOfBenefit',
   //REALIZATION_ADD: 'addBenefitToRealization',
   //REALIZATION_REMOVE: 'removeBenefitFromRealization',
+  SET_SUBMITTING: 'setSubmit',
 };
 
 //todo: map arrays
@@ -113,7 +114,7 @@ export function reducer(state, action) {
       const [benefitsToAdd, balance] = addToTransaction(state);
       return {
         ...state,
-        benefitsToAdd: benefitsToAdd,
+        benefitsToAdd,
         balanceAfterTransaction: balance,
       };
     }
@@ -121,7 +122,7 @@ export function reducer(state, action) {
       const inventory = completeTransaction(state, action.payload);
       return {
         ...state,
-        inventory: inventory,
+        inventory,
         balance: state.balanceAfterTransaction,
         benefitsToAdd: [],
       };
@@ -157,15 +158,26 @@ export function reducer(state, action) {
       const benefitsToRealize = addToRealization(state, action.payload);
       return {
         ...state,
-        benefitsToRealize: benefitsToRealize,
+        benefitsToRealize,
       };
     }
     case ACTIONS.REALIZATION_SUB: {
       const benefitsToRealize = rmFromRealization(state, action.payload);
       return {
         ...state,
-        benefitsToRealize: benefitsToRealize,
+        benefitsToRealize,
       };
+    }
+
+    case ACTIONS.SET_SUBMITTING: {
+      return {
+        ...state,
+        isSubmitting: action.payload,
+      };
+    }
+
+    default: {
+      return state;
     }
   }
 }

@@ -5,36 +5,40 @@ import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 import CardTile from './CardTile';
 import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 import StyleBase from '../../styles/StyleBase';
-import { getImage } from '../../utils/cardGetters';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 interface Props {
   // todo change the type
   cards: any[];
   onLongCardPress?: () => SetStateAction<any>;
-  onPress?: () => void;
+  onPress?: (card) => void;
   deletionMode?: boolean;
 }
-
-// can use FLASH LIST
 
 export default function CardList({ cards, onLongCardPress, deletionMode = false, onPress }: Props) {
   const navigation = useNavigation();
   const { onPressCard } = useOnPressHandlers();
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <View style={[StyleBase.container, { paddingTop: 10 }]}>
       <FlatList
         data={cards}
         renderItem={({ item }) => (
           <View>
             <CardTile
-              // image={getImage(item)}
+              imageUrl={item?.imageUrl ? item.imageUrl : item.businessDetails.bannerImageId}
               onLongCardPress={onLongCardPress}
-              onPress={deletionMode ? () => onPress() : () => onPressCard(navigation, item)}
+              onPress={deletionMode ? () => onPress(item) : () => onPressCard(navigation, item)}
+              deletionMode={deletionMode}
             />
-            {/* TODO position correctly the icon*/}
-            {/*{deletionMode && <Icon name='delete' style={styles.deleteIcon} size={25} />}*/}
+            {deletionMode && (
+              <Icon
+                name='delete'
+                style={styles.deleteIcon}
+                size={40}
+                onPress={() => onPress(item)}
+              />
+            )}
           </View>
         )}
         ItemSeparatorComponent={ListItemSeparator}
@@ -46,8 +50,8 @@ export default function CardList({ cards, onLongCardPress, deletionMode = false,
 const styles = StyleSheet.create({
   deleteIcon: {
     position: 'absolute',
-    top: 25,
-    right: -10,
+    top: 20,
+    right: 10,
     color: 'red',
   },
 });

@@ -5,7 +5,7 @@ import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
 
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 
-import { getName, getImage } from '../../utils/cardGetters';
+import { getName } from '../../utils/cardGetters';
 
 import StyleBase from '../../styles/StyleBase';
 
@@ -18,6 +18,11 @@ import Tile from '../../components/Miscellaneous/Tile';
 import BenefitList from '../../components/Benefits/BenefitList';
 import CustomButton from '../../components/Miscellaneous/CustomButton';
 import BoxContainer from '../../components/Miscellaneous/BoxContainer';
+
+import * as api from '../../api';
+import Auth from '../../database/Auth';
+import { CommonActions } from '@react-navigation/native';
+import { MAIN_ROUTE } from '../../constants/paths';
 
 //chaos
 
@@ -39,31 +44,73 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   */
 
   const { Card: selectedCard } = route.params;
-  const {
-    content: { businessDetails },
-  } = selectedCard;
-  let {
-    content: { points, inventory },
-  } = selectedCard;
 
   const [state, dispatch] = useReducer(reducer, {
     ...INITIAL_STATE,
-    balance: points,
-    balanceAfterTransaction: points,
-    inventory: inventory,
+    // dumb hack with fallbacks, but works for now
+    balance: selectedCard.content?.points ?? 0,
+    balanceAfterTransaction: selectedCard.content?.points ?? 0,
+    inventory: selectedCard.content?.inventory ?? [],
+    isSubmitting: false,
   });
   const { onPressBack } = useOnPressHandlers();
+
+  const handleAddCard = async () => {
+    dispatch({ type: ACTIONS.SET_SUBMITTING, payload: !state.isSubmitting });
+    let response = null;
+    const header = Auth.getAuthHeader();
+    if (selectedCard.type === 'virtual') {
+      const VCA = new api.VirtualCardsApi();
+
+      try {
+        response = await VCA.createVirtualCard(selectedCard.businessesDetails.publicId, header);
+      } catch (e) {
+        response = e.response.code;
+      }
+    }
+
+    if (selectedCard.type === 'local') {
+      const LCA = new api.LocalCardsApi();
+
+      // TODO GET DATA FROM SCANNER
+      const code = '12345678';
+
+      try {
+        console.log('data', selectedCard.name, selectedCard.publicId);
+        response = await LCA.createLocalCard(
+          { name: selectedCard.name, type: selectedCard.publicId, code },
+          header
+        );
+      } catch (e) {
+        response = e.response.code;
+      }
+    }
+
+    console.log(response);
+
+    dispatch({ type: ACTIONS.SET_SUBMITTING, payload: !state.isSubmitting });
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: MAIN_ROUTE }],
+      })
+    );
+  };
 
   return selectedCard.type === 'virtual' ? (
     <SafeAreaView style={StyleBase.container}>
       <StatusBar barStyle='default' />
       {state.screenState === 'card' && (
         <>
-          <TopBar iconLeft={'arrow-left'} onPressLeft={() => onPressBack(navigation)} />
+          <TopBar iconLeft='arrow-left' onPressLeft={() => onPressBack(navigation)} />
           {/* todo: image as Card.businessDetails.iconImageId */}
           <CardTile
             containerStyle={[styles.cardTile, !selectedCard.isAdded && { paddingBottom: 75 }]}
-            image={getImage(selectedCard)}
+            imageUrl={
+              selectedCard?.imageUrl
+                ? selectedCard.imageUrl
+                : selectedCard.businessDetails.bannerImageId
+            }
             tileStyle={{ width: '88.66%' }}
           />
           {selectedCard.isAdded && (
@@ -108,7 +155,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                 <BoxContainer style={styles.boxContainer}>
                   <Text style={[styles.text, { paddingBottom: 40 }]}>{getName(selectedCard)}</Text>
                   <Text style={[styles.text, { paddingBottom: 40 }]}>Address</Text>
-                  <Text style={styles.text}>{businessDetails.description}</Text>
+                  <Text style={styles.text}>{selectedCard.businessDetails.description}</Text>
                 </BoxContainer>
                 {selectedCard.isAdded && (
                   <>
@@ -168,10 +215,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
               </>
             )}
           </View>
-          {!selectedCard.isAdded && (
-            <CustomButton title='add card' onPress={() => alert('Work in progress')} />
-          )}
-          <TapBar navigation={navigation} />
+          <TapBar />
         </>
       )}
       {state.screenState === 'benefit' && (
@@ -209,9 +253,13 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
             }}
           />
           <View style={{ alignItems: 'center', height: '75%' }}>
-            {inventory.length !== 0 && <Text style={styles.headline}>Available Benefits</Text>}
-            {inventory.length === 0 && <Text style={styles.headline}>No available benefits</Text>}
-            <BenefitList benefits={inventory} mode='addToRealization' />
+            {selectedCard.content?.inventory?.length !== 0 && (
+              <Text style={styles.headline}>Available Benefits</Text>
+            )}
+            {selectedCard.content?.inventory?.length === 0 && (
+              <Text style={styles.headline}>No available benefits</Text>
+            )}
+            <BenefitList benefits={selectedCard.content?.inventory} mode='addToRealization' />
           </View>
           <CustomButton
             onPress={() => alert('Work in progress!')}
@@ -220,12 +268,26 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           />
         </>
       )}
-      <TapBar navigation={navigation} />
+      {!selectedCard.isAdded && (
+        <CustomButton
+          title='add card'
+          onPress={() => handleAddCard()}
+          disabled={state.isSubmitting}
+        />
+      )}
+      <TapBar />
     </SafeAreaView>
   ) : (
     <SafeAreaView style={StyleBase.container}>
-      <TopBar iconLeft={'arrow-left'} onPressLeft={() => onPressBack(navigation)} />
+      <TopBar iconLeft='arrow-left' onPressLeft={() => onPressBack(navigation)} />
       <Text>This is real card info</Text>
+      {!selectedCard.isAdded && (
+        <CustomButton
+          title='add card'
+          onPress={() => handleAddCard()}
+          disabled={state.isSubmitting}
+        />
+      )}
     </SafeAreaView>
   );
 }

@@ -8,10 +8,11 @@ export const fetchLocalCards = async (callbackFn: React.Dispatch<React.SetStateA
   try {
     const header = Auth.getAuthHeader();
     const localCardsResponse = await LCA.getLocalCardTypes(header);
-    callbackFn([...localCardsResponse.data.types]);
+    console.log('data', localCardsResponse.data.types);
+    return callbackFn([...localCardsResponse.data.types]);
   } catch (e) {
     console.log('error:', e);
-    callbackFn([]);
+    return callbackFn([]);
   }
 };
 
@@ -28,5 +29,39 @@ export const fetchVirtualCards = async (
   } catch (e) {
     console.log('error:', e);
     callbackFn([]);
+  }
+};
+
+export const fetchUserCards = async (callbackFn: React.Dispatch<React.SetStateAction<any[]>>) => {
+  const CA = new api.CardsApi();
+  const LCA = new api.LocalCardsApi();
+
+  try {
+    const header = Auth.getAuthHeader();
+    const userCardsResponse = await CA.getUserCards(header);
+    if (!Object.keys(userCardsResponse.data).length) {
+      return callbackFn([]);
+    }
+
+    const localCardsTypesResponse = await LCA.getLocalCardTypes(header);
+    const {
+      data: { types: allLocalCards },
+    } = localCardsTypesResponse;
+
+    let cardsWithImgUrl = [];
+
+    const localCards = userCardsResponse.data?.localCards || [];
+    const virtualCards = userCardsResponse.data?.virtualCards || [];
+
+    localCards.forEach((card) => {
+      const matchingCard = allLocalCards.find((cardWithUrl) => cardWithUrl.publicId === card.type);
+      cardsWithImgUrl = [...cardsWithImgUrl, { ...card, imageUrl: matchingCard.imageUrl }];
+    });
+
+    const cards = [...cardsWithImgUrl, ...virtualCards];
+    return callbackFn(cards);
+  } catch (e) {
+    console.log('error:', e);
+    return callbackFn([]);
   }
 };

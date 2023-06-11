@@ -9,7 +9,7 @@ export const cards: Card[] = [
       name: 'Biedronka',
       type: 'chrumaczak',
       code: '1234',
-      image: require('../images/biedronka_homepage.jpg'),
+      imageUrl: require('../images/biedronka_homepage.jpg'),
     },
     isAdded: true,
   },

@@ -26,8 +26,6 @@ export type BusinessRegistrationFormData = {
   city: string;
 };
 
-//na podstawie schematu api
-
 export type Date = {
   //idk jak nazwac xd
   type: string;
@@ -52,41 +50,48 @@ export type Benefit = {
   name: string;
   price: number; //int
   description: string;
-  imageId: string;
+  imageId: UUID;
   startDate: Date;
   endDate: Date;
   maxAmount: number; //int
   available: boolean;
 };
 
-export type BusinessDetails = {
-  publicId: string;
+export type ItemDefinition = {
+  publicId: UUID;
   name: string;
+  price: number;
   description: string;
-  gpsCoordinates: string;
-  bannerImageId: ImageSourcePropType; //temp, string od api (adapter)?
-  iconImageId: string;
+  imageId: UUID;
+  startDate: string;
+  endDate: string;
+  maxAmount: number;
+  available: boolean;
 };
 
-export type InventoryElem = {
+export type BusinessDetails = {
   publicId: UUID;
-  amount: number;
   name: string;
+  address: string;
+  gpsCoordinates: string;
+  bannerImageId: UUID;
+  iconImageId: UUID;
+  menuImageIds: string[];
+  itemDefinitions: ItemDefinition[];
 };
 
 export type VirtualCard = {
+  ownedItems: { publicId: UUID; definitionId: UUID }[];
   businessDetails: BusinessDetails;
-  points?: number; //int
-  benefits: Benefit[]; //avaliable benefits
-  inventory?: InventoryElem[];
+  points: number;
 };
 
 export type LocalCard = {
   publicId: string;
   name: string;
-  type: string;
+  type?: string;
   code: string;
-  image: ImageSourcePropType; //jw
+  imageUrl: ImageSourcePropType; //jw
 };
 
 export type CardType = 'virtual' | 'local';

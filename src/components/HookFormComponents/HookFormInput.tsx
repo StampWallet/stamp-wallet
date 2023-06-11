@@ -3,7 +3,6 @@ import { View, TextInput, StyleSheet, Text } from 'react-native';
 import { Controller, Control, RegisterOptions } from 'react-hook-form';
 
 import colors from '../../constants/colors';
-import StyleBase from '../../styles/StyleBase';
 import ErrorField from './ErrorField';
 
 interface IHookFormInput {
@@ -37,6 +36,7 @@ const HookFormInput = ({
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder={placeholder}
+              placeholderTextColor='black'
               secureTextEntry={secureTextEntry}
               autoCapitalize='none'
             />

@@ -11,8 +11,8 @@ interface Props {
 }
 
 export default function CustomModal({
-  header = 'aa',
-  description = 'bb',
+  header = '',
+  description = '',
   isModalOpen = false,
   confirmOption,
   cancelOption,

@@ -1,15 +1,16 @@
 import { LocalCard, VirtualCard } from '../types';
 
 interface Props {
-  content: LocalCard | VirtualCard;
+  item: LocalCard | VirtualCard;
 }
 
-export const getName = ({ content }: Props) => {
-  if ('name' in content) return content.name;
-  return content.businessDetails.name;
+export const getName = ({ item }: Props) => {
+  console.log(item);
+  if ('name' in item) return item.name;
+  return item.businessDetails.name;
 };
 
-export const getImage = ({ content }: Props) => {
-  if ('image' in content) return content.image;
-  return content.businessDetails.bannerImageId;
+export const getImage = ({ item }: Props) => {
+  if ('imageUrl' in item) return item.imageUrl;
+  return item.businessDetails.bannerImageId;
 };

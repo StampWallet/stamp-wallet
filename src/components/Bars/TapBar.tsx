@@ -8,7 +8,7 @@ import colors from '../../constants/colors';
 
 interface Props {
   tapBarState?: 'default' | 'deletion';
-  callbackFn: () => void;
+  callbackFn?: () => void;
 }
 
 const TapBar = ({ tapBarState, callbackFn }: Props) => {
