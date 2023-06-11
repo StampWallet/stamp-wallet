@@ -30,6 +30,9 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   /*
 
   todo:
+  add visible response for specific buttons (save, cancel, add benefit)
+  code generation
+  some alert if doing stuff with benefits to add pending
   needs some styling
   tested on pixel 6 pro (1440x3120), components MAY NOT fit properly on other models
 
@@ -115,6 +118,10 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                     <View style={styles.claimButton}>
                       <CustomButton
                         onPress={() => {
+                          dispatch({
+                            type: ACTIONS.SET_BENEFITS_TO_REALIZE,
+                            payload: inventory,
+                          });
                           dispatch({ type: 'setScreen', payload: 'claimBenefits' });
                         }}
                         title='Claim Benefits'
@@ -135,7 +142,6 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                     <BenefitList
                       benefits={selectedCard.content.benefits}
                       dispatch={dispatch}
-                      dispatchType={ACTIONS.SET_BENEFIT_SCREEN}
                       customBenefitTileStyle={{ width: '100%', height: 60 }}
                       mode='addToInventory'
                     />
@@ -157,7 +163,6 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                     />
                     <CustomButton
                       onPress={() => {
-                        //lekko upo
                         dispatch({ type: ACTIONS.TRANSACTION_SAVE, payload: selectedCard });
                       }}
                       title='Save'
@@ -211,10 +216,18 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           <View style={{ alignItems: 'center', height: '75%' }}>
             {inventory.length !== 0 && <Text style={styles.headline}>Available Benefits</Text>}
             {inventory.length === 0 && <Text style={styles.headline}>No available benefits</Text>}
-            <BenefitList benefits={inventory} mode='addToRealization' />
+            <BenefitList
+              benefits={state.benefitsToRealize}
+              mode='addToRealization'
+              dispatch={dispatch}
+            />
           </View>
           <CustomButton
-            onPress={() => alert('Work in progress!')}
+            onPress={() => {
+              dispatch({ type: ACTIONS.REALIZE_BENEFITS });
+              alert('dummy text');
+              //todo
+            }}
             title='generate code'
             customButtonStyle={[styles.button, { width: '80%' }]}
           />
