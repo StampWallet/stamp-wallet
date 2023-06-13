@@ -23,7 +23,7 @@ import TapBar from '../components/Bars/TapBar';
 import Auth from '../database/Auth';
 import Loader from '../components/Loader';
 import CenteredLoader from '../components/CenteredLoader';
-import useAnimateWidth from '../hooks/useAnimateWidth';
+import SideBar from '../components/Bars/SideBar';
 /*
 todo:
       make search maintain proper screen composition
@@ -45,17 +45,16 @@ export default function MainScreen({ navigation }) {
   const [cardToDelete, setCardToDelete] = useState(null);
   const [sidebarVisibility, setSidebarVisibility] = useState(false);
 
-  const sidebarWidth = useRef(new Animated.Value(0)).current;
+  const translateXValue = useRef(new Animated.Value(0)).current;
 
-  const toggleWidth = () => {
-    const endWidth = sidebarVisibility ? 0 : 40;
-    console.log('toggle', sidebarWidth);
+  const toggleXPosition = () => {
+    const endPosition = sidebarVisibility ? -200 : 160;
 
-    Animated.timing(sidebarWidth, {
-      toValue: endWidth,
+    Animated.timing(translateXValue, {
+      toValue: endPosition,
       duration: 200,
       easing: Easing.linear,
-      useNativeDriver: false,
+      useNativeDriver: true,
     }).start();
   };
 
@@ -160,8 +159,11 @@ export default function MainScreen({ navigation }) {
       <TopBar
         iconLeft='menu'
         onPressLeft={() => {
+          if (!sidebarVisibility) {
+            setFilterDropdownVisibility(false);
+          }
           setSidebarVisibility((prev) => !prev);
-          toggleWidth();
+          toggleXPosition();
         }}
         iconRight='filter-menu-outline'
         onPressRight={
@@ -171,6 +173,13 @@ export default function MainScreen({ navigation }) {
         }
       />
 
+      <SideBar
+        translateXValue={translateXValue}
+        mainScreenState={{
+          businessCreated: false,
+          mainScreenMode,
+        }}
+      />
       <SearchBar onChangeText={setCardQuery} value={cardQuery} deletionMode={deletionMode} />
       {isFilterDropdownOpen && (
         <SortOptions
@@ -179,23 +188,6 @@ export default function MainScreen({ navigation }) {
           setFilterDropdownVisibility={setFilterDropdownVisibility}
         />
       )}
-
-      <Animated.View
-        style={{
-          flexGrow: 1,
-          backgroundColor: colors.swLightBlue,
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 1,
-          width: sidebarWidth.interpolate({
-            inputRange: [0, 100],
-            outputRange: ['0%', '100%'],
-          }),
-        }}
-      ></Animated.View>
 
       <View
         style={[

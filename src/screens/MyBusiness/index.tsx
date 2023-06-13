@@ -27,9 +27,9 @@ const mockFormData = {
 
 const getTitle = (step: number) => {
   if (step === 1) {
-    return 'To business details';
+    return 'To business customisation';
   }
-  return step === 2 ? 'To business customisation' : 'Create business';
+  return 'Create business';
 };
 
 export default function MyBusinessScreen({ navigation }) {
@@ -43,7 +43,7 @@ export default function MyBusinessScreen({ navigation }) {
   const { handleSubmit } = methods;
 
   const onPressStepForm = (data) => {
-    if (step < 3) {
+    if (step < 2) {
       setBusinessRegistrationFormValues(data);
       setCurrentStep((prev) => prev + 1);
       return;
@@ -52,7 +52,7 @@ export default function MyBusinessScreen({ navigation }) {
   };
   return (
     <SafeAreaView style={StyleBase.container}>
-      <Text style={styles.stepCounter}>{`Step ${step}/3`}</Text>
+      <Text style={styles.stepCounter}>{`Step ${step}/2`}</Text>
       {step > 1 && (
         <Icon
           name='arrow-left'
@@ -63,9 +63,9 @@ export default function MyBusinessScreen({ navigation }) {
         />
       )}
       <FormProvider {...methods}>
-        {step === 1 && <PersonalDataForm />}
-        {step === 2 && <BusinessDataForm />}
-        {step === 3 && <BusinessImagesForm />}
+        {/*{step === 1 && <PersonalDataForm />}*/}
+        {step === 1 && <BusinessDataForm />}
+        {step === 2 && <BusinessImagesForm />}
         <CustomButton onPress={handleSubmit(onPressStepForm)} title={getTitle(step)} />
       </FormProvider>
     </SafeAreaView>

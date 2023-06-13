@@ -24,35 +24,27 @@ export default function PersonalDataForm() {
         placeholder='name'
         isInvalid={Boolean(errors.name)}
       />
-      <HookFormInput
-        control={control}
-        rules={{
-          required,
-        }}
-        name='surname'
-        placeholder='surname'
-        isInvalid={Boolean(errors.surname)}
-      />
-      <HookFormInput
-        control={control}
-        rules={{
-          required,
-          pattern: validateEmail,
-        }}
-        name='email'
-        placeholder='email'
-        isInvalid={Boolean(errors.email)}
-      />
-      <HookFormInput
-        control={control}
-        rules={{
-          required,
-          pattern: validatePhoneNumber,
-        }}
-        name='phoneNumber'
-        placeholder='phone number'
-        isInvalid={Boolean(errors.phoneNumber)}
-      />
+      {/* currently the fields are useless??? */}
+      {/*<HookFormInput*/}
+      {/*  control={control}*/}
+      {/*  rules={{*/}
+      {/*    required,*/}
+      {/*    pattern: validateEmail,*/}
+      {/*  }}*/}
+      {/*  name='email'*/}
+      {/*  placeholder='email'*/}
+      {/*  isInvalid={Boolean(errors.email)}*/}
+      {/*/>*/}
+      {/*<HookFormInput*/}
+      {/*  control={control}*/}
+      {/*  rules={{*/}
+      {/*    required,*/}
+      {/*    pattern: validatePhoneNumber,*/}
+      {/*  }}*/}
+      {/*  name='phoneNumber'*/}
+      {/*  placeholder='phone number'*/}
+      {/*  isInvalid={Boolean(errors.phoneNumber)}*/}
+      {/*/>*/}
     </BoxContainer>
   );
 }

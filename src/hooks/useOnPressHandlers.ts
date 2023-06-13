@@ -8,6 +8,7 @@ import {
   HOME_ROUTE,
   MAIN_ROUTE,
   ADD_CARD_ROUTE,
+  BUSINESS_ROUTE,
 } from '../constants/paths';
 import MainScreen from '../screens/MainScreen';
 
@@ -32,6 +33,10 @@ const useOnPressHandlers = () => {
   const onPressBack = (navigation) => {
     console.log('aaa');
     navigation.pop();
+  };
+
+  const onPressBusiness = (navigation) => {
+    navigation.push(BUSINESS_ROUTE);
   };
 
   const onPressBackHome = (navigation) => {
@@ -63,6 +68,7 @@ const useOnPressHandlers = () => {
     onPressCard,
     onPressBackHome,
     onPressCardAddition,
+    onPressBusiness,
   };
 };
 

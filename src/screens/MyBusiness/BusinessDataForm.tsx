@@ -22,27 +22,9 @@ export default function BusinessDataForm() {
           rules={{
             required,
           }}
-          name='NIP'
-          placeholder='NIP'
-          isInvalid={Boolean(errors.NIP)}
-        />
-        <HookFormInput
-          control={control}
-          rules={{
-            required,
-          }}
-          name='KRS'
-          placeholder='KRS'
-          isInvalid={Boolean(errors.KRS)}
-        />
-        <HookFormInput
-          control={control}
-          rules={{
-            required,
-          }}
-          name='REGON'
-          placeholder='REGON'
-          isInvalid={Boolean(errors.REGON)}
+          name='name'
+          placeholder='name'
+          isInvalid={Boolean(errors.name)}
         />
         <HookFormInput
           control={control}
@@ -67,19 +49,47 @@ export default function BusinessDataForm() {
           rules={{
             required,
           }}
-          name='postalCode'
-          placeholder='postal code'
-          isInvalid={Boolean(errors.postalCode)}
+          name='city'
+          placeholder='city'
+          isInvalid={Boolean(errors.city)}
         />
         <HookFormInput
           control={control}
           rules={{
             required,
           }}
-          name='city'
-          placeholder='city'
-          isInvalid={Boolean(errors.city)}
+          name='NIP'
+          placeholder='NIP'
+          isInvalid={Boolean(errors.NIP)}
         />
+        <HookFormInput
+          control={control}
+          rules={{
+            required,
+          }}
+          name='KRS'
+          placeholder='KRS'
+          isInvalid={Boolean(errors.KRS)}
+        />
+        <HookFormInput
+          control={control}
+          rules={{
+            required,
+          }}
+          name='REGON'
+          placeholder='REGON'
+          isInvalid={Boolean(errors.REGON)}
+        />
+
+        {/*<HookFormInput*/}
+        {/*  control={control}*/}
+        {/*  rules={{*/}
+        {/*    required,*/}
+        {/*  }}*/}
+        {/*  name='postalCode'*/}
+        {/*  placeholder='postal code'*/}
+        {/*  isInvalid={Boolean(errors.postalCode)}*/}
+        {/*/>*/}
       </ScrollView>
     </BoxContainer>
   );
