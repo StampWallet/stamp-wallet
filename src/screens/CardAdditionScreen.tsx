@@ -71,7 +71,7 @@ export default function CardAdditionScreen({ navigation }) {
         <>
           <SearchBar onChangeText={setCardQuery} value={cardQuery} />
           {filteredCards === null && <CenteredLoader animation='loader' />}
-          {filteredCards?.length && (
+          {Boolean(filteredCards?.length) && (
             <CardList
               cards={filteredCards.map((obj) => ({
                 ...obj,

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, StatusBar, StyleSheet, SafeAreaView, Text } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StatusBar, StyleSheet, SafeAreaView, Text, Animated, Easing } from 'react-native';
 
 import TopBar from '../components/Bars/TopBar';
 import CardList from '../components/Cards/CardList';
@@ -23,7 +23,7 @@ import TapBar from '../components/Bars/TapBar';
 import Auth from '../database/Auth';
 import Loader from '../components/Loader';
 import CenteredLoader from '../components/CenteredLoader';
-
+import useAnimateWidth from '../hooks/useAnimateWidth';
 /*
 todo:
       make search maintain proper screen composition
@@ -43,10 +43,22 @@ export default function MainScreen({ navigation }) {
   const [deletionMode, setDeletionMode] = useState(false);
   const [mainScreenMode, setMainScreenMode] = useState<'customer' | 'business'>('customer');
   const [cardToDelete, setCardToDelete] = useState(null);
+  const [sidebarVisibility, setSidebarVisibility] = useState(false);
 
-  const { onPressCard } = useOnPressHandlers();
+  const sidebarWidth = useRef(new Animated.Value(0)).current;
 
-  // TODO ADD ADAPTER FOR IMAGE URLS
+  const toggleWidth = () => {
+    const endWidth = sidebarVisibility ? 0 : 40;
+    console.log('toggle', sidebarWidth);
+
+    Animated.timing(sidebarWidth, {
+      toValue: endWidth,
+      duration: 200,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    }).start();
+  };
+
   useEffect(() => {
     fetchUserCards(setCards);
   }, []);
@@ -145,6 +157,68 @@ export default function MainScreen({ navigation }) {
 
   return (
     <SafeAreaView style={StyleBase.container}>
+      <TopBar
+        iconLeft='menu'
+        onPressLeft={() => {
+          setSidebarVisibility((prev) => !prev);
+          toggleWidth();
+        }}
+        iconRight='filter-menu-outline'
+        onPressRight={
+          sidebarVisibility
+            ? () => {}
+            : () => setFilterDropdownVisibility((prevState) => !prevState)
+        }
+      />
+
+      <SearchBar onChangeText={setCardQuery} value={cardQuery} deletionMode={deletionMode} />
+      {isFilterDropdownOpen && (
+        <SortOptions
+          setFilter={setFilter}
+          filter={filter}
+          setFilterDropdownVisibility={setFilterDropdownVisibility}
+        />
+      )}
+
+      <Animated.View
+        style={{
+          flexGrow: 1,
+          backgroundColor: colors.swLightBlue,
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1,
+          width: sidebarWidth.interpolate({
+            inputRange: [0, 100],
+            outputRange: ['0%', '100%'],
+          }),
+        }}
+      ></Animated.View>
+
+      <View
+        style={[
+          StyleBase.container,
+          (isFilterDropdownOpen || sidebarVisibility) && styles.listOpacity,
+          StyleBase.listContainer,
+        ]}
+      >
+        {filteredCards === null && <Loader animation='loader' />}
+        {filteredCards?.length && (
+          <CardList
+            cards={filteredCards.map((obj) => ({ ...obj, isAdded: true }))}
+            onLongCardPress={() => setDeletionMode(true)}
+            onPress={(card) => handleOnDelete(card)}
+            deletionMode={deletionMode}
+          />
+        )}
+        {filteredCards !== null && !filteredCards.length && <Text>Add your first card!</Text>}
+      </View>
+      <TapBar
+        callbackFn={() => setDeletionMode((prev) => !prev)}
+        tapBarState={deletionMode ? 'deletion' : 'default'}
+      />
       <CustomModal
         header={`Are you sure you want to delete this ${
           mainScreenMode === 'customer' ? 'card' : 'benefit'
@@ -172,45 +246,6 @@ export default function MainScreen({ navigation }) {
         }
         isModalOpen={isModalOpen}
       />
-      <TopBar
-        iconLeft='menu'
-        onPressLeft={() => alert('Work in progress')}
-        iconRight='filter-menu-outline'
-        onPressRight={() => setFilterDropdownVisibility((prevState) => !prevState)}
-      />
-
-      <SearchBar onChangeText={setCardQuery} value={cardQuery} deletionMode={deletionMode} />
-      {isFilterDropdownOpen && (
-        <SortOptions
-          setFilter={setFilter}
-          filter={filter}
-          setFilterDropdownVisibility={setFilterDropdownVisibility}
-        />
-      )}
-
-      <View
-        style={[
-          StyleBase.container,
-          isFilterDropdownOpen && styles.listOpacity,
-          StyleBase.listContainer,
-        ]}
-      >
-        {filteredCards === null && <Loader animation='loader' />}
-        {filteredCards?.length && (
-          <CardList
-            cards={filteredCards.map((obj) => ({ ...obj, isAdded: true }))}
-            onLongCardPress={() => setDeletionMode(true)}
-            onPress={(card) => handleOnDelete(card)}
-            deletionMode={deletionMode}
-          />
-        )}
-        {filteredCards !== null && !filteredCards.length && <Text>Add your first card!</Text>}
-      </View>
-      <TapBar
-        callbackFn={() => setDeletionMode((prev) => !prev)}
-        tapBarState={deletionMode ? 'deletion' : 'default'}
-      />
-      <StatusBar barStyle='default' />
     </SafeAreaView>
   );
 }
