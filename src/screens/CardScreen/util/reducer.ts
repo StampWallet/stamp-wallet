@@ -41,15 +41,14 @@ function addToArr(benefit, benefitArr) {
 
 function completeTransaction(state, payload) {
   let inventory = state.inventory.slice();
-  let cardContent = payload.content;
   state.benefitsToAdd.forEach((benefit) => {
     let obj = findInArr(benefit, inventory);
     obj ? (obj.amount += benefit.amount) : inventory.push(benefit);
   });
   //api request
   //temp solution
-  cardContent.inventory = inventory;
-  cardContent.points = state.balanceAfterTransaction;
+  payload.inventory = inventory;
+  payload.points = state.balanceAfterTransaction;
   return inventory;
 }
 

@@ -17,7 +17,7 @@ import { OptionKey } from '../components/Bars/SearchBar/OptionRow';
 import * as api from '../api';
 
 import filterCards from '../utils/filterCards';
-import fetchLocalCards from '../utils/fetchCards';
+import { fetchLocalCards } from '../utils/fetchCards';
 
 import colors from '../constants/colors';
 import TapBar from '../components/Bars/TapBar';
@@ -59,7 +59,7 @@ export default function MainScreen({ navigation }) {
 
     const lowerCaseCardQuery = cardQuery.toLowerCase();
     const cardsWithSearchedName = cardList.filter((card) =>
-      getName(card).toLowerCase().includes(lowerCaseCardQuery)
+      getName({ Card: card }).toLowerCase().includes(lowerCaseCardQuery)
     );
     setFilteredCards(cardsWithSearchedName);
   }, [cards, filter, cardQuery]);
@@ -119,10 +119,12 @@ export default function MainScreen({ navigation }) {
       >
         {filteredCards?.length ? (
           <CardList
-            cards={filteredCards.map((obj) => ({ ...obj, isAdded: false }))}
+            cards={filteredCards}
+            //cards={filteredCards.map((obj) => ({ ...obj, isAdded: false }))}
             onLongCardPress={() => setDeletionMode(true)}
             onPress={() => handleOnDelete()}
             deletionMode={deletionMode}
+            isAdded={true}
           />
         ) : (
           <Text>Add your first card!</Text>

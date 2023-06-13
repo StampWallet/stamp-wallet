@@ -10,6 +10,7 @@ import {
   ADD_CARD_ROUTE,
 } from '../constants/paths';
 import MainScreen from '../screens/MainScreen';
+import { benefits } from '../assets/mockData/Benefits';
 
 const useOnPressHandlers = () => {
   const onPressLogIn = (navigation, data) => {
@@ -46,7 +47,13 @@ const useOnPressHandlers = () => {
     navigation.push(ADD_CARD_ROUTE);
   };
 
-  const onPressCard = (navigation, card) => {
+  const onPressCard = (navigation, card, isAdded) => {
+    //if virtualcard
+    //if isAdded use getVirtualCard else getBusiness and use as card
+
+    //then just add isAdded argument to object ig
+    card.businessDetails = { ...card.businessDetails, itemDefinitions: benefits };
+    card = { ...card, isAdded };
     navigation.push(CARD_ROUTE, { Card: card });
   };
 

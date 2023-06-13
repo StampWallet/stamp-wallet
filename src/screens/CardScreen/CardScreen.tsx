@@ -5,7 +5,13 @@ import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
 
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 
-import { getName, getImage } from '../../utils/cardGetters';
+import {
+  getName,
+  getImage,
+  getBusinessDetails,
+  getPoints,
+  getInventory,
+} from '../../utils/cardGetters';
 
 import StyleBase from '../../styles/StyleBase';
 
@@ -18,6 +24,9 @@ import Tile from '../../components/Miscellaneous/Tile';
 import BenefitList from '../../components/Benefits/BenefitList';
 import CustomButton from '../../components/Miscellaneous/CustomButton';
 import BoxContainer from '../../components/Miscellaneous/BoxContainer';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+//import { VirtualCard, LocalCard, Card } from '../../types';
+import { RouteProp } from '@react-navigation/native';
 
 //chaos
 
@@ -33,21 +42,17 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   add visible response for specific buttons (save, cancel, add benefit)
   code generation
   some alert if doing stuff with benefits to add pending
-  needs some styling
-  tested on pixel 6 pro (1440x3120), components MAY NOT fit properly on other models
-
-  proper account balance from api
-  proper descriptions
-  proper everything (after api implementation)
+  
+  use getVirtualCard
   */
 
-  const { Card: selectedCard } = route.params;
-  const {
-    content: { businessDetails },
-  } = selectedCard;
-  let {
-    content: { points, inventory },
-  } = selectedCard;
+  //const { Card: selectedCard } = route.params as Card;
+  const selectedCard = route.params.Card;
+  const businessDetails = getBusinessDetails({ Card: selectedCard });
+  let points = getPoints({ Card: selectedCard });
+  let inventory = getInventory({ Card: selectedCard });
+  //console.log({ selectedCard });
+  //let inventory = []; //temp - fetch
 
   const [state, dispatch] = useReducer(reducer, {
     ...INITIAL_STATE,
@@ -57,7 +62,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   });
   const { onPressBack } = useOnPressHandlers();
 
-  return selectedCard.type === 'virtual' ? (
+  return 'businessDetails' in selectedCard ? (
     <SafeAreaView style={StyleBase.container}>
       <StatusBar barStyle='default' />
       {state.screenState === 'card' && (
@@ -66,7 +71,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           {/* todo: image as Card.businessDetails.iconImageId */}
           <CardTile
             containerStyle={[styles.cardTile, !selectedCard.isAdded && { paddingBottom: 75 }]}
-            image={getImage(selectedCard)}
+            //image={getImage(selectedCard)}
             tileStyle={{ width: '88.66%' }}
           />
           {selectedCard.isAdded && (
@@ -109,7 +114,9 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
             {state.cardInfoState === 'business' && (
               <>
                 <BoxContainer style={styles.boxContainer}>
-                  <Text style={[styles.text, { paddingBottom: 40 }]}>{getName(selectedCard)}</Text>
+                  <Text style={[styles.text, { paddingBottom: 40 }]}>
+                    {getName({ Card: selectedCard })}
+                  </Text>
                   <Text style={[styles.text, { paddingBottom: 40 }]}>Address</Text>
                   <Text style={styles.text}>{businessDetails.description}</Text>
                 </BoxContainer>
@@ -140,7 +147,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                   <Text style={styles.text}>List of benefits</Text>
                   {selectedCard.isAdded && (
                     <BenefitList
-                      benefits={selectedCard.content.benefits}
+                      benefits={selectedCard.businessDetails.itemDefinitions}
                       dispatch={dispatch}
                       customBenefitTileStyle={{ width: '100%', height: 60 }}
                       mode='addToInventory'
@@ -148,7 +155,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                   )}
                   {!selectedCard.isAdded && (
                     <BenefitList
-                      benefits={selectedCard.content.benefits}
+                      benefits={selectedCard.businessDetails.itemDefinitions}
                       customBenefitTileStyle={{ width: '100%', height: 60 }}
                       mode='preview'
                     />
@@ -176,7 +183,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           {!selectedCard.isAdded && (
             <CustomButton title='add card' onPress={() => alert('Work in progress')} />
           )}
-          <TapBar navigation={navigation} />
+          <TapBar callbackFn={() => {}} />
         </>
       )}
       {state.screenState === 'benefit' && (
@@ -233,7 +240,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           />
         </>
       )}
-      <TapBar navigation={navigation} />
+      <TapBar callbackFn={() => {}} />
     </SafeAreaView>
   ) : (
     <SafeAreaView style={StyleBase.container}>

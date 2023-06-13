@@ -22,6 +22,8 @@ export default function CardAdditionScreen({ navigation }) {
   const [availableCards, setAvailableCards] = useState([]);
   const { onPressBack } = useOnPressHandlers();
 
+  console.log(availableCards);
+
   // useEffect(() => {
   //   if (!cardType) {
   //     return;
@@ -86,7 +88,10 @@ export default function CardAdditionScreen({ navigation }) {
           {/*<CardList cards={availableCards} />*/}
           {/* for testing purpose */}
           {availableCards?.length ? (
-            <CardList cards={availableCards.map((obj) => ({ ...obj, isAdded: false }))} />
+            <CardList
+              cards={availableCards.map((obj) => ({ ...obj, isAdded: false }))}
+              isAdded={false}
+            />
           ) : (
             <Text>No cards found</Text>
           )}

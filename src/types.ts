@@ -66,6 +66,8 @@ export type BusinessDetails = {
   gpsCoordinates: string;
   bannerImageId: ImageSourcePropType; //temp, string od api (adapter)?
   iconImageId: string;
+  menuImageIds?: string[];
+  itemDefinitions?: Benefit[];
 };
 
 export type InventoryElem = {
@@ -77,7 +79,7 @@ export type InventoryElem = {
 export type VirtualCard = {
   businessDetails: BusinessDetails;
   points?: number; //int
-  benefits: Benefit[]; //avaliable benefits
+  //benefits: Benefit[]; //avaliable benefits
   inventory?: InventoryElem[];
 };
 
@@ -89,6 +91,11 @@ export type LocalCard = {
   image: ImageSourcePropType; //jw
 };
 
+export type Card = {
+  Card: (VirtualCard | LocalCard) & { isAdded: boolean };
+};
+
+/*
 export type CardType = 'virtual' | 'local';
 
 export type Card = {
@@ -96,3 +103,4 @@ export type Card = {
   type: CardType;
   content: VirtualCard | LocalCard;
 };
+*/
