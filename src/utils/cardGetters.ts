@@ -1,9 +1,7 @@
-import { LocalCard, VirtualCard } from '../types';
-
-//interface usuniety bo nie chce dzialac xd
+import { Card } from '../types';
 
 interface Props {
-  Card: (LocalCard | VirtualCard) & { isAdded?: boolean };
+  Card: Card;
 }
 
 export const getName = ({ Card }: Props) => {
@@ -11,8 +9,6 @@ export const getName = ({ Card }: Props) => {
   if ('businessDetails' in Card) return Card.businessDetails.name;
   return undefined;
 };
-
-//getName({Card: card});
 
 export const getImage = ({ Card }: Props) => {
   if ('image' in Card) return Card.image;

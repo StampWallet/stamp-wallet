@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { StyleSheet, Text, View, StatusBar, Pressable, SafeAreaView } from 'react-native';
 
 import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
@@ -24,11 +24,7 @@ import Tile from '../../components/Miscellaneous/Tile';
 import BenefitList from '../../components/Benefits/BenefitList';
 import CustomButton from '../../components/Miscellaneous/CustomButton';
 import BoxContainer from '../../components/Miscellaneous/BoxContainer';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-//import { VirtualCard, LocalCard, Card } from '../../types';
-import { RouteProp } from '@react-navigation/native';
-
-//chaos
+import { Card } from '../../types';
 
 interface CardInfoScreenProps {
   navigation: any; //proper type
@@ -42,17 +38,14 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   add visible response for specific buttons (save, cancel, add benefit)
   code generation
   some alert if doing stuff with benefits to add pending
-  
-  use getVirtualCard
+  realize benefits
+  getImage
   */
 
-  //const { Card: selectedCard } = route.params as Card;
-  const selectedCard = route.params.Card;
+  const selectedCard = route.params.Card as Card;
   const businessDetails = getBusinessDetails({ Card: selectedCard });
   let points = getPoints({ Card: selectedCard });
   let inventory = getInventory({ Card: selectedCard });
-  //console.log({ selectedCard });
-  //let inventory = []; //temp - fetch
 
   const [state, dispatch] = useReducer(reducer, {
     ...INITIAL_STATE,
@@ -282,7 +275,6 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     height: '7.875%',
-    //width
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -310,7 +302,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   showCard: {
-    //marginTop: '2.375%',
     width: '100%',
     alignItems: 'center',
   },
@@ -319,7 +310,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   description: {
-    //fontFamily: 'Inter',
     fontStyle: 'normal',
     fontWeight: '300',
     fontSize: 24,
@@ -330,8 +320,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '88.33%',
     height: '68.75%',
-    justifyContent: 'flex-start', //?
-    //shadows to be applied
+    justifyContent: 'flex-start',
   },
   benefitButton: {
     marginTop: '3.375%',

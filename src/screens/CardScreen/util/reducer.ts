@@ -1,4 +1,3 @@
-//WIP
 export const INITIAL_STATE = {
   screenState: 'card',
   cardInfoState: 'business',
@@ -19,15 +18,11 @@ export const ACTIONS = {
   REPLACE_STATE: 'replaceState',
   ON_BACK_BENEFITS: 'backBenefits',
   SET_BENEFIT_SCREEN: 'setBenefitScreen',
-  //CREATE_INVENTORY_MAP: 'createInventoryMap',
   REALIZATION_INCREMENT: 'incrementAmountOfBenefit',
   REALIZATION_SUB: 'substractAmountOfBenefit',
   REALIZE_BENEFITS: 'realizeBenefits',
-  //REALIZATION_ADD: 'addBenefitToRealization',
-  //REALIZATION_REMOVE: 'removeBenefitFromRealization',
 };
 
-//todo: map arrays
 function findInArr(benefit, benefitArr) {
   return benefitArr.find((obj) => obj.publicId === benefit.publicId);
 }

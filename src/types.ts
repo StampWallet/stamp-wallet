@@ -79,7 +79,6 @@ export type InventoryElem = {
 export type VirtualCard = {
   businessDetails: BusinessDetails;
   points?: number; //int
-  //benefits: Benefit[]; //avaliable benefits
   inventory?: InventoryElem[];
 };
 
@@ -91,16 +90,4 @@ export type LocalCard = {
   image: ImageSourcePropType; //jw
 };
 
-export type Card = {
-  Card: (VirtualCard | LocalCard) & { isAdded: boolean };
-};
-
-/*
-export type CardType = 'virtual' | 'local';
-
-export type Card = {
-  isAdded: boolean;
-  type: CardType;
-  content: VirtualCard | LocalCard;
-};
-*/
+export type Card = (VirtualCard | LocalCard) & { isAdded?: boolean };
