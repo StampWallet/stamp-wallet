@@ -52,7 +52,9 @@ const useOnPressHandlers = () => {
     //if isAdded use getVirtualCard else getBusiness and use as card
 
     //then just add isAdded argument to object ig
-    card.businessDetails = { ...card.businessDetails, itemDefinitions: benefits };
+    //temp solution on mockData below
+    if ('businessDetails' in card)
+      card.businessDetails = { ...card.businessDetails, itemDefinitions: benefits };
     card = { ...card, isAdded };
     navigation.push(CARD_ROUTE, { Card: card });
   };
