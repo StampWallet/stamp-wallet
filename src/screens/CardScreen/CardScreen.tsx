@@ -199,19 +199,6 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                 </View>
                 {selectedCard.isAdded && (
                   <View style={[styles.buttonsContainer, { marginTop: '10%' }]}>
-                    {/*
-                    <CustomButton
-                      onPress={() => dispatch({ type: ACTIONS.TRANSACTION_CANCEL })}
-                      title='Cancel'
-                      customButtonStyle={styles.button}
-                    />
-                    <CustomButton
-                      onPress={() => {
-                        dispatch({ type: ACTIONS.TRANSACTION_SAVE, payload: selectedCard });
-                      }}
-                      title='Save'
-                      customButtonStyle={styles.button}
-                    /> */}
                     <CustomButton
                       onPress={() => dispatch({ type: ACTIONS.SET_SCREEN, payload: 'cart' })}
                       title='Cart'
@@ -221,8 +208,6 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
               </>
             )}
           </View>
-          {/*
-          <TapBar callbackFn={() => console.log('test')} tapBarState={'default'} /> */}
         </>
       )}
       {state.screenState === 'benefit' && (
