@@ -90,6 +90,7 @@ export default function LogInScreen({ navigation }) {
               name='email'
               placeholder='email'
               isInvalid={Boolean(errors.email)}
+              header='email'
             />
             <HookFormInput
               control={control}
@@ -100,6 +101,7 @@ export default function LogInScreen({ navigation }) {
               placeholder='password'
               secureTextEntry
               isInvalid={Boolean(errors.password)}
+              header='password'
             />
             <Text style={styles.forgotPassword}>can&apos;t log in?</Text>
           </BoxContainer>

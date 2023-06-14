@@ -45,6 +45,7 @@ export default function RegistrationScreen({ navigation }) {
 
     try {
       const registerResponse = await AccountApi.createAccount({ email, password });
+      console.log(registerResponse);
       const { token } = registerResponse.data;
       Auth.token = token;
       Auth.apiConfig = new Configuration({ apiKey: token });
@@ -100,6 +101,7 @@ export default function RegistrationScreen({ navigation }) {
               name='name'
               placeholder='name'
               isInvalid={Boolean(errors.name)}
+              header='name'
             />
             <HookFormInput
               control={control}
@@ -107,6 +109,7 @@ export default function RegistrationScreen({ navigation }) {
               name='email'
               placeholder='email'
               isInvalid={Boolean(errors.email)}
+              header='email'
             />
             <HookFormInput
               control={control}
@@ -115,6 +118,7 @@ export default function RegistrationScreen({ navigation }) {
               placeholder='password'
               isInvalid={Boolean(errors.password)}
               secureTextEntry
+              header='password'
             />
             <HookFormInput
               control={control}
@@ -126,6 +130,7 @@ export default function RegistrationScreen({ navigation }) {
               placeholder='repeat password'
               isInvalid={Boolean(errors.passwordRepeated)}
               secureTextEntry
+              header='repeat password'
             />
           </BoxContainer>
           <CustomButton

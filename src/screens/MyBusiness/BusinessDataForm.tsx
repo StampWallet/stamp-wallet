@@ -16,7 +16,7 @@ export default function BusinessDataForm() {
 
   return (
     <BoxContainer style={StyleBase.formMargin}>
-      <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center' }}>
+      <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center', width: 300 }}>
         <HookFormInput
           control={control}
           rules={{
@@ -25,6 +25,7 @@ export default function BusinessDataForm() {
           name='name'
           placeholder='name'
           isInvalid={Boolean(errors.name)}
+          header='name'
         />
         <HookFormInput
           control={control}
@@ -34,6 +35,7 @@ export default function BusinessDataForm() {
           name='businessName'
           placeholder='business name'
           isInvalid={Boolean(errors.businessName)}
+          header='business name'
         />
         <HookFormInput
           control={control}
@@ -43,6 +45,7 @@ export default function BusinessDataForm() {
           name='businessAddress'
           placeholder='business address'
           isInvalid={Boolean(errors.businessAddress)}
+          header='business address'
         />
         <HookFormInput
           control={control}
@@ -52,6 +55,7 @@ export default function BusinessDataForm() {
           name='city'
           placeholder='city'
           isInvalid={Boolean(errors.city)}
+          header='city'
         />
         <HookFormInput
           control={control}
@@ -61,6 +65,7 @@ export default function BusinessDataForm() {
           name='NIP'
           placeholder='NIP'
           isInvalid={Boolean(errors.NIP)}
+          header='NIP'
         />
         <HookFormInput
           control={control}
@@ -70,6 +75,7 @@ export default function BusinessDataForm() {
           name='KRS'
           placeholder='KRS'
           isInvalid={Boolean(errors.KRS)}
+          header='KRS'
         />
         <HookFormInput
           control={control}
@@ -79,6 +85,7 @@ export default function BusinessDataForm() {
           name='REGON'
           placeholder='REGON'
           isInvalid={Boolean(errors.REGON)}
+          header='REGON'
         />
 
         {/*<HookFormInput*/}

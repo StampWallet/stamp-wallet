@@ -9,3 +9,4 @@ export const BENEFIT_DESC_ROUTE = 'BenefitDescriptionScreen';
 export const CARD_ROUTE = 'CardScreen';
 export const MAIN_ROUTE = 'MainScreen';
 export const ADD_CARD_ROUTE = 'CardAdditionScreen';
+export const ACCOUNT_ROUTE = 'AccountScreen';
