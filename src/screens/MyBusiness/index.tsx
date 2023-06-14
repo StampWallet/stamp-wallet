@@ -10,6 +10,8 @@ import BusinessDataForm from './BusinessDataForm';
 import { BusinessRegistrationFormData } from '../../types';
 import StyleBase from '../../styles/StyleBase';
 import BusinessImagesForm from './BusinessImagesForm';
+import { CommonActions } from '@react-navigation/native';
+import { MAIN_ROUTE } from '../../constants/paths';
 
 const mockFormData = {
   name: 'bill',
@@ -22,7 +24,7 @@ const mockFormData = {
   businessName: 'pay a bill @ bill',
   businessAddress: 'hrumczakowa 41/12',
   postalCode: '21-37',
-  city: 'Wydzial Matematyczny i Informatyczny Jot U',
+  city: 'WChUJaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
 };
 
 const getTitle = (step: number) => {
@@ -50,19 +52,30 @@ export default function MyBusinessScreen({ navigation }) {
     }
     navigation.push('MainScreen');
   };
-  //potrzeba TopBar, powrot
+
+  const handleArrowPress = () => {
+    if (step === 1) {
+      return navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: MAIN_ROUTE }],
+        })
+      );
+    }
+
+    return setCurrentStep((prev) => prev - 1);
+  };
+
   return (
     <SafeAreaView style={StyleBase.container}>
       <Text style={styles.stepCounter}>{`Step ${step}/2`}</Text>
-      {step > 1 && (
-        <Icon
-          name='arrow-left'
-          size={30}
-          style={StyleBase.backArrow}
-          onPress={() => setCurrentStep((prev) => prev - 1)}
-          title='back'
-        />
-      )}
+      <Icon
+        name='arrow-left'
+        size={30}
+        style={StyleBase.backArrow}
+        onPress={() => handleArrowPress()}
+        title='back'
+      />
       <FormProvider {...methods}>
         {/*{step === 1 && <PersonalDataForm />}*/}
         {step === 1 && <BusinessDataForm />}
