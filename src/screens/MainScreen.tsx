@@ -67,6 +67,7 @@ export default function MainScreen({ navigation }) {
   // filters cards based on search query + current filter
   useEffect(() => {
     if (!cards || !cards.length) {
+      setFilteredCards(cards);
       return;
     }
 
@@ -198,17 +199,18 @@ export default function MainScreen({ navigation }) {
           StyleBase.listContainer,
         ]}
       >
-        {filteredCards === null && <Loader animation='loader' />}
-        {filteredCards?.length && (
+        {Boolean(filteredCards === null) && <Loader animation='loader' />}
+        {Boolean(filteredCards?.length) && (
           <CardList
             cards={filteredCards}
-            //cards={filteredCards.map((obj) => ({ ...obj, isAdded: false }))}
             onLongCardPress={() => setDeletionMode(true)}
             onPress={(card) => handleOnDelete(card)}
             deletionMode={deletionMode}
           />
         )}
-        {filteredCards !== null && !filteredCards.length && <Text>Add your first card!</Text>}
+        {Boolean(filteredCards !== null && !filteredCards.length) && (
+          <Text>Add your first card!</Text>
+        )}
       </View>
       <TapBar
         callbackFn={() => setDeletionMode((prev) => !prev)}
