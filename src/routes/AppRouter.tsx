@@ -12,6 +12,7 @@ import CardAdditionScreen from '../screens/CardAdditionScreen';
 import RegistrationScreen from '../screens/RegistrationScreen';
 import LogInScreen from '../screens/LogInScreen';
 import MyBusinessScreen from '../screens/MyBusiness';
+import AccountScreen from '../screens/AccountScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,7 @@ export default function AppRouter({ initialRouteName }: IAppRouter) {
         <Stack.Screen name='MyBusinessScreen' component={MyBusinessScreen} />
         <Stack.Screen name='RegistrationScreen' component={RegistrationScreen} />
         <Stack.Screen name='LogInScreen' component={LogInScreen} />
+        <Stack.Screen name='AccountScreen' component={AccountScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

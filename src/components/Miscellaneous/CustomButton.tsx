@@ -38,7 +38,7 @@ const CustomButton = ({
   const textStyle = StyleSheet.flatten([styles.buttonText, customTextStyle]);
 
   return (
-    <TouchableOpacity onPress={() => onPress()} style={buttonStyle} disabled={disabled}>
+    <TouchableOpacity onPress={onPress} style={buttonStyle} disabled={disabled}>
       {title && <Text style={textStyle}>{title}</Text>}
       {!title && children}
     </TouchableOpacity>

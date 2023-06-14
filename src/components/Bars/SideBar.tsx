@@ -2,9 +2,12 @@ import React from 'react';
 import { Animated, StyleSheet, View, Text } from 'react-native';
 import colors from '../../constants/colors';
 import CustomButton from '../Miscellaneous/CustomButton';
-import { useNavigation } from '@react-navigation/native';
-import { BUSINESS_ROUTE } from '../../constants/paths';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import { ACCOUNT_ROUTE, BUSINESS_ROUTE, HOME_ROUTE, MAIN_ROUTE } from '../../constants/paths';
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
+
+import * as api from '../../api';
+import Auth from '../../database/Auth';
 
 const SideBar = ({ translateXValue, mainScreenState }) => {
   const { mainScreenMode, businessCreated } = mainScreenState;
@@ -12,6 +15,31 @@ const SideBar = ({ translateXValue, mainScreenState }) => {
 
   const navigation = useNavigation();
   const { onPressBusiness } = useOnPressHandlers();
+
+  const onPressNavigate = async (route) => {
+    switch (route) {
+      case ACCOUNT_ROUTE:
+        return navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: ACCOUNT_ROUTE }],
+          })
+        );
+      case BUSINESS_ROUTE:
+        return navigation.dispatch(CommonActions.navigate(BUSINESS_ROUTE));
+      case 'LOGOUT': {
+        const SA = new api.SessionsApi();
+        const header = Auth.getAuthHeader();
+
+        try {
+          const response = await SA.logout(header);
+          return navigation.dispatch(CommonActions.navigate(HOME_ROUTE));
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  };
 
   return (
     <Animated.View
@@ -33,16 +61,15 @@ const SideBar = ({ translateXValue, mainScreenState }) => {
       }}
     >
       <View style={styles.buttonContainer}>
-        {/*<Text>Dupa</Text>*/}
         <CustomButton
-          onPress={() => {}}
+          onPress={() => onPressNavigate(ACCOUNT_ROUTE)}
           title='account'
           customButtonStyle={styles.customButtonStyle}
           customTextStyle={styles.customTextStyle}
         />
         {!businessCreated && (
           <CustomButton
-            onPress={() => onPressBusiness(navigation)}
+            onPress={() => onPressNavigate(BUSINESS_ROUTE)}
             title='create business'
             customButtonStyle={styles.customButtonStyle}
             customTextStyle={styles.customTextStyle}
@@ -81,7 +108,7 @@ const SideBar = ({ translateXValue, mainScreenState }) => {
           />
         )}
         <CustomButton
-          onPress={() => {}}
+          onPress={() => onPressNavigate('LOGOUT')}
           title='logout'
           customButtonStyle={styles.customButtonStyle}
           customTextStyle={styles.customTextStyle}

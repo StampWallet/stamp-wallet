@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
     width: 350,
     borderRadius: 15,
     overflow: 'hidden',
-    shadowOpacity: 10,
   },
 });
 
