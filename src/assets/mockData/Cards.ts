@@ -1,7 +1,7 @@
 import { LocalCard, VirtualCard } from '../../types';
 import { benefits } from './Benefits';
 
-export const cards = [
+export const Cards = [
   {
     publicId: '1',
     name: 'Biedronka',

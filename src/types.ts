@@ -101,4 +101,7 @@ export type LocalCard = {
   imageUrl: ImageSourcePropType; //jw
 };
 
-export type Card = (VirtualCard | LocalCard) & { isAdded?: boolean };
+export type Card = (VirtualCard | LocalCard) & {
+  isAdded?: boolean;
+  //type: 'virtual' | 'local';
+};

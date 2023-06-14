@@ -16,11 +16,9 @@ import { OptionKey } from '../components/Bars/SearchBar/OptionRow';
 import * as api from '../api';
 
 import filterCards from '../utils/filterCards';
-<<<<<<< HEAD
-import { fetchLocalCards } from '../utils/fetchCards';
-=======
 import { fetchUserCards } from '../utils/fetchCards';
->>>>>>> origin/dawba/develop
+import { getName } from '../utils/cardGetters';
+import { Cards } from '../assets/mockData/Cards';
 
 import colors from '../constants/colors';
 import TapBar from '../components/Bars/TapBar';
@@ -80,16 +78,9 @@ export default function MainScreen({ navigation }) {
     }
 
     const lowerCaseCardQuery = cardQuery.toLowerCase();
-<<<<<<< HEAD
     const cardsWithSearchedName = cardList.filter((card) =>
       getName({ Card: card }).toLowerCase().includes(lowerCaseCardQuery)
     );
-=======
-    const cardsWithSearchedName = cardList.filter((card) => {
-      const cardName = card.name ? card.name : card.businessDetails.name;
-      return cardName.toLowerCase().includes(lowerCaseCardQuery);
-    });
->>>>>>> origin/dawba/develop
     setFilteredCards(cardsWithSearchedName);
   }, [cards, filter, cardQuery]);
 
@@ -138,20 +129,21 @@ export default function MainScreen({ navigation }) {
 
     const VCA = new api.VirtualCardsApi();
     const {
+      businessDetails,
       businessDetails: { businessId },
     } = cardToDelete;
     try {
       const deleteResponse = await VCA.deleteVirtualCard(businessId, header);
       const localCards = cards.filter((card) => Boolean(card.name));
       const virtualCards = cards.filter((card) =>
-        Boolean(card.businessDetails && card.businessDetails.businessId !== businessId)
+        Boolean(card.businessDetails && businessDetails.businessId !== businessId)
       );
       const filteredCardswithRemovedDeletedCard = filteredCards.filter((card) => {
         if (card.name) {
           return true;
         }
 
-        return card.businessDetails.businessId !== businessId;
+        return businessDetails.businessId !== businessId;
       });
 
       setCards([...localCards, ...virtualCards]);
@@ -209,16 +201,11 @@ export default function MainScreen({ navigation }) {
         {filteredCards === null && <Loader animation='loader' />}
         {filteredCards?.length && (
           <CardList
-<<<<<<< HEAD
             cards={filteredCards}
             //cards={filteredCards.map((obj) => ({ ...obj, isAdded: false }))}
-=======
-            cards={filteredCards.map((obj) => ({ ...obj, isAdded: true }))}
->>>>>>> origin/dawba/develop
             onLongCardPress={() => setDeletionMode(true)}
             onPress={(card) => handleOnDelete(card)}
             deletionMode={deletionMode}
-            isAdded={true}
           />
         )}
         {filteredCards !== null && !filteredCards.length && <Text>Add your first card!</Text>}

@@ -5,7 +5,7 @@ import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
 
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 
-import { getName } from '../../utils/cardGetters';
+import { getName, getBusinessDetails, getPoints, getInventory } from '../../utils/cardGetters';
 
 import StyleBase from '../../styles/StyleBase';
 
@@ -46,6 +46,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
 
   const selectedCard = route.params.Card as Card;
   const businessDetails = getBusinessDetails({ Card: selectedCard });
+  const name = getName({ Card: selectedCard });
   let points = getPoints({ Card: selectedCard });
   let inventory = getInventory({ Card: selectedCard });
 
@@ -63,22 +64,24 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
     dispatch({ type: ACTIONS.SET_SUBMITTING, payload: !state.isSubmitting });
     let response = null;
     const header = Auth.getAuthHeader();
-    if (selectedCard.type === 'virtual') {
+    //temp
+    if ('businessDetails' in selectedCard) {
       const VCA = new api.VirtualCardsApi();
 
       try {
-        response = await VCA.createVirtualCard(selectedCard.businessesDetails.publicId, header);
+        response = await VCA.createVirtualCard(businessDetails.publicId, header);
       } catch (e) {
         response = e.response.code;
       }
     }
 
-    if (selectedCard.type === 'local') {
+    //inaczej idee krzyczy
+    if ('publicId' in selectedCard) {
       const LCA = new api.LocalCardsApi();
 
       try {
         response = await LCA.createLocalCard(
-          { name: selectedCard.name, type: selectedCard.publicId, code: cardData.data },
+          { name: name, type: selectedCard.publicId, code: cardData.data },
           header
         );
       } catch (e) {
@@ -104,11 +107,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           {/* todo: image as Card.businessDetails.iconImageId */}
           <CardTile
             containerStyle={[styles.cardTile, !selectedCard.isAdded && { paddingBottom: 75 }]}
-            imageUrl={
-              selectedCard?.imageUrl
-                ? selectedCard.imageUrl
-                : selectedCard.businessDetails.bannerImageId
-            }
+            imageUrl={businessDetails.bannerImageId}
             tileStyle={{ width: '88.66%' }}
           />
           {selectedCard.isAdded && (
@@ -155,7 +154,9 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                     {getName({ Card: selectedCard })}
                   </Text>
                   <Text style={[styles.text, { paddingBottom: 40 }]}>Address</Text>
-                  <Text style={styles.text}>{selectedCard.businessDetails.description}</Text>
+                  {/* problem: brak description zwracanego przez api
+                  <Text style={styles.text}>{businessDetails.description}</Text> */}
+                  <Text style={styles.text}>temp text</Text>
                 </BoxContainer>
                 {selectedCard.isAdded && (
                   <>
@@ -164,7 +165,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                         onPress={() => {
                           dispatch({
                             type: ACTIONS.SET_BENEFITS_TO_REALIZE,
-                            payload: selectedCard.content.inventory,
+                            payload: inventory,
                           });
                           dispatch({ type: 'setScreen', payload: 'claimBenefits' });
                         }}
@@ -255,12 +256,8 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
             }}
           />
           <View style={{ alignItems: 'center', height: '75%' }}>
-            {selectedCard.content?.inventory?.length !== 0 && (
-              <Text style={styles.headline}>Available Benefits</Text>
-            )}
-            {selectedCard.content?.inventory?.length === 0 && (
-              <Text style={styles.headline}>No available benefits</Text>
-            )}
+            {inventory.length !== 0 && <Text style={styles.headline}>Available Benefits</Text>}
+            {inventory?.length === 0 && <Text style={styles.headline}>No available benefits</Text>}
             <BenefitList
               benefits={state.benefitsToRealize}
               mode='addToRealization'
@@ -293,6 +290,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
       {!selectedCard.isAdded && (
         <Scanner onPressAdd={(cardData) => handleAddCard(cardData)} disabled={state.isSubmitting} />
       )}
+      {selectedCard.isAdded && <Text>Scanner will be here</Text>}
     </SafeAreaView>
   );
 }

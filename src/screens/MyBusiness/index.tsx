@@ -50,6 +50,7 @@ export default function MyBusinessScreen({ navigation }) {
     }
     navigation.push('MainScreen');
   };
+  //potrzeba TopBar, powrot
   return (
     <SafeAreaView style={StyleBase.container}>
       <Text style={styles.stepCounter}>{`Step ${step}/2`}</Text>
