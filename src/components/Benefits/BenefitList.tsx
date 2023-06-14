@@ -16,7 +16,7 @@ interface BenefitListProps {
   customListStyle?: StyleProp<ViewStyle>;
   customBenefitTileStyle?: StyleProp<ViewStyle>;
   dispatch?: React.Dispatch<any>;
-  mode: 'addToInventory' | 'addToRealization' | 'preview';
+  mode: 'addToInventory' | 'addToRealization' | 'preview' | 'cart';
 }
 
 const BenefitList = ({
@@ -30,8 +30,12 @@ const BenefitList = ({
 
   function getBenefitStyle(item) {
     const benefitStyle = StyleSheet.flatten([styles.benefit, customBenefitTileStyle]);
-    if (mode === 'addToRealization' && item.amountToRealize === 0)
+    if (
+      (mode === 'addToRealization' && item.amountToRealize === 0) ||
+      (mode === 'cart' && item.amount === 0)
+    )
       return [benefitStyle, { backgroundColor: colors.swPaleGreen }];
+
     return benefitStyle;
   }
 
@@ -56,7 +60,7 @@ const BenefitList = ({
             }
             tileStyle={getBenefitStyle(item)}
           >
-            {'price' in item && (
+            {isAddingToInventory && (
               <View style={styles.containerRight}>
                 <View style={styles.containerInRow}>
                   <Text style={styles.text}>{item.price}</Text>
@@ -71,17 +75,26 @@ const BenefitList = ({
                     name='minus-circle-outline'
                     size={25}
                     onPress={() => {
-                      dispatch({ type: ACTIONS.REALIZATION_SUB, payload: item });
+                      mode === 'addToRealization'
+                        ? dispatch({ type: ACTIONS.REALIZATION_SUB, payload: item })
+                        : dispatch({ type: ACTIONS.TRANSACTION_RM_BENEFIT, payload: item });
                     }}
                   />
-                  <Text style={{ fontSize: 25, padding: 10 }}>
-                    {item.amountToRealize} / {item.amount}
-                  </Text>
+                  {mode === 'addToRealization' && (
+                    <Text style={{ fontSize: 25, padding: 10 }}>
+                      {item.amountToRealize} / {item.amount}
+                    </Text>
+                  )}
+                  {mode === 'cart' && (
+                    <Text style={{ fontSize: 25, padding: 10 }}>{item.amount}</Text>
+                  )}
                   <Icon
                     name='plus-circle-outline'
                     size={25}
                     onPress={() => {
-                      dispatch({ type: ACTIONS.REALIZATION_INCREMENT, payload: item });
+                      mode === 'addToRealization'
+                        ? dispatch({ type: ACTIONS.REALIZATION_INCREMENT, payload: item })
+                        : dispatch({ type: ACTIONS.TRANSACTION_ADD_BENEFIT, payload: item });
                     }}
                     style={{ paddingRight: 25 }}
                   />

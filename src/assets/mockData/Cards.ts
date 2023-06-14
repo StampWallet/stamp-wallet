@@ -21,7 +21,7 @@ export const Cards = [
     },
     points: 1000,
     inventory: [],
-    isAdded: true,
+    isAdded: false,
     //benefits: benefits,
   },
 

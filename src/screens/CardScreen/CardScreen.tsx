@@ -154,9 +154,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                     {getName({ Card: selectedCard })}
                   </Text>
                   <Text style={[styles.text, { paddingBottom: 40 }]}>Address</Text>
-                  {/* problem: brak description zwracanego przez api
-                  <Text style={styles.text}>{businessDetails.description}</Text> */}
-                  <Text style={styles.text}>temp text</Text>
+                  <Text style={styles.text}>{businessDetails.description}</Text>
                 </BoxContainer>
                 {selectedCard.isAdded && (
                   <>
@@ -201,6 +199,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                 </View>
                 {selectedCard.isAdded && (
                   <View style={[styles.buttonsContainer, { marginTop: '10%' }]}>
+                    {/*
                     <CustomButton
                       onPress={() => dispatch({ type: ACTIONS.TRANSACTION_CANCEL })}
                       title='Cancel'
@@ -212,13 +211,18 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                       }}
                       title='Save'
                       customButtonStyle={styles.button}
+                    /> */}
+                    <CustomButton
+                      onPress={() => dispatch({ type: ACTIONS.SET_SCREEN, payload: 'cart' })}
+                      title='Cart'
                     />
                   </View>
                 )}
               </>
             )}
           </View>
-          <TapBar />
+          {/*
+          <TapBar callbackFn={() => console.log('test')} tapBarState={'default'} /> */}
         </>
       )}
       {state.screenState === 'benefit' && (
@@ -226,10 +230,12 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           <TopBar
             iconLeft='arrow-left'
             onPressLeft={() => {
-              dispatch({
-                type: ACTIONS.ON_BACK_BENEFITS,
-                payload: { screenState: 'card', cardInfoState: 'benefits' },
-              });
+              {
+                dispatch({
+                  type: ACTIONS.ON_BACK_BENEFITS,
+                  payload: { screenState: 'card', cardInfoState: 'benefits' },
+                });
+              }
             }}
           />
           <BoxContainer style={styles.benefitDesc}>
@@ -238,7 +244,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           <CustomButton
             title='add benefit'
             onPress={() => {
-              dispatch({ type: ACTIONS.TRANSACTION_ADD_BENEFIT });
+              dispatch({ type: ACTIONS.TRANSACTION_ADD_BENEFIT, payload: state.benefit });
             }}
             customButtonStyle={styles.benefitButton}
           />
@@ -275,6 +281,38 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           />
         </>
       )}
+      {state.screenState === 'cart' && (
+        <>
+          <TopBar
+            iconLeft='arrow-left'
+            onPressLeft={() => {
+              dispatch({ type: ACTIONS.TRANSACTION_CLEANUP });
+              dispatch({ type: ACTIONS.SET_SCREEN, payload: 'card' });
+            }}
+          />
+          <View style={{ height: '60%' }}>
+            <BenefitList benefits={state.benefitsToAdd} mode='cart' dispatch={dispatch} />
+          </View>
+          <View style={[styles.buttonsContainer, { marginTop: '10%' }]}>
+            <CustomButton
+              onPress={() => {
+                dispatch({ type: ACTIONS.TRANSACTION_CANCEL });
+                dispatch({ type: ACTIONS.SET_SCREEN, payload: 'card' });
+              }}
+              title='Cancel'
+              customButtonStyle={styles.button}
+            />
+            <CustomButton
+              onPress={() => {
+                dispatch({ type: ACTIONS.TRANSACTION_SAVE, payload: selectedCard });
+                dispatch({ type: ACTIONS.SET_SCREEN, payload: 'card' });
+              }}
+              title='Purchase'
+              customButtonStyle={styles.button}
+            />
+          </View>
+        </>
+      )}
       {!selectedCard.isAdded && (
         <CustomButton
           title='add card'
@@ -282,7 +320,13 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           disabled={state.isSubmitting}
         />
       )}
-      <TapBar />
+      <TapBar
+        callbackFn={() =>
+          //upo
+          selectedCard.isAdded && dispatch({ type: ACTIONS.SET_SCREEN, payload: 'cart' })
+        }
+        tapBarState={'cardScreen'}
+      />
     </SafeAreaView>
   ) : (
     <SafeAreaView style={StyleBase.container}>

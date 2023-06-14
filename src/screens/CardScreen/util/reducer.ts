@@ -13,6 +13,8 @@ export const ACTIONS = {
   SET_BALANCE: 'setBalance',
   SET_BENEFITS_TO_REALIZE: 'setBenefitsToRealize',
   TRANSACTION_ADD_BENEFIT: 'addBenefit',
+  TRANSACTION_RM_BENEFIT: 'removeBenefit',
+  TRANSACTION_CLEANUP: 'cleanup',
   TRANSACTION_SAVE: 'save',
   TRANSACTION_CANCEL: 'cancel',
   REPLACE_STATE: 'replaceState',
@@ -34,7 +36,12 @@ function addToArr(benefit, benefitArr) {
   let item = findInArr(benefit, benefitArr);
   item
     ? item.amount++
-    : benefitArr.push({ publicId: benefit.publicId, amount: 1, name: benefit.name });
+    : benefitArr.push({
+        publicId: benefit.publicId,
+        amount: 1,
+        name: benefit.name,
+        price: benefit.price,
+      });
 }
 
 function completeTransaction(state, payload) {
@@ -50,8 +57,8 @@ function completeTransaction(state, payload) {
   return inventory;
 }
 
-function addToTransaction(state) {
-  const { benefit } = state;
+function addToTransaction(state, payload) {
+  const benefit = payload;
   let benefitsToAdd = state.benefitsToAdd.slice();
   let balance = state.balanceAfterTransaction;
   if (balance < benefit.price) {
@@ -61,6 +68,28 @@ function addToTransaction(state) {
     addToArr(benefit, benefitsToAdd);
   }
   return [benefitsToAdd, balance];
+}
+
+function rmFromTransaction(state, payload) {
+  const benefit = payload;
+  let benefitsToAdd = state.benefitsToAdd.slice();
+  let balance = state.balanceAfterTransaction;
+  let item = findInArr(benefit, benefitsToAdd);
+  if (item.amount > 0) {
+    balance += benefit.price;
+    /*
+  if (item.amount === 1) {
+    console.log('1');
+    benefitsToAdd = benefitsToAdd.filter((item) => item.publicId !== benefit.publicId);
+  } else*/ item.amount--;
+  }
+  return [benefitsToAdd, balance];
+}
+
+function cleanupTransaction(state) {
+  let benefitsToAdd = state.benefitsToAdd.slice();
+  benefitsToAdd = benefitsToAdd.filter((obj) => obj.amount > 0);
+  return benefitsToAdd;
 }
 
 function addToRealization(state, benefit) {
@@ -104,12 +133,29 @@ export function reducer(state, action) {
         balance: payload,
       };
     }
-    case ACTIONS.TRANSACTION_ADD_BENEFIT: {
-      const [benefitsToAdd, balance] = addToTransaction(state);
+    case ACTIONS.TRANSACTION_RM_BENEFIT: {
+      const [benefitsToAdd, balance] = rmFromTransaction(state, payload);
       return {
         ...state,
         benefitsToAdd,
         balanceAfterTransaction: balance,
+      };
+    }
+    case ACTIONS.TRANSACTION_ADD_BENEFIT: {
+      console.log(payload);
+      const [benefitsToAdd, balance] = addToTransaction(state, payload);
+      return {
+        ...state,
+        benefitsToAdd: benefitsToAdd,
+        balanceAfterTransaction: balance,
+      };
+    }
+    case ACTIONS.TRANSACTION_CLEANUP: {
+      const benefitsToAdd = cleanupTransaction(state);
+      console.log(benefitsToAdd);
+      return {
+        ...state,
+        benefitsToAdd: benefitsToAdd,
       };
     }
     case ACTIONS.TRANSACTION_SAVE: {
