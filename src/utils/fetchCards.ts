@@ -8,7 +8,10 @@ export const fetchLocalCards = async (callbackFn: React.Dispatch<React.SetStateA
   try {
     const header = Auth.getAuthHeader();
     const localCardsResponse = await LCA.getLocalCardTypes(header);
-    callbackFn([...localCardsResponse.data.types]);
+    const cards = localCardsResponse.data.types.map((obj) => ({ ...obj, isAdded: false }));
+    callbackFn([...cards]);
+    //callbackFn([...localCardsResponse.data.types.map((obj) => ({ ...obj, isAdded: false }))]);
+    //callbackFn([...localCardsResponse.data.types]);
   } catch (e) {
     console.log('error:', e);
     callbackFn([]);

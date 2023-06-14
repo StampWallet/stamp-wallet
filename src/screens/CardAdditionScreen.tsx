@@ -88,10 +88,7 @@ export default function CardAdditionScreen({ navigation }) {
           {/*<CardList cards={availableCards} />*/}
           {/* for testing purpose */}
           {availableCards?.length ? (
-            <CardList
-              cards={availableCards.map((obj) => ({ ...obj, isAdded: false }))}
-              isAdded={false}
-            />
+            <CardList cards={availableCards} />
           ) : (
             <Text>No cards found</Text>
           )}

@@ -285,6 +285,7 @@ const styles = StyleSheet.create({
     width: '88.66%',
     height: '8%',
     marginTop: '0.075%',
+    backgroundColor: colors.swViolet,
   },
   cardTile: {
     marginBottom: '2%',

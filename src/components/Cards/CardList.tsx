@@ -9,7 +9,6 @@ import { getImage } from '../../utils/cardGetters';
 
 interface Props {
   // todo change the type
-  isAdded: boolean;
   cards: any[];
   onLongCardPress?: () => SetStateAction<any>;
   onPress?: () => void;
@@ -18,13 +17,7 @@ interface Props {
 
 // can use FLASH LIST
 
-export default function CardList({
-  cards,
-  onLongCardPress,
-  deletionMode = false,
-  onPress,
-  isAdded,
-}: Props) {
+export default function CardList({ cards, onLongCardPress, deletionMode = false, onPress }: Props) {
   const navigation = useNavigation();
   const { onPressCard } = useOnPressHandlers();
 
@@ -38,9 +31,7 @@ export default function CardList({
             <CardTile
               // image={getImage(item)}
               onLongCardPress={onLongCardPress}
-              onPress={
-                deletionMode ? () => onPress() : () => onPressCard(navigation, item, isAdded)
-              }
+              onPress={deletionMode ? () => onPress() : () => onPressCard(navigation, item)}
             />
             {/* TODO position correctly the icon*/}
             {/*{deletionMode && <Icon name='delete' style={styles.deleteIcon} size={25} />}*/}

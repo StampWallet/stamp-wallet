@@ -47,7 +47,7 @@ const useOnPressHandlers = () => {
     navigation.push(ADD_CARD_ROUTE);
   };
 
-  const onPressCard = (navigation, card, isAdded) => {
+  const onPressCard = (navigation, card) => {
     //if virtualcard
     //if isAdded use getVirtualCard else getBusiness and use as card
 
@@ -55,7 +55,6 @@ const useOnPressHandlers = () => {
     //temp solution on mockData below
     if ('businessDetails' in card)
       card.businessDetails = { ...card.businessDetails, itemDefinitions: benefits };
-    card = { ...card, isAdded };
     navigation.push(CARD_ROUTE, { Card: card });
   };
 

@@ -8,6 +8,7 @@ export const cards = [
     type: 'chrumaczak',
     code: '1234',
     image: require('../images/biedronka_homepage.jpg'), //brak w api na razie
+    isAdded: true,
   },
   {
     businessDetails: {
@@ -20,6 +21,7 @@ export const cards = [
     },
     points: 1000,
     inventory: [],
+    isAdded: true,
     //benefits: benefits,
   },
 
@@ -34,6 +36,7 @@ export const cards = [
     },
     points: 10000,
     inventory: [],
+    isAdded: true,
   },
 
   {
@@ -47,6 +50,7 @@ export const cards = [
     },
     points: 100,
     inventory: [],
+    isAdded: true,
   },
   {
     businessDetails: {
@@ -59,6 +63,7 @@ export const cards = [
     },
     points: 100,
     inventory: [],
+    isAdded: true,
   },
   {
     businessDetails: {
@@ -71,6 +76,7 @@ export const cards = [
     },
     points: 100,
     inventory: [],
+    isAdded: true,
   },
   {
     businessDetails: {
@@ -83,6 +89,7 @@ export const cards = [
     },
     points: 100,
     inventory: [],
+    isAdded: true,
   },
   {
     businessDetails: {
@@ -95,6 +102,7 @@ export const cards = [
     },
     points: 100,
     inventory: [],
+    isAdded: true,
   },
   {
     businessDetails: {
@@ -107,6 +115,7 @@ export const cards = [
     },
     points: 100,
     inventory: [],
+    isAdded: true,
   },
   {
     businessDetails: {
@@ -119,6 +128,7 @@ export const cards = [
     },
     points: 100,
     inventory: [],
+    isAdded: true,
   },
   {
     businessDetails: {
@@ -131,6 +141,7 @@ export const cards = [
     },
     points: 100,
     inventory: [],
+    isAdded: true,
   },
   {
     businessDetails: {
@@ -143,5 +154,6 @@ export const cards = [
     },
     points: 100,
     inventory: [],
+    isAdded: true,
   },
 ];
