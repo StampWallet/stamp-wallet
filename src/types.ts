@@ -73,6 +73,7 @@ export type InventoryElem = {
   publicId: UUID;
   amount: number;
   name: string;
+  price: number;
 };
 
 export type BusinessDetails = {

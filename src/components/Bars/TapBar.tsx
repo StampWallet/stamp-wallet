@@ -7,13 +7,20 @@ import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 import colors from '../../constants/colors';
 
 interface Props {
-  tapBarState?: 'default' | 'deletion';
+  tapBarState?: 'default' | 'deletion' | 'cardScreen';
   callbackFn?: () => void;
 }
 
 const TapBar = ({ tapBarState, callbackFn }: Props) => {
   const navigation = useNavigation();
   const { onPressBackHome, onPressCardAddition } = useOnPressHandlers();
+
+  const iconName =
+    tapBarState === 'default'
+      ? 'delete'
+      : tapBarState === 'deletion'
+      ? 'close-thick'
+      : 'cart-outline';
 
   return (
     <View style={styles.TapBar}>
@@ -30,11 +37,7 @@ const TapBar = ({ tapBarState, callbackFn }: Props) => {
         </View>
         <View style={styles.containerIcon}>
           <TouchableOpacity onPress={callbackFn}>
-            <Icon
-              name={tapBarState === 'default' ? 'delete' : 'close-thick'}
-              size={35}
-              style={styles.icon}
-            />
+            <Icon name={iconName} size={35} style={styles.icon} />
           </TouchableOpacity>
         </View>
       </View>
