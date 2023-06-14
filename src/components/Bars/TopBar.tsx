@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Platform, StatusBar } from 'react-native';
+import { StyleSheet, View, Platform, StatusBar, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import colors from '../../constants/colors';
 
 interface Props {
   iconLeft: string;
@@ -22,16 +23,15 @@ const TopBar = ({
   <View style={styles.topBar}>
     <View style={styles.container}>
       <View style={styles.containerIcon}>
-        <Icon name={iconLeft} size={30} onPress={onPressLeft} style={{ color: iconLeftColor }} />
+        <TouchableOpacity onPress={onPressLeft}>
+          <Icon name={iconLeft} size={30} style={{ color: iconLeftColor }} />
+        </TouchableOpacity>
       </View>
       <View style={styles.containerIcon}>
         {iconRight && (
-          <Icon
-            name={iconRight}
-            size={30}
-            onPress={onPressRight}
-            style={{ color: iconRightColor }}
-          />
+          <TouchableOpacity onPress={onPressRight}>
+            <Icon name={iconRight} size={30} style={{ color: iconRightColor }} />
+          </TouchableOpacity>
         )}
       </View>
     </View>
@@ -45,19 +45,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   topBar: {
-    height: 55, //temp
-    //height: '6.125%',
     width: '100%',
-    backgroundColor: '#50AAEB',
     position: 'absolute',
     left: 0,
     top: 0,
+    zIndex: 2,
+    height: 60,
+    backgroundColor: colors.swLightBlue,
     // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   containerIcon: {
     paddingLeft: 30,
     paddingRight: 30,
-    justifyContent: 'center',
+    paddingBottom: 5,
+    justifyContent: 'flex-end',
   },
 });
 

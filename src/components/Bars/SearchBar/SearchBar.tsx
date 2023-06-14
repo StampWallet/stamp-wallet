@@ -16,7 +16,7 @@ const SearchBar = ({
 }: SearchBarProps) => (
   <View style={styles.container}>
     {deletionMode ? (
-      <Text style={styles.deleteHeader}>Tap the card you want to delete.</Text>
+      <Text style={styles.deleteHeader}>Choose card you want to delete.</Text>
     ) : (
       <TextInput
         style={styles.searchBar}

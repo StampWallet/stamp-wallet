@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     position: 'absolute',
-    top: 40,
+    top: 60,
     height: 280,
     width: '100%',
     borderBottomWidth: 2,

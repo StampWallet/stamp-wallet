@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -8,7 +8,7 @@ import colors from '../../constants/colors';
 
 interface Props {
   tapBarState?: 'default' | 'deletion';
-  callbackFn: () => void;
+  callbackFn?: () => void;
 }
 
 const TapBar = ({ tapBarState, callbackFn }: Props) => {
@@ -19,28 +19,23 @@ const TapBar = ({ tapBarState, callbackFn }: Props) => {
     <View style={styles.TapBar}>
       <View style={styles.container}>
         <View style={styles.containerIcon}>
-          <Icon
-            name='home-outline'
-            onPress={() => onPressBackHome(navigation)}
-            size={35}
-            style={styles.icon}
-          />
+          <TouchableOpacity onPress={() => onPressBackHome(navigation)}>
+            <Icon name='home-outline' size={35} style={styles.icon} />
+          </TouchableOpacity>
         </View>
         <View style={styles.containerIcon}>
-          <Icon
-            name='plus-circle-outline'
-            onPress={() => onPressCardAddition(navigation)}
-            size={35}
-            style={styles.icon}
-          />
+          <TouchableOpacity onPress={() => onPressCardAddition(navigation)}>
+            <Icon name='plus-circle-outline' size={35} style={styles.icon} />
+          </TouchableOpacity>
         </View>
         <View style={styles.containerIcon}>
-          <Icon
-            name={tapBarState === 'default' ? 'delete' : 'close-thick'}
-            onPress={callbackFn}
-            size={35}
-            style={styles.icon}
-          />
+          <TouchableOpacity onPress={callbackFn}>
+            <Icon
+              name={tapBarState === 'default' ? 'delete' : 'close-thick'}
+              size={35}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </View>

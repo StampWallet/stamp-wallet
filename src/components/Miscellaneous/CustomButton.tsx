@@ -32,6 +32,8 @@ const CustomButton = ({
     // this removes padding and border for image being present
     { ...(!title && { padding: 0 }) },
     { ...(buttonColor && { backgroundColor: buttonColor }) },
+    // this adds opacity when button is disabled
+    { ...(disabled && { opacity: 0.5 }) },
   ]);
   const textStyle = StyleSheet.flatten([styles.buttonText, customTextStyle]);
 

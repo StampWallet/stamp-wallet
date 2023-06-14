@@ -24,6 +24,8 @@ import { SERVER_ADDRESS } from '../constants/numericAndStringConstants';
 import { Configuration } from '../api';
 import Auth from '../database/Auth';
 import { REGISTER_ROUTE } from '../constants/paths';
+import Loader from '../components/Loader';
+import CenteredLoader from '../components/CenteredLoader';
 
 export default function RegistrationScreen({ navigation }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,55 +80,61 @@ export default function RegistrationScreen({ navigation }) {
 
   return (
     <SafeAreaView style={StyleBase.container}>
-      <Icon
-        name='arrow-left'
-        size={30}
-        style={StyleBase.backArrow}
-        onPress={() => navigation.pop()}
-        title='back'
-      />
-      <BoxContainer style={{ marginBottom: 25 }}>
-        <HookFormInput
-          control={control}
-          rules={{
-            required,
-          }}
-          name='name'
-          placeholder='name'
-          isInvalid={Boolean(errors.name)}
-        />
-        <HookFormInput
-          control={control}
-          rules={{ required, pattern: validateEmail }}
-          name='email'
-          placeholder='email'
-          isInvalid={Boolean(errors.email)}
-        />
-        <HookFormInput
-          control={control}
-          rules={{ required, pattern: validatePassword }}
-          name='password'
-          placeholder='password'
-          isInvalid={Boolean(errors.password)}
-          secureTextEntry
-        />
-        <HookFormInput
-          control={control}
-          rules={{
-            required,
-            validate: () => validateMatchingPasswords(password, passwordRepeated),
-          }}
-          name='passwordRepeated'
-          placeholder='repeat password'
-          isInvalid={Boolean(errors.passwordRepeated)}
-          secureTextEntry
-        />
-      </BoxContainer>
-      <CustomButton
-        onPress={handleSubmit((data: RegistrationFormData) => handleRegistration(data))}
-        title='Register'
-        disabled={isSubmitting}
-      />
+      {isSubmitting ? (
+        <CenteredLoader animation='loader' />
+      ) : (
+        <>
+          <Icon
+            name='arrow-left'
+            size={30}
+            style={StyleBase.backArrow}
+            onPress={() => navigation.pop()}
+            title='back'
+          />
+          <BoxContainer style={{ marginBottom: 25 }}>
+            <HookFormInput
+              control={control}
+              rules={{
+                required,
+              }}
+              name='name'
+              placeholder='name'
+              isInvalid={Boolean(errors.name)}
+            />
+            <HookFormInput
+              control={control}
+              rules={{ required, pattern: validateEmail }}
+              name='email'
+              placeholder='email'
+              isInvalid={Boolean(errors.email)}
+            />
+            <HookFormInput
+              control={control}
+              rules={{ required, pattern: validatePassword }}
+              name='password'
+              placeholder='password'
+              isInvalid={Boolean(errors.password)}
+              secureTextEntry
+            />
+            <HookFormInput
+              control={control}
+              rules={{
+                required,
+                validate: () => validateMatchingPasswords(password, passwordRepeated),
+              }}
+              name='passwordRepeated'
+              placeholder='repeat password'
+              isInvalid={Boolean(errors.passwordRepeated)}
+              secureTextEntry
+            />
+          </BoxContainer>
+          <CustomButton
+            onPress={handleSubmit((data: RegistrationFormData) => handleRegistration(data))}
+            title='Register'
+            disabled={isSubmitting}
+          />
+        </>
+      )}
     </SafeAreaView>
   );
 }

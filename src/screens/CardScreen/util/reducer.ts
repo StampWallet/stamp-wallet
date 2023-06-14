@@ -21,6 +21,9 @@ export const ACTIONS = {
   REALIZATION_INCREMENT: 'incrementAmountOfBenefit',
   REALIZATION_SUB: 'substractAmountOfBenefit',
   REALIZE_BENEFITS: 'realizeBenefits',
+  //REALIZATION_ADD: 'addBenefitToRealization',
+  //REALIZATION_REMOVE: 'removeBenefitFromRealization',
+  SET_SUBMITTING: 'setSubmit',
 };
 
 function findInArr(benefit, benefitArr) {
@@ -105,7 +108,7 @@ export function reducer(state, action) {
       const [benefitsToAdd, balance] = addToTransaction(state);
       return {
         ...state,
-        benefitsToAdd: benefitsToAdd,
+        benefitsToAdd,
         balanceAfterTransaction: balance,
       };
     }
@@ -113,7 +116,7 @@ export function reducer(state, action) {
       const inventory = completeTransaction(state, action.payload);
       return {
         ...state,
-        inventory: inventory,
+        inventory,
         balance: state.balanceAfterTransaction,
         benefitsToAdd: [],
       };
@@ -149,14 +152,21 @@ export function reducer(state, action) {
       const benefitsToRealize = addToRealization(state, action.payload);
       return {
         ...state,
-        benefitsToRealize: benefitsToRealize,
+        benefitsToRealize,
       };
     }
     case ACTIONS.REALIZATION_SUB: {
       const benefitsToRealize = subFromRealization(state, action.payload);
       return {
         ...state,
-        benefitsToRealize: benefitsToRealize,
+        benefitsToRealize,
+      };
+    }
+
+    case ACTIONS.SET_SUBMITTING: {
+      return {
+        ...state,
+        isSubmitting: action.payload,
       };
     }
     case ACTIONS.SET_BENEFITS_TO_REALIZE: {
@@ -171,6 +181,10 @@ export function reducer(state, action) {
         ...state,
         benefitsToRealize: [],
       };
+    }
+
+    default: {
+      return state;
     }
   }
 }
