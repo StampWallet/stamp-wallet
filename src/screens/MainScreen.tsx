@@ -61,7 +61,8 @@ export default function MainScreen({ navigation }) {
   };
 
   useEffect(() => {
-    fetchUserCards(setCards);
+    //fetchUserCards(setCards);
+    setCards(Cards);
   }, []);
 
   // filters cards based on search query + current filter

@@ -79,6 +79,7 @@ export type BusinessDetails = {
   publicId: UUID;
   name: string;
   address: string;
+  description?: string;
   gpsCoordinates: string;
   bannerImageId: UUID;
   iconImageId: UUID;

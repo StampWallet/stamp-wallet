@@ -7,7 +7,7 @@ export const Cards = [
     name: 'Biedronka',
     type: 'chrumaczak',
     code: '1234',
-    imageUrl: require('../images/biedronka_homepage.jpg'), //brak w api na razie
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/f/fc/Kaufland_supermarket2.jpg',
     isAdded: true,
   },
   {

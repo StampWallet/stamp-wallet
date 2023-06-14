@@ -54,7 +54,6 @@ export const fetchUserCards = async (callbackFn: React.Dispatch<React.SetStateAc
     let cardsWithImgUrl = [];
 
     const localCards = userCardsResponse.data?.localCards || [];
-    //potrzebne: dodane isAdded: true do kazdego z objektow
     const virtualCards = userCardsResponse.data?.virtualCards
       ? userCardsResponse.data.virtualCards.map((card) => ({
           ...card,
