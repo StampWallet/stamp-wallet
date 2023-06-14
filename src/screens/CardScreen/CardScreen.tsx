@@ -118,7 +118,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                 ? () =>
                     dispatch({
                       type: ACTIONS.OPEN_MODAL,
-                      payload: onPressBack(navigation),
+                      payload: () => onPressBack(navigation),
                     })
                 : () => onPressBack(navigation)
             }
