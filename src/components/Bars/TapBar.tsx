@@ -34,10 +34,12 @@ const TapBar = ({ tapBarState, callbackFn, dispatch }: Props) => {
                 ? () =>
                     dispatch({
                       type: ACTIONS.OPEN_MODAL,
-                      payload: () => onPressBackHome(navigation),
+                      payload: () => {
+                        dispatch({ type: ACTIONS.CLOSE_MODAL });
+                        onPressBackHome(navigation);
+                      },
                     })
                 : () => {
-                    console.log('no dispatch');
                     onPressBackHome(navigation);
                   }
             }
@@ -54,6 +56,8 @@ const TapBar = ({ tapBarState, callbackFn, dispatch }: Props) => {
                       type: ACTIONS.OPEN_MODAL,
                       payload: () => {
                         dispatch({ type: ACTIONS.TRANSACTION_CANCEL });
+                        dispatch({ type: ACTIONS.SET_SCREEN, payload: 'card' });
+                        dispatch({ type: ACTIONS.CLOSE_MODAL });
                         onPressCardAddition(navigation);
                       },
                     });

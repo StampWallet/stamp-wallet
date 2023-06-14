@@ -35,7 +35,6 @@ interface CardInfoScreenProps {
 }
 
 function ClaimBenefits(dispatch, inventory) {
-  console.log('works, yahooo');
   dispatch({
     type: ACTIONS.SET_BENEFITS_TO_REALIZE,
     payload: inventory,
@@ -62,7 +61,6 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
 
   const [state, dispatch] = useReducer(reducer, {
     ...INITIAL_STATE,
-    // dumb hack with fallbacks, but works for now
     balance: points,
     balanceAfterTransaction: points,
     inventory: inventory,
@@ -120,13 +118,9 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                 ? () =>
                     dispatch({
                       type: ACTIONS.OPEN_MODAL,
-                      payload: () => onPressBack(navigation),
+                      payload: onPressBack(navigation),
                     })
-                : /*dispatch({
-                    type: ACTIONS.OPEN_MODAL,
-                    payload: () => onPressBack(navigation),
-                  })*/
-                  () => onPressBack(navigation)
+                : () => onPressBack(navigation)
             }
           />
           {/* todo: image as Card.businessDetails.iconImageId */}
@@ -190,15 +184,13 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                             ? () =>
                                 dispatch({
                                   type: ACTIONS.OPEN_MODAL,
-                                  payload: () => ClaimBenefits(dispatch, inventory),
+                                  payload: () => {
+                                    dispatch({ type: ACTIONS.TRANSACTION_CANCEL });
+                                    dispatch({ type: ACTIONS.CLOSE_MODAL });
+                                    ClaimBenefits(dispatch, inventory);
+                                  },
                                 })
-                            : () => ClaimBenefits(dispatch, inventory) /*{
-                                dispatch({
-                                  type: ACTIONS.SET_BENEFITS_TO_REALIZE,
-                                  payload: inventory,
-                                });
-                                dispatch({ type: 'setScreen', payload: 'claimBenefits' });
-                              }*/
+                            : () => ClaimBenefits(dispatch, inventory)
                         }
                         title='Claim Benefits'
                       />
@@ -350,7 +342,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
         header='You have items pending in cart!'
         description='Do you wish to discard them and proceed?'
         isModalOpen={state.isModalOpen}
-        confirmOption={<CustomButton onPress={() => state.onConfirmModal} title='Yes' />}
+        confirmOption={<CustomButton onPress={state.onConfirmModal} title='Yes' />}
         cancelOption={
           <CustomButton onPress={() => dispatch({ type: ACTIONS.CLOSE_MODAL })} title='No' />
         }
@@ -362,7 +354,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
       {!selectedCard.isAdded && (
         <Scanner onPressAdd={(cardData) => handleAddCard(cardData)} disabled={state.isSubmitting} />
       )}
-      {selectedCard.isAdded && <Text>Scanner will be here</Text>}
+      {selectedCard.isAdded && <Text>Code will be here</Text>}
     </SafeAreaView>
   );
 }

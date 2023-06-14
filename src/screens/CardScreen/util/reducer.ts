@@ -81,11 +81,7 @@ function rmFromTransaction(state, payload) {
   let item = findInArr(benefit, benefitsToAdd);
   if (item.amount > 0) {
     balance += benefit.price;
-    /*
-  if (item.amount === 1) {
-    console.log('1');
-    benefitsToAdd = benefitsToAdd.filter((item) => item.publicId !== benefit.publicId);
-  } else*/ item.amount--;
+    item.amount--;
   }
   return [benefitsToAdd, balance];
 }
@@ -114,14 +110,12 @@ export function reducer(state, action) {
   const { payload } = action;
   switch (action.type) {
     case ACTIONS.CLOSE_MODAL: {
-      console.log('Modal should disappear');
       return {
         ...state,
         isModalOpen: false,
       };
     }
     case ACTIONS.OPEN_MODAL: {
-      console.log('Modal should open');
       return {
         ...state,
         isModalOpen: true,
@@ -161,7 +155,6 @@ export function reducer(state, action) {
       };
     }
     case ACTIONS.TRANSACTION_ADD_BENEFIT: {
-      console.log(payload);
       const [benefitsToAdd, balance] = addToTransaction(state, payload);
       return {
         ...state,
@@ -171,7 +164,6 @@ export function reducer(state, action) {
     }
     case ACTIONS.TRANSACTION_CLEANUP: {
       const benefitsToAdd = cleanupTransaction(state);
-      console.log(benefitsToAdd);
       return {
         ...state,
         benefitsToAdd: benefitsToAdd,
