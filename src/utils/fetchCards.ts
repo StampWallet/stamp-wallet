@@ -55,7 +55,12 @@ export const fetchUserCards = async (callbackFn: React.Dispatch<React.SetStateAc
 
     const localCards = userCardsResponse.data?.localCards || [];
     //potrzebne: dodane isAdded: true do kazdego z objektow
-    const virtualCards = userCardsResponse.data?.virtualCards || [];
+    const virtualCards = userCardsResponse.data?.virtualCards
+      ? userCardsResponse.data.virtualCards.map((card) => ({
+          ...card,
+          isAdded: true,
+        }))
+      : [];
 
     localCards.forEach((card) => {
       const matchingCard = allLocalCards.find((cardWithUrl) => cardWithUrl.publicId === card.type);
