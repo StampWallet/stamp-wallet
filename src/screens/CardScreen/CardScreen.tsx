@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useState } from 'react';
 import { StyleSheet, Text, View, StatusBar, Pressable, SafeAreaView } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
@@ -18,6 +18,7 @@ import Tile from '../../components/Miscellaneous/Tile';
 import BenefitList from '../../components/Benefits/BenefitList';
 import CustomButton from '../../components/Miscellaneous/CustomButton';
 import BoxContainer from '../../components/Miscellaneous/BoxContainer';
+import CustomModal from '../../components/Modals/CustomModal';
 import { Card } from '../../types';
 
 import * as api from '../../api';
@@ -31,6 +32,15 @@ import Scanner from '../../components/Scanner';
 interface CardInfoScreenProps {
   navigation: any; //proper type
   route: any; //proper type
+}
+
+function ClaimBenefits(dispatch, inventory) {
+  console.log('works, yahooo');
+  dispatch({
+    type: ACTIONS.SET_BENEFITS_TO_REALIZE,
+    payload: inventory,
+  });
+  dispatch({ type: 'setScreen', payload: 'claimBenefits' });
 }
 
 export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
@@ -103,7 +113,22 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
       <StatusBar barStyle='default' />
       {state.screenState === 'card' && (
         <>
-          <TopBar iconLeft='arrow-left' onPressLeft={() => onPressBack(navigation)} />
+          <TopBar
+            iconLeft='arrow-left'
+            onPressLeft={
+              state.benefitsToAdd.length > 0
+                ? () =>
+                    dispatch({
+                      type: ACTIONS.OPEN_MODAL,
+                      payload: () => onPressBack(navigation),
+                    })
+                : /*dispatch({
+                    type: ACTIONS.OPEN_MODAL,
+                    payload: () => onPressBack(navigation),
+                  })*/
+                  () => onPressBack(navigation)
+            }
+          />
           {/* todo: image as Card.businessDetails.iconImageId */}
           <CardTile
             containerStyle={[styles.cardTile, !selectedCard.isAdded && { paddingBottom: 75 }]}
@@ -160,13 +185,21 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                   <>
                     <View style={styles.claimButton}>
                       <CustomButton
-                        onPress={() => {
-                          dispatch({
-                            type: ACTIONS.SET_BENEFITS_TO_REALIZE,
-                            payload: inventory,
-                          });
-                          dispatch({ type: 'setScreen', payload: 'claimBenefits' });
-                        }}
+                        onPress={
+                          state.benefitsToAdd.length > 0
+                            ? () =>
+                                dispatch({
+                                  type: ACTIONS.OPEN_MODAL,
+                                  payload: () => ClaimBenefits(dispatch, inventory),
+                                })
+                            : () => ClaimBenefits(dispatch, inventory) /*{
+                                dispatch({
+                                  type: ACTIONS.SET_BENEFITS_TO_REALIZE,
+                                  payload: inventory,
+                                });
+                                dispatch({ type: 'setScreen', payload: 'claimBenefits' });
+                              }*/
+                        }
                         title='Claim Benefits'
                       />
                     </View>
@@ -306,11 +339,21 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
         />
       )}
       <TapBar
+        dispatch={state.benefitsToAdd.length > 0 ? dispatch : undefined}
         callbackFn={() =>
           //upo
           selectedCard.isAdded && dispatch({ type: ACTIONS.SET_SCREEN, payload: 'cart' })
         }
         tapBarState={'cardScreen'}
+      />
+      <CustomModal
+        header='You have items pending in cart!'
+        description='Do you wish to discard them and proceed?'
+        isModalOpen={state.isModalOpen}
+        confirmOption={<CustomButton onPress={() => state.onConfirmModal} title='Yes' />}
+        cancelOption={
+          <CustomButton onPress={() => dispatch({ type: ACTIONS.CLOSE_MODAL })} title='No' />
+        }
       />
     </SafeAreaView>
   ) : (

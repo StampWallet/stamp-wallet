@@ -4,6 +4,8 @@ export const INITIAL_STATE = {
   benefit: null,
   benefitsToAdd: [],
   benefitsToRealize: [],
+  isModalOpen: false,
+  onConfirmModal: () => {},
 };
 
 export const ACTIONS = {
@@ -26,6 +28,8 @@ export const ACTIONS = {
   //REALIZATION_ADD: 'addBenefitToRealization',
   //REALIZATION_REMOVE: 'removeBenefitFromRealization',
   SET_SUBMITTING: 'setSubmit',
+  OPEN_MODAL: 'checkIfTransactionPending',
+  CLOSE_MODAL: 'closeModal',
 };
 
 function findInArr(benefit, benefitArr) {
@@ -109,6 +113,21 @@ function subFromRealization(state, benefit) {
 export function reducer(state, action) {
   const { payload } = action;
   switch (action.type) {
+    case ACTIONS.CLOSE_MODAL: {
+      console.log('Modal should disappear');
+      return {
+        ...state,
+        isModalOpen: false,
+      };
+    }
+    case ACTIONS.OPEN_MODAL: {
+      console.log('Modal should open');
+      return {
+        ...state,
+        isModalOpen: true,
+        onConfirmModal: payload,
+      };
+    }
     case ACTIONS.SET_SCREEN: {
       return {
         ...state,

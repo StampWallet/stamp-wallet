@@ -5,13 +5,15 @@ import { useNavigation } from '@react-navigation/native';
 
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 import colors from '../../constants/colors';
+import { ACTIONS } from '../../screens/CardScreen/util/reducer';
 
 interface Props {
   tapBarState?: 'default' | 'deletion' | 'cardScreen';
   callbackFn?: () => void;
+  dispatch?: React.Dispatch<any>;
 }
 
-const TapBar = ({ tapBarState, callbackFn }: Props) => {
+const TapBar = ({ tapBarState, callbackFn, dispatch }: Props) => {
   const navigation = useNavigation();
   const { onPressBackHome, onPressCardAddition } = useOnPressHandlers();
 
@@ -26,12 +28,39 @@ const TapBar = ({ tapBarState, callbackFn }: Props) => {
     <View style={styles.TapBar}>
       <View style={styles.container}>
         <View style={styles.containerIcon}>
-          <TouchableOpacity onPress={() => onPressBackHome(navigation)}>
+          <TouchableOpacity
+            onPress={
+              dispatch && dispatch != undefined
+                ? () =>
+                    dispatch({
+                      type: ACTIONS.OPEN_MODAL,
+                      payload: () => onPressBackHome(navigation),
+                    })
+                : () => {
+                    console.log('no dispatch');
+                    onPressBackHome(navigation);
+                  }
+            }
+          >
             <Icon name='home-outline' size={35} style={styles.icon} />
           </TouchableOpacity>
         </View>
         <View style={styles.containerIcon}>
-          <TouchableOpacity onPress={() => onPressCardAddition(navigation)}>
+          <TouchableOpacity
+            onPress={
+              dispatch && dispatch != undefined
+                ? () => {
+                    dispatch({
+                      type: ACTIONS.OPEN_MODAL,
+                      payload: () => {
+                        dispatch({ type: ACTIONS.TRANSACTION_CANCEL });
+                        onPressCardAddition(navigation);
+                      },
+                    });
+                  }
+                : () => onPressCardAddition(navigation)
+            }
+          >
             <Icon name='plus-circle-outline' size={35} style={styles.icon} />
           </TouchableOpacity>
         </View>
