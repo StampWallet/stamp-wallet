@@ -5,14 +5,15 @@ import { CommonActions } from '@react-navigation/native';
 import StyleBase from '../../styles/StyleBase';
 import colors from '../../constants/colors';
 import TopBar from '../../components/Bars/TopBar';
-import { BUSINESS_ROUTE } from '../../constants/paths';
+import { BUSINESS_ROUTE, MAIN_ROUTE } from '../../constants/paths';
 
-import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
+import { reducer, INITIAL_STATE, ACTIONS, ProcessBenefitsIn } from './util/reducer';
 import BenefitList from '../../components/Benefits/BenefitList';
 import BoxContainer from '../../components/Miscellaneous/BoxContainer';
 import HookFormInput from '../../components/HookFormComponents/HookFormInput';
 import { useForm } from 'react-hook-form';
 import CustomButton from '../../components/Miscellaneous/CustomButton';
+import { benefits } from '../../assets/mockData/BenefitsApi';
 
 /* 
     todo: 
@@ -25,7 +26,7 @@ function Navigate(navigation, screenState, dispatch) {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: BUSINESS_ROUTE }],
+        routes: [{ name: MAIN_ROUTE }],
       })
     );
   }
@@ -74,12 +75,20 @@ const mockBenefitsData = [
 ];
 
 export default function BenefitRealizationScreen({ navigation, route }: Props) {
+  //const benefits = route.props;
+  const Benefits = benefits;
+  let benefitsProcessed = ProcessBenefitsIn(Benefits);
+  console.log(benefitsProcessed);
   const { control } = useForm();
   const [state, dispatch] = useReducer(reducer, {
     ...INITIAL_STATE,
     //screenState: 'transaction',
+    //benefitsInt: benefitsProcessed,
+    //benefitsToRealize: benefitsProcessed,
+    benefitsInt: mockBenefitsData.map((obj) => ({ ...obj, amountToRealize: obj.amount })),
     benefitsToRealize: mockBenefitsData.map((obj) => ({ ...obj, amountToRealize: obj.amount })),
   });
+
   return (
     <SafeAreaView style={[StyleBase.container, { justifyContent: 'flex-end' }]}>
       <StatusBar barStyle='default' />
@@ -171,7 +180,7 @@ const styles = StyleSheet.create({
   },
   headline: {
     fontSize: 25,
-    paddingBottom: 30,
+    paddingBottom: 15,
     textDecorationLine: 'underline',
   },
   whiteButton: {

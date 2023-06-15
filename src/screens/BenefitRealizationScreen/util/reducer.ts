@@ -1,3 +1,5 @@
+import { postTransaction } from '../../../utils/transactions';
+
 export const INITIAL_STATE = {
   screenState: 'transaction',
   benefitsToRealize: [],
@@ -31,6 +33,45 @@ function subFromRealization(state, benefit) {
   let item = findInArr(benefit, benefitsToRealize);
   if (item.amountToRealize > 0) item.amountToRealize--;
   return benefitsToRealize;
+}
+
+function SubArrays(arr1, arr2) {
+  let arrResult = arr1.slice();
+  arr2.forEach((obj) => {
+    let item = findInArr(obj, arrResult);
+    item.amount -= obj.amount;
+  });
+  return arrResult;
+}
+
+export function ProcessBenefitsIn(benefits) {
+  let benefitsToRealize = [];
+  benefits.forEach((obj) => {
+    let item = findInArr(obj, benefitsToRealize);
+    item
+      ? (item.amount++, item.amountToRealize++)
+      : (benefitsToRealize = [
+          ...benefitsToRealize,
+          { publicId: item.publicId, amount: 1, amountToRealize: 1 },
+        ]);
+  });
+  return benefitsToRealize;
+}
+
+function ProcessBenefitsOut(benefitsToRealize, benefitsToRecall, addedPoints) {
+  let processedBenefits = { addedPoints: addedPoints, itemActions: [] };
+  let { itemActions } = processedBenefits;
+  benefitsToRealize.forEach((obj) => {
+    for (let i = 0; i < obj.amount; i++) {
+      itemActions = [...itemActions, { itemId: obj.publicId, action: 'REDEEMED' }];
+    }
+  });
+  benefitsToRecall.forEach((obj) => {
+    for (let i = 0; i < obj.amount; i++) {
+      itemActions = [...itemActions, { itemId: obj.publicId, action: 'RECALLED' }];
+    }
+  });
+  return itemActions;
 }
 
 export function reducer(state, action) {
@@ -76,12 +117,19 @@ export function reducer(state, action) {
       };
     }
     case ACTIONS.REALIZATION_ACCEPT: {
-      alert('Work in progress');
+      console.log('dupa1');
+      let benefitsToRecall = SubArrays(state.benefitsInt, state.benefitsToRealize);
+      console.log(benefitsToRecall);
+      let benefits = ProcessBenefitsOut(state.benefitsToRealize, benefitsToRecall, payload);
+      console.log(benefits);
+      //postTransaction(state.transactionCode, benefits);
       //tbd
       return state;
     }
     case ACTIONS.REALIZATION_CANCEL: {
-      alert('Work in progress');
+      let benefits = ProcessBenefitsOut([], state.benefitsInt, 0);
+      console.log(benefits);
+      //postTransaction(state.transactionCode, benefits);
       //tbd
       return state;
     }
