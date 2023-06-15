@@ -26,6 +26,7 @@ const SideBar = ({ translateXValue, mainScreenState }) => {
           })
         );
       case BUSINESS_ROUTE:
+        console.log(edit);
         return edit
           ? navigation.dispatch(
               CommonActions.navigate({ name: BUSINESS_ROUTE, params: { isEditing: true } })
@@ -81,7 +82,7 @@ const SideBar = ({ translateXValue, mainScreenState }) => {
         )}
         {businessCreated && (
           <CustomButton
-            onPress={() => onPressNavigate(BUSINESS_ROUTE)}
+            onPress={() => onPressNavigate(BUSINESS_ROUTE, true)}
             title='my business'
             customButtonStyle={styles.customButtonStyle}
             customTextStyle={styles.customTextStyle}
