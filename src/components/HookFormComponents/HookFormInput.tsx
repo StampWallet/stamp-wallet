@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginVertical: 5,
     marginBottom: 10,
-    height: 25,
+    height: 40,
     justifyContent: 'center',
   },
   header: {
