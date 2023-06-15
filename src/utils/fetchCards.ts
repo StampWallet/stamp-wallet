@@ -26,8 +26,16 @@ export const fetchVirtualCards = async (
 
   try {
     const header = Auth.getAuthHeader();
-    const virtualCardsResponse = await UA.searchBusinesses(query, null, null, header);
-    const cards = virtualCardsResponse.data.businesses.map((obj) => ({ ...obj, isAdded: false }));
+    const virtualCardsResponse = await UA.searchBusinesses(
+      'franek biznes',
+      undefined,
+      undefined,
+      header
+    );
+    const cards = virtualCardsResponse.data.businesses.map((obj) => ({
+      businessDetails: { ...obj },
+      isAdded: false,
+    }));
     callbackFn([...cards]);
   } catch (e) {
     console.log('error:', e);
@@ -60,6 +68,8 @@ export const fetchUserCards = async (callbackFn: React.Dispatch<React.SetStateAc
           isAdded: true,
         }))
       : [];
+
+    console.log(virtualCards);
 
     localCards.forEach((card) => {
       const matchingCard = allLocalCards.find((cardWithUrl) => cardWithUrl.publicId === card.type);
@@ -103,5 +113,16 @@ export const fetchNonAddedCards = async (
     return callbackFn([...nonUserLocalCards]);
   } catch (e) {
     return callbackFn([]);
+  }
+};
+
+export const fetchVirtualCard = async (publicId: string) => {
+  const VC = new api.VirtualCardsApi();
+  const header = Auth.getAuthHeader();
+  try {
+    const virtualCard = await VC.getVirtualCard(publicId, header);
+    console.log(virtualCard.data);
+  } catch (e) {
+    console.log('error: ', e);
   }
 };
