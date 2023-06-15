@@ -16,7 +16,7 @@ interface BenefitListProps {
   customListStyle?: StyleProp<ViewStyle>;
   customBenefitTileStyle?: StyleProp<ViewStyle>;
   dispatch?: React.Dispatch<any>;
-  mode: 'addToInventory' | 'addToRealization' | 'preview' | 'cart';
+  mode: 'addToInventory' | 'addToRealization' | 'preview' | 'cart' | 'realizationInfo';
 }
 
 const BenefitList = ({
@@ -60,7 +60,7 @@ const BenefitList = ({
             }
             tileStyle={getBenefitStyle(item)}
           >
-            {isAddingToInventory && (
+            {(isAddingToInventory || mode === 'preview') && (
               <View style={styles.containerRight}>
                 <View style={styles.containerInRow}>
                   <Text style={styles.text}>{item.price}</Text>
@@ -70,35 +70,43 @@ const BenefitList = ({
             )}
             {'amount' in item && (
               <View style={[styles.containerRight, { width: '30%' }]}>
-                <View style={styles.containerInRow}>
-                  <Icon
-                    name='minus-circle-outline'
-                    size={25}
-                    onPress={() => {
-                      mode === 'addToRealization'
-                        ? dispatch({ type: ACTIONS.REALIZATION_SUB, payload: item })
-                        : dispatch({ type: ACTIONS.TRANSACTION_RM_BENEFIT, payload: item });
-                    }}
-                  />
-                  {mode === 'addToRealization' && (
-                    <Text style={{ fontSize: 25, padding: 10 }}>
-                      {item.amountToRealize} / {item.amount}
-                    </Text>
-                  )}
-                  {mode === 'cart' && (
+                {(mode === 'addToRealization' || mode === 'cart') && (
+                  <View style={styles.containerInRow}>
+                    <Icon
+                      name='minus-circle-outline'
+                      size={25}
+                      onPress={() => {
+                        mode === 'addToRealization'
+                          ? dispatch({ type: ACTIONS.REALIZATION_SUB, payload: item })
+                          : dispatch({ type: ACTIONS.TRANSACTION_RM_BENEFIT, payload: item });
+                      }}
+                    />
+                    {mode === 'addToRealization' && (
+                      <Text style={{ fontSize: 25, padding: 10 }}>
+                        {item.amountToRealize} / {item.amount}
+                      </Text>
+                    )}
+
+                    {mode === 'cart' && (
+                      <Text style={{ fontSize: 25, padding: 10 }}>{item.amount}</Text>
+                    )}
+                    <Icon
+                      name='plus-circle-outline'
+                      size={25}
+                      onPress={() => {
+                        mode === 'addToRealization'
+                          ? dispatch({ type: ACTIONS.REALIZATION_INCREMENT, payload: item })
+                          : dispatch({ type: ACTIONS.TRANSACTION_ADD_BENEFIT, payload: item });
+                      }}
+                      style={{ paddingRight: 25 }}
+                    />
+                  </View>
+                )}
+                {mode === 'realizationInfo' && (
+                  <View style={[styles.containerInRow, { width: 125 }]}>
                     <Text style={{ fontSize: 25, padding: 10 }}>{item.amount}</Text>
-                  )}
-                  <Icon
-                    name='plus-circle-outline'
-                    size={25}
-                    onPress={() => {
-                      mode === 'addToRealization'
-                        ? dispatch({ type: ACTIONS.REALIZATION_INCREMENT, payload: item })
-                        : dispatch({ type: ACTIONS.TRANSACTION_ADD_BENEFIT, payload: item });
-                    }}
-                    style={{ paddingRight: 25 }}
-                  />
-                </View>
+                  </View>
+                )}
               </View>
             )}
           </BenefitTile>

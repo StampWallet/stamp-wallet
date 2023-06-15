@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useReducer } from 'react';
 import { StyleSheet, Text, View, StatusBar, Pressable, SafeAreaView } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
@@ -317,7 +317,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
               alert('dummy text');
               //todo
             }}
-            title='generate code'
+            title='Show Card'
             customButtonStyle={[styles.button, { width: '80%' }]}
           />
         </>
