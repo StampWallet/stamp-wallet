@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import { StyleSheet, Text, View, StatusBar, Pressable, SafeAreaView } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
-import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
+import { reducer, INITIAL_STATE, ACTIONS, ProcessInventory } from './util/reducer';
 
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 
@@ -29,6 +29,10 @@ import Scanner from '../../components/Scanner';
 import { Snackbar } from 'react-native-paper';
 import Barcode from '@kichiyaki/react-native-barcode-generator';
 import BarcodeTile from '../../components/BarcodeTile';
+import { fetchVirtualCard } from '../../utils/fetchCards';
+import { postTransaction, startTransaction } from '../../utils/transactions';
+import { benefits } from '../../assets/mockData/BenefitsApi';
+import { itemDefinitions } from '../../assets/mockData/itemDefinition';
 
 //chaos
 
@@ -38,6 +42,7 @@ interface CardInfoScreenProps {
 }
 
 function ClaimBenefits(dispatch, inventory) {
+  console.log(inventory);
   dispatch({
     type: ACTIONS.SET_BENEFITS_TO_REALIZE,
     payload: inventory,
@@ -57,17 +62,23 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   */
 
   const selectedCard = route.params.Card as Card;
+  console.log(selectedCard);
   const businessDetails = getBusinessDetails({ Card: selectedCard });
   const name = getName({ Card: selectedCard });
   let points = getPoints({ Card: selectedCard });
-  let inventory = getInventory({ Card: selectedCard });
+  //let inventory = getInventory({ Card: selectedCard });
+  let [inventory, inventoryProper] = ProcessInventory(benefits);
+  //let [inventory, inventoryProper] = ProcessInventory(getInventory({ Card: selectedCard }));
 
   const [state, dispatch] = useReducer(reducer, {
     ...INITIAL_STATE,
     // dumb hack with fallbacks, but works for now
     balance: points,
     balanceAfterTransaction: points,
-    inventory: inventory,
+    //inventory: inventory,
+    inventory: inventoryProper,
+    inventoryIds: inventory,
+    benefitsToRealize: inventoryProper,
     isSubmitting: false,
   });
   const { onPressBack } = useOnPressHandlers();
@@ -82,6 +93,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
       const VCA = new api.VirtualCardsApi();
 
       try {
+        console.log('test');
         const response = await VCA.createVirtualCard(businessDetails.publicId, header);
         requestStatus = {
           color: colors.swDarkGreen,
@@ -138,8 +150,6 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
       })
     );
   };
-
-  console.log(selectedCard);
 
   return 'businessDetails' in selectedCard ? (
     <SafeAreaView style={StyleBase.container}>
@@ -222,16 +232,25 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                                   payload: () => {
                                     dispatch({ type: ACTIONS.TRANSACTION_CANCEL });
                                     dispatch({ type: ACTIONS.CLOSE_MODAL });
-                                    ClaimBenefits(dispatch, inventory);
+                                    ClaimBenefits(dispatch, state.inventory);
                                   },
                                 })
-                            : () => ClaimBenefits(dispatch, inventory)
+                            : () => {
+                                console.log(state.benefitsToRealize);
+                                ClaimBenefits(dispatch, state.inventory);
+                              }
                         }
                         title='Claim Benefits'
                       />
                     </View>
                     <View style={styles.showCard}>
-                      <CustomButton onPress={() => alert('Work in progress')} title='Show Card' />
+                      <CustomButton
+                        onPress={() =>
+                          //postTransaction('000680637592', { addedPoints: 1000, itemActions: [] })
+                          dispatch({ type: ACTIONS.REALIZE_BENEFITS })
+                        }
+                        title='Show Card'
+                      />
                     </View>
                   </>
                 )}
