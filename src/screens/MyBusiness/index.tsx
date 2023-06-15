@@ -16,6 +16,10 @@ import colors from '../../constants/colors';
 
 import * as api from '../../api';
 import Auth from '../../database/Auth';
+import { Buffer } from 'buffer';
+import { Axios } from 'axios';
+import RNFetchBlob from 'rn-fetch-blob';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 
 const mockFormData = {
   name: 'bill',
@@ -28,7 +32,8 @@ const mockFormData = {
   businessName: 'pay a bill @ bill',
   businessAddress: 'hrumczakowa 41/12',
   postalCode: '21-37',
-  city: 'WChUJaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+  description: 'short description',
+  city: 'wmiii',
 };
 
 const getTitle = (step: number) => {
@@ -66,11 +71,12 @@ export default function MyBusinessScreen({ navigation }) {
 
     const createAccountPayload = {
       name: data.businessName,
-      address: `${data.address}, ${data.city}`,
-      gpsCoordinates: '+48.8577+002.295/',
-      nip: data.nip,
-      krs: data.krs,
-      regon: data.regon,
+      address: `${data.businessAddress}, ${data.city}`,
+      gpsCoordinates: '12.123,11.123',
+      description: data.description,
+      nip: data.NIP,
+      krs: data.KRS,
+      regon: data.REGON,
       ownerName: data.name,
     };
 
@@ -79,8 +85,11 @@ export default function MyBusinessScreen({ navigation }) {
 
     try {
       const BA = new api.BusinessApi();
+      console.log('pre request');
       response = await BA.createBusinessAccount(createAccountPayload, header);
+      console.log('business creation', response);
     } catch (e) {
+      console.log(e.response);
       const { status } = e.response;
       if (status === 'UNAUTHORIZED') {
         setSnackbarState({
@@ -104,9 +113,33 @@ export default function MyBusinessScreen({ navigation }) {
     }
 
     // TODO FINISH BUSINESS CREATION
-    if (response) {
-      const { publicId, bannerImageId, iconImageId } = response.data;
-    }
+    // if (response) {
+    //   const { publicId, bannerImageId, iconImageId } = response.data;
+    //   console.log('image upload');
+    //
+    //   const FA = new api.FileApi();
+    //   const BA = new api.BusinessApi();
+    //
+    //   try {
+    //     const bannerIconResp = await FA.uploadFile(bannerImageId, data.banner, header);
+    //     const cardIconResp = await FA.uploadFile(iconImageId, data.cardIcon, header);
+    //     const menuIconId = await BA.addMenuImage(header);
+    //     const menuIconResp = await FA.uploadFile(menuIconId, data.menu, header);
+    //
+    //     setSnackbarState({
+    //       color: colors.swDarkGreen,
+    //       message: 'Business successfully created.',
+    //       visible: true,
+    //     });
+    //   } catch (e) {
+    //     console.log(e.response);
+    //     setSnackbarState({
+    //       color: colors.swRed,
+    //       message: 'Something went wrong.',
+    //       visible: true,
+    //     });
+    //   }
+    // }
   };
 
   const handleArrowPress = () => {

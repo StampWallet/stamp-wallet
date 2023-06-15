@@ -2068,7 +2068,6 @@ export const CardsApiFp = function (configuration?: Configuration) {
       options?: AxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserCardsResponse>> {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getUserCards(options);
-      console.log(localVarAxiosArgs);
       return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
     },
   };

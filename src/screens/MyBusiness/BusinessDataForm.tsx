@@ -52,6 +52,16 @@ export default function BusinessDataForm() {
           rules={{
             required,
           }}
+          name='description'
+          placeholder='description'
+          isInvalid={Boolean(errors.businessAddress)}
+          header='short description'
+        />
+        <HookFormInput
+          control={control}
+          rules={{
+            required,
+          }}
           name='city'
           placeholder='city'
           isInvalid={Boolean(errors.city)}
