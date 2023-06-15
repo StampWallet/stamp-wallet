@@ -65,7 +65,12 @@ export const fetchUserCards = async (callbackFn: React.Dispatch<React.SetStateAc
       const matchingCard = allLocalCards.find((cardWithUrl) => cardWithUrl.publicId === card.type);
       cardsWithImgUrl = [
         ...cardsWithImgUrl,
-        { ...card, imageUrl: matchingCard.imageUrl, isAdded: true },
+        {
+          ...card,
+          imageUrl: matchingCard.imageUrl,
+          isAdded: true,
+          barcodeType: matchingCard.code.toUpperCase(),
+        },
       ];
     });
 

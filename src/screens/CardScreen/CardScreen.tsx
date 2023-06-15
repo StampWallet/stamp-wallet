@@ -27,6 +27,8 @@ import Auth from '../../database/Auth';
 import { MAIN_ROUTE } from '../../constants/paths';
 import Scanner from '../../components/Scanner';
 import { Snackbar } from 'react-native-paper';
+import Barcode from '@kichiyaki/react-native-barcode-generator';
+import BarcodeTile from '../../components/BarcodeTile';
 
 //chaos
 
@@ -136,6 +138,8 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
       })
     );
   };
+
+  console.log(selectedCard);
 
   return 'businessDetails' in selectedCard ? (
     <SafeAreaView style={StyleBase.container}>
@@ -385,7 +389,14 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
       {!selectedCard.isAdded && (
         <Scanner onPressAdd={(cardData) => handleAddCard(cardData)} disabled={state.isSubmitting} />
       )}
-      {selectedCard.isAdded && <Text>Code will be here</Text>}
+      <CardTile
+        containerStyle={[styles.cardTile, !selectedCard.isAdded && { paddingBottom: 75 }]}
+        imageUrl={selectedCard.imageUrl}
+        tileStyle={{ width: '88.66%' }}
+      />
+      {selectedCard.isAdded && (
+        <BarcodeTile value={selectedCard.code} format={selectedCard.barcodeType} />
+      )}
     </SafeAreaView>
   );
 }

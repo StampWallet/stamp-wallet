@@ -1,4 +1,5 @@
 import { ImageSourcePropType } from 'react-native/types';
+import { Format } from '@kichiyaki/react-native-barcode-generator';
 
 export type LoginFormData = {
   email: string;
@@ -100,10 +101,11 @@ export type LocalCard = {
   name: string;
   type?: string;
   code: string;
-  imageUrl: ImageSourcePropType; //jw
+  imageUrl: string; //jw
 };
 
 export type Card = (VirtualCard | LocalCard) & {
   isAdded?: boolean;
   //type: 'virtual' | 'local';
+  barcodeType?: Format;
 };

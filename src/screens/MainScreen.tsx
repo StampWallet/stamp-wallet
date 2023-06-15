@@ -80,8 +80,8 @@ export default function MainScreen({ navigation, route }) {
   };
 
   useEffect(() => {
-    fetchUserCards(setCards);
-    // setCards(Cards);
+    // fetchUserCards(setCards);
+    setCards(Cards);
   }, []);
 
   // filters cards based on search query + current filter
