@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet, Text } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { CommonActions } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -69,6 +69,7 @@ export default function LogInScreen({ navigation }) {
 
   return (
     <SafeAreaView style={StyleBase.container}>
+      <StatusBar barStyle='default' />
       {isSubmitting ? (
         <CenteredLoader animation='loader' />
       ) : (

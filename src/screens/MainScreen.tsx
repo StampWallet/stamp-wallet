@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, SafeAreaView, Text, Animated, Easing } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Text, Animated, Easing, StatusBar } from 'react-native';
 import { DefaultTheme, Snackbar } from 'react-native-paper';
 
 import TopBar from '../components/Bars/TopBar';
@@ -195,6 +195,7 @@ export default function MainScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={StyleBase.container}>
+      <StatusBar barStyle='default' />
       <TopBar
         iconLeft='menu'
         onPressLeft={() => {

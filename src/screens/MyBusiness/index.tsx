@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, StatusBar } from 'react-native';
 import { useForm, FormProvider } from 'react-hook-form';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -124,6 +124,7 @@ export default function MyBusinessScreen({ navigation }) {
 
   return (
     <SafeAreaView style={StyleBase.container}>
+      <StatusBar barStyle='default' />
       <Text style={styles.stepCounter}>{`Step ${step}/2`}</Text>
       <Icon
         name='arrow-left'

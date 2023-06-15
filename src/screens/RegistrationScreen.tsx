@@ -81,6 +81,7 @@ export default function RegistrationScreen({ navigation }) {
 
   return (
     <SafeAreaView style={StyleBase.container}>
+      <StatusBar barStyle='default' />
       {isSubmitting ? (
         <CenteredLoader animation='loader' />
       ) : (

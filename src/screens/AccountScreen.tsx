@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import CustomButton from '../components/Miscellaneous/CustomButton';
 import TopBar from '../components/Bars/TopBar';
 
@@ -138,6 +138,7 @@ export default function AccountScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle='default' />
       <TopBar
         iconLeft='arrow-left'
         onPressLeft={() =>

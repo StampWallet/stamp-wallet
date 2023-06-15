@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet, Text } from 'react-native';
 import CustomButton from '../components/Miscellaneous/CustomButton';
 import BoxContainer from '../components/Miscellaneous/BoxContainer';
 import TopBar from '../components/Bars/TopBar';
@@ -8,6 +8,7 @@ export default function EmailConfirmationScreen({ navigation, route }) {
   const { email } = route.params;
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle='default' />
       <TopBar
         iconLeft='arrow-left'
         onPressLeft={() =>
