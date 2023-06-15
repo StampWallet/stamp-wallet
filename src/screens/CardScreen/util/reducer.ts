@@ -1,3 +1,6 @@
+import { itemDefinitions } from '../../../assets/mockData/itemDefinition';
+import { startTransaction } from '../../../utils/transactions';
+
 export const INITIAL_STATE = {
   screenState: 'card',
   cardInfoState: 'business',
@@ -32,25 +35,79 @@ export const ACTIONS = {
   CLOSE_MODAL: 'closeModal',
 };
 
+export function ProcessInventory(ownedItems) {
+  let inventory = [];
+  ownedItems.forEach((obj) => {
+    let item = findInArrDefinition(obj, inventory);
+    item
+      ? item.ids.push(obj.publicId)
+      : (inventory = [...inventory, { definitionId: obj.definitionId, ids: [obj.publicId] }]);
+  });
+  let inventoryProper = [];
+  inventory.forEach((obj) => {
+    //get item definition
+    let itemDefinition = obj.definitionId === '1' ? itemDefinitions[0] : itemDefinitions[1];
+    inventoryProper.push({
+      publicId: obj.definitionId,
+      amount: obj.ids.length,
+      name: itemDefinition.name,
+      price: itemDefinition.price,
+    });
+  });
+  return [inventory, inventoryProper];
+}
+
+function ProcessTransactionStart(state) {
+  console.log(state.benefitsToRealize);
+  console.log(state.inventoryInt);
+  let claimedBenefits = [];
+  state.benefitsToRealize.forEach((obj) => {
+    let item = findInArrDefinitionPublicId(obj, state.inventoryIds);
+    for (let i = 0; i < obj.amountToRealize; i++) {
+      claimedBenefits.push(item.ids[i]);
+    }
+  });
+  return claimedBenefits;
+}
+
+function findInArrDefinitionPublicId(benefit, benefitArr) {
+  return benefitArr.find((obj) => obj.definitionId === benefit.publicId);
+}
+
+function findInArrDefinition(benefit, benefitArr) {
+  return benefitArr.find((obj) => obj.definitionId === benefit.definitionId);
+}
+
 function findInArr(benefit, benefitArr) {
   return benefitArr.find((obj) => obj.publicId === benefit.publicId);
 }
 
-function addToArr(benefit, benefitArr) {
+function addToArr(benefit, benefitArr, balance) {
   let item = findInArr(benefit, benefitArr);
-  item
-    ? item.amount++
-    : benefitArr.push({
-        publicId: benefit.publicId,
-        amount: 1,
-        name: benefit.name,
-        price: benefit.price,
-      });
+  if (!item) {
+    benefitArr.push({
+      publicId: benefit.publicId,
+      amount: 1,
+      name: benefit.name,
+      price: benefit.price,
+      maxAmount: benefit.maxAmount,
+    });
+    return balance;
+  }
+  if (item.amount === benefit.maxAmount) {
+    alert('Maximum number of this benefit reached!');
+    return balance;
+  } else {
+    item.amount++;
+    balance -= benefit.price;
+    return balance;
+  }
 }
 
 function completeTransaction(state, payload) {
   let inventory = state.inventory.slice();
-  state.benefitsToAdd.forEach((benefit) => {
+  console.log(inventory);
+  inventory.forEach((benefit) => {
     let obj = findInArr(benefit, inventory);
     obj ? (obj.amount += benefit.amount) : inventory.push(benefit);
   });
@@ -68,8 +125,8 @@ function addToTransaction(state, payload) {
   if (balance < benefit.price) {
     alert('insufficient funds');
   } else {
-    balance -= benefit.price;
-    addToArr(benefit, benefitsToAdd);
+    //balance -= benefit.price;
+    balance = addToArr(benefit, benefitsToAdd, balance);
   }
   return [benefitsToAdd, balance];
 }
@@ -167,6 +224,16 @@ export function reducer(state, action) {
       return {
         ...state,
         benefitsToAdd: benefitsToAdd,
+      };
+    }
+    case ACTIONS.REALIZE_BENEFITS: {
+      let claimedBenefits = ProcessTransactionStart(state);
+      console.log(claimedBenefits);
+      //startTransaction(payload, claimedBenefits);
+      //start transaction businessId, claimedBenefits
+      //get response, show barcode with given code
+      return {
+        ...state,
       };
     }
     case ACTIONS.TRANSACTION_SAVE: {
