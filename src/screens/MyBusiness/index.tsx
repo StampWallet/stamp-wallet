@@ -12,6 +12,10 @@ import StyleBase from '../../styles/StyleBase';
 import BusinessImagesForm from './BusinessImagesForm';
 import { CommonActions } from '@react-navigation/native';
 import { MAIN_ROUTE } from '../../constants/paths';
+import colors from '../../constants/colors';
+
+import * as api from '../../api';
+import Auth from '../../database/Auth';
 
 const mockFormData = {
   name: 'bill',
@@ -38,19 +42,71 @@ export default function MyBusinessScreen({ navigation }) {
   const [step, setCurrentStep] = useState(1);
   const [businessRegistrationFormValues, setBusinessRegistrationFormValues] =
     useState<BusinessRegistrationFormData>(null);
+  const [snackbarState, setSnackbarState] = useState<{
+    visible: boolean;
+    message: string;
+    color: string;
+  }>({
+    visible: false,
+    message: '',
+    color: '',
+  });
 
   const { ...methods } = useForm({
     defaultValues: mockFormData,
   });
   const { handleSubmit } = methods;
 
-  const onPressStepForm = (data) => {
+  const onPressStepForm = async (data) => {
     if (step < 2) {
       setBusinessRegistrationFormValues(data);
       setCurrentStep((prev) => prev + 1);
       return;
     }
-    navigation.push('MainScreen');
+
+    const createAccountPayload = {
+      name: data.businessName,
+      address: `${data.address}, ${data.city}`,
+      gpsCoordinates: '+48.8577+002.295/',
+      nip: data.nip,
+      krs: data.krs,
+      regon: data.regon,
+      ownerName: data.name,
+    };
+
+    const header = Auth.getAuthHeader();
+    let response = null;
+
+    try {
+      const BA = new api.BusinessApi();
+      response = await BA.createBusinessAccount(createAccountPayload, header);
+    } catch (e) {
+      const { status } = e.response;
+      if (status === 'UNAUTHORIZED') {
+        setSnackbarState({
+          color: colors.swRed,
+          message: 'Unauthorized credentials.',
+          visible: true,
+        });
+      } else if (status === 'ALREADY_EXISTS') {
+        setSnackbarState({
+          color: colors.swRed,
+          message: 'Business already exists!.',
+          visible: true,
+        });
+      } else {
+        setSnackbarState({
+          color: colors.swRed,
+          message: 'Something went wrong.',
+          visible: true,
+        });
+      }
+    }
+
+    // TODO FINISH BUSINESS CREATION
+    if (response) {
+      const { publicId, bannerImageId, iconImageId } = response.data;
+    }
   };
 
   const handleArrowPress = () => {

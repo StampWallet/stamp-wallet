@@ -14,11 +14,21 @@ import * as api from '../api';
 import CenteredLoader from '../components/CenteredLoader';
 import { CommonActions } from '@react-navigation/native';
 import { ACCOUNT_ROUTE, REGISTER_ROUTE } from '../constants/paths';
+import { Snackbar } from 'react-native-paper';
 
 export default function AccountScreen({ navigation }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isChangingEmail, setIsChangingEmail] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [snackbarState, setSnackbarState] = useState<{
+    visible: boolean;
+    message: string;
+    color: string;
+  }>({
+    visible: false,
+    message: '',
+    color: '',
+  });
 
   const {
     control,
@@ -56,7 +66,7 @@ export default function AccountScreen({ navigation }) {
     const header = Auth.getAuthHeader();
 
     try {
-      // TODO DEFINITION OF API DOESNT HANDLEIT!!!
+      // TODO DEFINITION OF API DOESNT HANDLE IT!!!
       // const response = await AA.changePassword(
       //   { oldPassword: passwordWatch, newPassword: newPasswordWatch },
       //   header
@@ -64,8 +74,17 @@ export default function AccountScreen({ navigation }) {
 
       resetField('password');
       resetField('newPassword');
+      setSnackbarState({
+        color: colors.swDarkGreen,
+        message: 'Password was successfully changed.',
+        visible: true,
+      });
     } catch (e) {
-      console.log(e.response.data);
+      setSnackbarState({
+        color: colors.swRed,
+        message: 'Something went wrong.',
+        visible: true,
+      });
     }
 
     setIsSubmitting(false);
@@ -92,10 +111,26 @@ export default function AccountScreen({ navigation }) {
       console.log('resp:', response.data);
 
       Auth.email = emailWatch;
-
+      setSnackbarState((prev) => ({
+        color: colors.swDarkGreen,
+        message: 'Email has been successfully changed.',
+        visible: true,
+      }));
       resetField('email');
     } catch (e) {
-      console.log(e.response.data);
+      if (e.response.data.status === 'INVALID_REQUEST') {
+        setSnackbarState((prev) => ({
+          color: colors.swRed,
+          message: 'Something went wrong.',
+          visible: true,
+        }));
+      } else {
+        setSnackbarState((prev) => ({
+          color: colors.swDarkGreen,
+          message: 'Email already exists!.',
+          visible: true,
+        }));
+      }
     }
 
     setIsSubmitting(false);
@@ -112,6 +147,19 @@ export default function AccountScreen({ navigation }) {
           })
         }
       />
+      <Snackbar
+        visible={snackbarState.visible}
+        onDismiss={() => setSnackbarState({ ...snackbarState, visible: false })}
+        wrapperStyle={{ position: 'absolute', top: 15, left: 0, zIndex: 999 }}
+        style={{ backgroundColor: snackbarState.color }}
+        duration={Snackbar.DURATION_MEDIUM}
+        action={{
+          label: 'OK',
+          onPress: () => setSnackbarState({ ...snackbarState, visible: false }),
+        }}
+      >
+        <Text style={{ color: colors.swWhite }}>{snackbarState.message}</Text>
+      </Snackbar>
       {isSubmitting ? (
         <CenteredLoader animation='loader' />
       ) : (

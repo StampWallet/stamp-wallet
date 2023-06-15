@@ -20,7 +20,6 @@ import { LoginFormData } from '../types';
 import { SERVER_ADDRESS } from '../constants/numericAndStringConstants';
 import { Configuration } from '../api';
 import { LOGIN_ROUTE } from '../constants/paths';
-import Loader from '../components/Loader';
 import CenteredLoader from '../components/CenteredLoader';
 
 const mockFormData = {

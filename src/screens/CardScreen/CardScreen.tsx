@@ -26,6 +26,7 @@ import Auth from '../../database/Auth';
 
 import { MAIN_ROUTE } from '../../constants/paths';
 import Scanner from '../../components/Scanner';
+import { Snackbar } from 'react-native-paper';
 
 //chaos
 
@@ -61,6 +62,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
 
   const [state, dispatch] = useReducer(reducer, {
     ...INITIAL_STATE,
+    // dumb hack with fallbacks, but works for now
     balance: points,
     balanceAfterTransaction: points,
     inventory: inventory,
@@ -70,16 +72,35 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
 
   const handleAddCard = async (cardData) => {
     dispatch({ type: ACTIONS.SET_SUBMITTING, payload: !state.isSubmitting });
-    let response = null;
+    console.log('handle add card');
+    let requestStatus = null;
     const header = Auth.getAuthHeader();
     //temp
     if ('businessDetails' in selectedCard) {
       const VCA = new api.VirtualCardsApi();
 
       try {
-        response = await VCA.createVirtualCard(businessDetails.publicId, header);
+        const response = await VCA.createVirtualCard(businessDetails.publicId, header);
+        requestStatus = {
+          color: colors.swDarkGreen,
+          message: 'Card has been successfully added to your account.',
+          visible: true,
+        };
       } catch (e) {
-        response = e.response.code;
+        const { status } = e.response.data;
+        if (status !== 'ALREADY_EXISTS') {
+          requestStatus = {
+            color: colors.swRed,
+            message: 'Something went wrong, try again later.',
+            visible: true,
+          };
+        } else {
+          requestStatus = {
+            color: colors.swRed,
+            message: 'You already have this card.',
+            visible: true,
+          };
+        }
       }
     }
 
@@ -88,12 +109,22 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
       const LCA = new api.LocalCardsApi();
 
       try {
-        response = await LCA.createLocalCard(
-          { name: name, type: selectedCard.publicId, code: cardData.data },
+        const response = await LCA.createLocalCard(
+          { name, type: selectedCard.publicId, code: cardData.data },
           header
         );
+        requestStatus = {
+          color: colors.swDarkGreen,
+          message: 'Card has been successfully added to your account.',
+          visible: true,
+        };
       } catch (e) {
-        response = e.response.code;
+        const response = e.response.code;
+        requestStatus = {
+          color: colors.swRed,
+          message: 'Something went wrong, try again later.',
+          visible: true,
+        };
       }
     }
 
@@ -101,7 +132,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: MAIN_ROUTE }],
+        routes: [{ name: MAIN_ROUTE, params: requestStatus }],
       })
     );
   };

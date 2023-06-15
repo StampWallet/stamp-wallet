@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StatusBar, StyleSheet, SafeAreaView, Text, Animated, Easing } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Text, Animated, Easing } from 'react-native';
+import { DefaultTheme, Snackbar } from 'react-native-paper';
 
 import TopBar from '../components/Bars/TopBar';
 import CardList from '../components/Cards/CardList';
 import CustomButton from '../components/Miscellaneous/CustomButton';
-
-import useOnPressHandlers from '../hooks/useOnPressHandlers';
 
 import StyleBase from '../styles/StyleBase';
 import SearchBar from '../components/Bars/SearchBar/SearchBar';
@@ -16,7 +15,6 @@ import { OptionKey } from '../components/Bars/SearchBar/OptionRow';
 import * as api from '../api';
 
 import filterCards from '../utils/filterCards';
-import { fetchUserCards } from '../utils/fetchCards';
 import { getName } from '../utils/cardGetters';
 import { Cards } from '../assets/mockData/Cards';
 
@@ -24,8 +22,10 @@ import colors from '../constants/colors';
 import TapBar from '../components/Bars/TapBar';
 import Auth from '../database/Auth';
 import Loader from '../components/Loader';
-import CenteredLoader from '../components/CenteredLoader';
 import SideBar from '../components/Bars/SideBar';
+import { fetchUserCards } from '../utils/fetchCards';
+import CenteredLoader from '../components/CenteredLoader';
+
 /*
 todo:
       make search maintain proper screen composition
@@ -34,7 +34,7 @@ todo:
       get cards from database entity - REMOVE MOCK DATA CARDS in favour of state
 */
 
-export default function MainScreen({ navigation }) {
+export default function MainScreen({ navigation, route }) {
   const [cardQuery, setCardQuery] = useState('');
   const [isFilterDropdownOpen, setFilterDropdownVisibility] = useState(false);
   const [filter, setFilter] = useState<OptionKey | null>(null);
@@ -46,8 +46,27 @@ export default function MainScreen({ navigation }) {
   const [mainScreenMode, setMainScreenMode] = useState<'customer' | 'business'>('customer');
   const [cardToDelete, setCardToDelete] = useState(null);
   const [sidebarVisibility, setSidebarVisibility] = useState(false);
+  const [snackbarState, setSnackbarState] = useState<{
+    visible: boolean;
+    message: string;
+    color: string;
+  }>({
+    visible: false,
+    message: '',
+    color: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const translateXValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!route.params) {
+      return;
+    }
+
+    setSnackbarState({ ...route.params });
+    navigation.setParams(null);
+  }, []);
 
   const toggleXPosition = () => {
     const endPosition = sidebarVisibility ? -200 : 160;
@@ -61,8 +80,8 @@ export default function MainScreen({ navigation }) {
   };
 
   useEffect(() => {
-    //fetchUserCards(setCards);
-    setCards(Cards);
+    fetchUserCards(setCards);
+    // setCards(Cards);
   }, []);
 
   // filters cards based on search query + current filter
@@ -92,13 +111,16 @@ export default function MainScreen({ navigation }) {
   };
 
   const confirmDeleteAction = async () => {
+    setIsModalOpen(false);
     if (!cardToDelete) {
-      setIsModalOpen(false);
       return;
     }
 
+    setIsSubmitting(true);
+
     const isLocal = Boolean(cardToDelete.imageUrl);
     const header = Auth.getAuthHeader();
+    let requestResponse = null;
 
     if (isLocal) {
       const LCA = new api.LocalCardsApi();
@@ -120,12 +142,18 @@ export default function MainScreen({ navigation }) {
 
         setCards([...localCards, ...virtualCards]);
         setFilteredCards([...filteredCardsWithRemovedDeletedCard]);
+        requestResponse = {
+          color: colors.swDarkGreen,
+          message: 'Card has been successfully deleted from your account.',
+          visible: true,
+        };
       } catch (e) {
-        console.log(e);
+        requestResponse = { color: colors.swRed, message: 'Something went wrong.', visible: true };
       }
 
-      setIsModalOpen(false);
       setCardToDelete(null);
+      setSnackbarState({ ...requestResponse });
+      setIsSubmitting(false);
       return;
     }
 
@@ -150,12 +178,19 @@ export default function MainScreen({ navigation }) {
 
       setCards([...localCards, ...virtualCards]);
       setFilteredCards([...filteredCardswithRemovedDeletedCard]);
+      requestResponse = {
+        color: colors.swDarkGreen,
+        message: 'Card has been successfully deleted from your account.',
+        visible: true,
+      };
     } catch (e) {
-      console.log(e);
+      requestResponse = { color: colors.swRed, message: 'Something went wrong.', visible: true };
     }
 
     setIsModalOpen(false);
     setCardToDelete(null);
+    setSnackbarState({ ...requestResponse });
+    setIsSubmitting(false);
   };
 
   return (
@@ -184,7 +219,6 @@ export default function MainScreen({ navigation }) {
           mainScreenMode,
         }}
       />
-      <SearchBar onChangeText={setCardQuery} value={cardQuery} deletionMode={deletionMode} />
       {isFilterDropdownOpen && (
         <SortOptions
           setFilter={setFilter}
@@ -192,27 +226,34 @@ export default function MainScreen({ navigation }) {
           setFilterDropdownVisibility={setFilterDropdownVisibility}
         />
       )}
+      {isSubmitting ? (
+        <CenteredLoader animation='loader' />
+      ) : (
+        <>
+          <SearchBar onChangeText={setCardQuery} value={cardQuery} deletionMode={deletionMode} />
+          <View
+            style={[
+              StyleBase.container,
+              (isFilterDropdownOpen || sidebarVisibility) && styles.listOpacity,
+              StyleBase.listContainer,
+            ]}
+          >
+            {Boolean(filteredCards === null) && <Loader animation='loader' />}
+            {Boolean(filteredCards?.length) && (
+              <CardList
+                cards={filteredCards}
+                onLongCardPress={() => setDeletionMode(true)}
+                onPress={(card) => handleOnDelete(card)}
+                deletionMode={deletionMode}
+              />
+            )}
+            {Boolean(filteredCards !== null && !filteredCards.length) && (
+              <Text>Add your first card!</Text>
+            )}
+          </View>
+        </>
+      )}
 
-      <View
-        style={[
-          StyleBase.container,
-          (isFilterDropdownOpen || sidebarVisibility) && styles.listOpacity,
-          StyleBase.listContainer,
-        ]}
-      >
-        {Boolean(filteredCards === null) && <Loader animation='loader' />}
-        {Boolean(filteredCards?.length) && (
-          <CardList
-            cards={filteredCards}
-            onLongCardPress={() => setDeletionMode(true)}
-            onPress={(card) => handleOnDelete(card)}
-            deletionMode={deletionMode}
-          />
-        )}
-        {Boolean(filteredCards !== null && !filteredCards.length) && (
-          <Text>Add your first card!</Text>
-        )}
-      </View>
       <TapBar
         callbackFn={() => setDeletionMode((prev) => !prev)}
         tapBarState={deletionMode ? 'deletion' : 'default'}
@@ -244,6 +285,19 @@ export default function MainScreen({ navigation }) {
         }
         isModalOpen={isModalOpen}
       />
+      <Snackbar
+        visible={snackbarState.visible}
+        onDismiss={() => setSnackbarState({ ...snackbarState, visible: false })}
+        wrapperStyle={{ position: 'absolute', top: 15, left: 0, zIndex: 999 }}
+        style={{ backgroundColor: snackbarState.color }}
+        duration={Snackbar.DURATION_MEDIUM}
+        action={{
+          label: 'OK',
+          onPress: () => setSnackbarState({ ...snackbarState, visible: false }),
+        }}
+      >
+        <Text style={{ color: colors.swWhite }}>{snackbarState.message}</Text>
+      </Snackbar>
     </SafeAreaView>
   );
 }

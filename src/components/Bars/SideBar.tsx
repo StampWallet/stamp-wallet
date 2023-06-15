@@ -99,7 +99,7 @@ const SideBar = ({ translateXValue, mainScreenState }) => {
             customTextStyle={styles.customTextStyle}
           />
         )}
-        {userFields && (
+        {userFields && businessCreated && (
           <CustomButton
             onPress={() => {}}
             title='my benefits'

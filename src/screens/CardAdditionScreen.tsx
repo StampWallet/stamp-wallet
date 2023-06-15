@@ -49,6 +49,12 @@ export default function CardAdditionScreen({ navigation }) {
     setFilteredCards(cardsWithSearchedName);
   }, [availableCards, cardQuery]);
 
+  const handleChangeScreenMode = (mode) => {
+    setAvailableCards(null);
+    setFilteredCards(null);
+    setScreenMode(mode);
+  };
+
   return (
     <SafeAreaView style={StyleBase.container}>
       <StatusBar barStyle='default' />
@@ -62,14 +68,14 @@ export default function CardAdditionScreen({ navigation }) {
       {screenMode === 'search' && (
         <>
           <Text style={styles.text}>Choose card type</Text>
-          <CustomButton onPress={() => setScreenMode('virtual')} title='virtual card' />
-          <CustomButton onPress={() => setScreenMode('real')} title='real card' />
+          <CustomButton onPress={() => handleChangeScreenMode('virtual')} title='virtual card' />
+          <CustomButton onPress={() => handleChangeScreenMode('real')} title='real card' />
         </>
       )}
 
       {(screenMode === 'virtual' || screenMode === 'real') && (
         <>
-          <SearchBar onChangeText={setCardQuery} value={cardQuery} />
+          {filteredCards !== null && <SearchBar onChangeText={setCardQuery} value={cardQuery} />}
           {filteredCards === null && <CenteredLoader animation='loader' />}
           {Boolean(filteredCards?.length) && (
             <CardList
@@ -80,7 +86,12 @@ export default function CardAdditionScreen({ navigation }) {
               }))}
             />
           )}
-          {filteredCards !== null && !filteredCards.length && <Text>No cards found</Text>}
+          {filteredCards !== null && !filteredCards.length && screenMode === 'real' && (
+            <Text>No cards found</Text>
+          )}
+          {filteredCards !== null && !filteredCards.length && screenMode === 'virtual' && (
+            <Text>Find business</Text>
+          )}
         </>
       )}
     </SafeAreaView>

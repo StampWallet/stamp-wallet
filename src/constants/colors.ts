@@ -10,5 +10,6 @@ export default {
   swPaleViolet: 'rgba(151,159,238,0.55)',
   swPaleGreen: 'rgba(123,255,120,0.5)',
   swStrongGreen: '#7BFF78',
+  swDarkGreen: '#297538',
   swRed: '#d00404',
 };
