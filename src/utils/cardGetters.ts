@@ -28,5 +28,5 @@ export const getPoints = ({ Card }: Props) => {
 
 export const getInventory = ({ Card }: Props) => {
   if ('inventory' in Card) return Card.inventory;
-  return undefined;
+  return [];
 };

@@ -16,6 +16,7 @@ export default function Scanner({ onPressAdd, disabled }: Props) {
 
   const getBarCodeScannerPermissions = async () => {
     const { status } = await BarCodeScanner.requestPermissionsAsync();
+    console.log(barcodeData);
     setHasPermission(status === 'granted');
   };
 

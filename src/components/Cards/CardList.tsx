@@ -6,6 +6,7 @@ import CardTile from './CardTile';
 import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 import StyleBase from '../../styles/StyleBase';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { itemDefinitions } from '../../assets/mockData/itemDefinition';
 
 interface Props {
   // todo change the type

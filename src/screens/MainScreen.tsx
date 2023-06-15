@@ -80,8 +80,8 @@ export default function MainScreen({ navigation, route }) {
   }, []);
 
   useEffect(() => {
-    // fetchUserCards(setCards);
-    setCards(Cards);
+    fetchUserCards(setCards);
+    //setCards(Cards);
   }, []);
 
   // filters cards based on search query + current filter
@@ -160,20 +160,20 @@ export default function MainScreen({ navigation, route }) {
     const VCA = new api.VirtualCardsApi();
     const {
       businessDetails,
-      businessDetails: { businessId },
+      businessDetails: { publicId },
     } = cardToDelete;
     try {
-      const deleteResponse = await VCA.deleteVirtualCard(businessId, header);
+      const deleteResponse = await VCA.deleteVirtualCard(publicId, header);
       const localCards = cards.filter((card) => Boolean(card.name));
       const virtualCards = cards.filter((card) =>
-        Boolean(card.businessDetails && businessDetails.businessId !== businessId)
+        Boolean(card.businessDetails && businessDetails.publicId !== publicId)
       );
       const filteredCardswithRemovedDeletedCard = filteredCards.filter((card) => {
         if (card.name) {
           return true;
         }
 
-        return businessDetails.businessId !== businessId;
+        return businessDetails.businessId !== publicId;
       });
 
       setCards([...localCards, ...virtualCards]);
@@ -184,6 +184,7 @@ export default function MainScreen({ navigation, route }) {
         visible: true,
       };
     } catch (e) {
+      console.log('error: ', e);
       requestResponse = { color: colors.swRed, message: 'Something went wrong.', visible: true };
     }
 

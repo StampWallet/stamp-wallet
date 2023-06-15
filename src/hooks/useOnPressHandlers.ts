@@ -58,8 +58,12 @@ const useOnPressHandlers = () => {
 
     //then just add isAdded argument to object ig
     //temp solution on mockData below
+    console.log(card.businessDetails);
+    /*
     if ('businessDetails' in card)
       card.businessDetails = { ...card.businessDetails, itemDefinitions: benefits };
+      */
+
     navigation.push(CARD_ROUTE, { Card: card });
   };
 
