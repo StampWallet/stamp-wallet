@@ -1,6 +1,5 @@
 import { ImageSourcePropType } from 'react-native/types';
-import { Format } from '@kichiyaki/react-native-barcode-generator';
-
+import Format from '@kichiyaki/react-native-barcode-generator';
 export type LoginFormData = {
   email: string;
   password: string;

@@ -16,7 +16,7 @@ const SideBar = ({ translateXValue, mainScreenState }) => {
   const navigation = useNavigation();
   const { onPressBusiness } = useOnPressHandlers();
 
-  const onPressNavigate = async (route) => {
+  const onPressNavigate = async (route, edit = false) => {
     switch (route) {
       case ACCOUNT_ROUTE:
         return navigation.dispatch(
@@ -26,7 +26,11 @@ const SideBar = ({ translateXValue, mainScreenState }) => {
           })
         );
       case BUSINESS_ROUTE:
-        return navigation.dispatch(CommonActions.navigate(BUSINESS_ROUTE));
+        return edit
+          ? navigation.dispatch(
+              CommonActions.navigate({ name: BUSINESS_ROUTE, params: { isEditing: true } })
+            )
+          : navigation.dispatch(CommonActions.navigate(BUSINESS_ROUTE));
       case 'LOGOUT': {
         const SA = new api.SessionsApi();
         const header = Auth.getAuthHeader();
@@ -77,16 +81,8 @@ const SideBar = ({ translateXValue, mainScreenState }) => {
         )}
         {businessCreated && (
           <CustomButton
-            onPress={() => {}}
+            onPress={() => onPressNavigate(BUSINESS_ROUTE)}
             title='my business'
-            customButtonStyle={styles.customButtonStyle}
-            customTextStyle={styles.customTextStyle}
-          />
-        )}
-        {businessCreated && (
-          <CustomButton
-            onPress={() => {}}
-            title='edit business'
             customButtonStyle={styles.customButtonStyle}
             customTextStyle={styles.customTextStyle}
           />

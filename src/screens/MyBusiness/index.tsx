@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, SafeAreaView, StatusBar } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, SafeAreaView, StatusBar } from 'react-native';
 import { useForm, FormProvider } from 'react-hook-form';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -43,7 +43,7 @@ const getTitle = (step: number) => {
   return 'Create business';
 };
 
-export default function MyBusinessScreen({ navigation }) {
+export default function MyBusinessScreen({ navigation, route }) {
   const [step, setCurrentStep] = useState(1);
   const [businessRegistrationFormValues, setBusinessRegistrationFormValues] =
     useState<BusinessRegistrationFormData>(null);
@@ -56,11 +56,21 @@ export default function MyBusinessScreen({ navigation }) {
     message: '',
     color: '',
   });
+  const [loading, setLoading] = useState(true);
+  // const { isEditing } = route.params || ;
 
   const { ...methods } = useForm({
     defaultValues: mockFormData,
   });
   const { handleSubmit } = methods;
+
+  console.log(isEditing);
+
+  useEffect(() => {
+    if (!isEditing) {
+      setLoading(false);
+    }
+  });
 
   const onPressStepForm = async (data) => {
     if (step < 2) {

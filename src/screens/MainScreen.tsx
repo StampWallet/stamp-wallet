@@ -59,15 +59,6 @@ export default function MainScreen({ navigation, route }) {
 
   const translateXValue = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    if (!route.params) {
-      return;
-    }
-
-    setSnackbarState({ ...route.params });
-    navigation.setParams(null);
-  }, []);
-
   const toggleXPosition = () => {
     const endPosition = sidebarVisibility ? -200 : 160;
 
@@ -78,6 +69,15 @@ export default function MainScreen({ navigation, route }) {
       useNativeDriver: true,
     }).start();
   };
+
+  useEffect(() => {
+    if (!route.params) {
+      return;
+    }
+
+    setSnackbarState({ ...route.params });
+    navigation.setParams(null);
+  }, []);
 
   useEffect(() => {
     // fetchUserCards(setCards);
@@ -216,7 +216,7 @@ export default function MainScreen({ navigation, route }) {
       <SideBar
         translateXValue={translateXValue}
         mainScreenState={{
-          businessCreated: false,
+          businessCreated: true,
           mainScreenMode,
         }}
       />
