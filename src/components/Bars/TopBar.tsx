@@ -50,10 +50,8 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     zIndex: 2,
-    height: 40, //chyba lepiej wyglada idk
-    //height: 60,
+    height: Platform.OS === 'android' ? 40 : 60,
     backgroundColor: colors.swLightBlue,
-    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   containerIcon: {
     paddingLeft: 30,
