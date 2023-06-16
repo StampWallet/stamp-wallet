@@ -9,6 +9,7 @@ import {
   MAIN_ROUTE,
   ADD_CARD_ROUTE,
   BUSINESS_ROUTE,
+  BENEFIT_DESC_ROUTE,
 } from '../constants/paths';
 import MainScreen from '../screens/MainScreen';
 import { benefits } from '../assets/mockData/Benefits';
@@ -50,6 +51,10 @@ const useOnPressHandlers = () => {
     );
   };
 
+  const onPressBenefit = (navigation, benefit) => {
+    navigation.dispatch(CommonActions.navigate(BENEFIT_DESC_ROUTE, { params: benefit }));
+  };
+
   const onPressCardAddition = (navigation) => {
     navigation.push(ADD_CARD_ROUTE);
   };
@@ -89,6 +94,7 @@ const useOnPressHandlers = () => {
     onPressBackHome,
     onPressCardAddition,
     onPressBusiness,
+    onPressBenefit,
   };
 };
 

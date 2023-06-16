@@ -414,7 +414,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           //upo
           selectedCard.isAdded && dispatch({ type: ACTIONS.SET_SCREEN, payload: 'cart' })
         }
-        tapBarState={'cardScreen'}
+        tapBarState='cardScreen'
       />
       <CustomModal
         header='You have items pending in cart!'
@@ -434,9 +434,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
         imageUrl={selectedCard.imageUrl}
         tileStyle={{ width: '88.66%' }}
       />
-      {selectedCard.isAdded && (
-        <BarcodeTile value={selectedCard.code} format={selectedCard.barcodeType} />
-      )}
+      {selectedCard.isAdded && <BarcodeTile value={selectedCard.code} format='EAN13' />}
       {!selectedCard.isAdded && (
         <Scanner onPressAdd={(cardData) => handleAddCard(cardData)} disabled={state.isSubmitting} />
       )}
