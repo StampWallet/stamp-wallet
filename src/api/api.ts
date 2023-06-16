@@ -421,7 +421,7 @@ export interface ItemDefinitionAPIModel {
      * @type {number}
      * @memberof ItemDefinitionAPIModel
      */
-    'price'?: number;
+    'price'?: number | null;
     /**
      * 
      * @type {string}
@@ -451,7 +451,7 @@ export interface ItemDefinitionAPIModel {
      * @type {number}
      * @memberof ItemDefinitionAPIModel
      */
-    'maxAmount'?: number;
+    'maxAmount'?: number | null;
     /**
      * 
      * @type {boolean}
@@ -527,67 +527,6 @@ export interface PatchBusinessAccountRequest {
      * @memberof PatchBusinessAccountRequest
      */
     'description'?: string;
-}
-/**
- * 
- * @export
- * @interface PatchBusinessItemDefinitionRequest
- */
-export interface PatchBusinessItemDefinitionRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchBusinessItemDefinitionRequest
-     */
-    'publicId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchBusinessItemDefinitionRequest
-     */
-    'name'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchBusinessItemDefinitionRequest
-     */
-    'price'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchBusinessItemDefinitionRequest
-     */
-    'description'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchBusinessItemDefinitionRequest
-     */
-    'imageId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchBusinessItemDefinitionRequest
-     */
-    'startDate'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchBusinessItemDefinitionRequest
-     */
-    'endDate'?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchBusinessItemDefinitionRequest
-     */
-    'maxAmount'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchBusinessItemDefinitionRequest
-     */
-    'available'?: boolean;
 }
 /**
  * 
@@ -802,31 +741,19 @@ export interface PostBusinessItemDefinitionRequest {
      * @type {string}
      * @memberof PostBusinessItemDefinitionRequest
      */
-    'publicId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PostBusinessItemDefinitionRequest
-     */
     'name'?: string;
     /**
      * 
      * @type {number}
      * @memberof PostBusinessItemDefinitionRequest
      */
-    'price'?: number;
+    'price'?: number | null;
     /**
      * 
      * @type {string}
      * @memberof PostBusinessItemDefinitionRequest
      */
     'description'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PostBusinessItemDefinitionRequest
-     */
-    'imageId'?: string;
     /**
      * 
      * @type {string}
@@ -844,7 +771,7 @@ export interface PostBusinessItemDefinitionRequest {
      * @type {number}
      * @memberof PostBusinessItemDefinitionRequest
      */
-    'maxAmount'?: number;
+    'maxAmount'?: number | null;
     /**
      * 
      * @type {boolean}
@@ -1027,6 +954,55 @@ export interface PublicBusinessDetailsAPIModel {
      * @memberof PublicBusinessDetailsAPIModel
      */
     'itemDefinitions'?: Array<ItemDefinitionAPIModel>;
+}
+/**
+ * 
+ * @export
+ * @interface PutBusinessItemDefinitionRequest
+ */
+export interface PutBusinessItemDefinitionRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PutBusinessItemDefinitionRequest
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PutBusinessItemDefinitionRequest
+     */
+    'price'?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PutBusinessItemDefinitionRequest
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PutBusinessItemDefinitionRequest
+     */
+    'startDate'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PutBusinessItemDefinitionRequest
+     */
+    'endDate'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PutBusinessItemDefinitionRequest
+     */
+    'maxAmount'?: number | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PutBusinessItemDefinitionRequest
+     */
+    'available'?: boolean;
 }
 /**
  * 
@@ -2313,18 +2289,18 @@ export const ItemDefinitionsApiAxiosParamCreator = function (configuration?: Con
             };
         },
         /**
-         * This endpoint is used to change details of existing item definitions (benefits).
+         * This endpoint is used to change details of existing item definitions (benefits). Client has to provide all values, even if values do not change
          * @summary Update an exiting item definition
          * @param {string} definitionId Public id of the definition to update
-         * @param {PatchBusinessItemDefinitionRequest} patchBusinessItemDefinitionRequest 
+         * @param {PutBusinessItemDefinitionRequest} putBusinessItemDefinitionRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateItemDefinition: async (definitionId: string, patchBusinessItemDefinitionRequest: PatchBusinessItemDefinitionRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateItemDefinition: async (definitionId: string, putBusinessItemDefinitionRequest: PutBusinessItemDefinitionRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'definitionId' is not null or undefined
             assertParamExists('updateItemDefinition', 'definitionId', definitionId)
-            // verify required parameter 'patchBusinessItemDefinitionRequest' is not null or undefined
-            assertParamExists('updateItemDefinition', 'patchBusinessItemDefinitionRequest', patchBusinessItemDefinitionRequest)
+            // verify required parameter 'putBusinessItemDefinitionRequest' is not null or undefined
+            assertParamExists('updateItemDefinition', 'putBusinessItemDefinitionRequest', putBusinessItemDefinitionRequest)
             const localVarPath = `/business/itemDefinitions/{definitionId}`
                 .replace(`{${"definitionId"}}`, encodeURIComponent(String(definitionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -2334,7 +2310,7 @@ export const ItemDefinitionsApiAxiosParamCreator = function (configuration?: Con
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -2349,7 +2325,7 @@ export const ItemDefinitionsApiAxiosParamCreator = function (configuration?: Con
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchBusinessItemDefinitionRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(putBusinessItemDefinitionRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2399,15 +2375,15 @@ export const ItemDefinitionsApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * This endpoint is used to change details of existing item definitions (benefits).
+         * This endpoint is used to change details of existing item definitions (benefits). Client has to provide all values, even if values do not change
          * @summary Update an exiting item definition
          * @param {string} definitionId Public id of the definition to update
-         * @param {PatchBusinessItemDefinitionRequest} patchBusinessItemDefinitionRequest 
+         * @param {PutBusinessItemDefinitionRequest} putBusinessItemDefinitionRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateItemDefinition(definitionId: string, patchBusinessItemDefinitionRequest: PatchBusinessItemDefinitionRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DefaultResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateItemDefinition(definitionId, patchBusinessItemDefinitionRequest, options);
+        async updateItemDefinition(definitionId: string, putBusinessItemDefinitionRequest: PutBusinessItemDefinitionRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DefaultResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateItemDefinition(definitionId, putBusinessItemDefinitionRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -2450,15 +2426,15 @@ export const ItemDefinitionsApiFactory = function (configuration?: Configuration
             return localVarFp.getItemDefinitions(options).then((request) => request(axios, basePath));
         },
         /**
-         * This endpoint is used to change details of existing item definitions (benefits).
+         * This endpoint is used to change details of existing item definitions (benefits). Client has to provide all values, even if values do not change
          * @summary Update an exiting item definition
          * @param {string} definitionId Public id of the definition to update
-         * @param {PatchBusinessItemDefinitionRequest} patchBusinessItemDefinitionRequest 
+         * @param {PutBusinessItemDefinitionRequest} putBusinessItemDefinitionRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateItemDefinition(definitionId: string, patchBusinessItemDefinitionRequest: PatchBusinessItemDefinitionRequest, options?: any): AxiosPromise<DefaultResponse> {
-            return localVarFp.updateItemDefinition(definitionId, patchBusinessItemDefinitionRequest, options).then((request) => request(axios, basePath));
+        updateItemDefinition(definitionId: string, putBusinessItemDefinitionRequest: PutBusinessItemDefinitionRequest, options?: any): AxiosPromise<DefaultResponse> {
+            return localVarFp.updateItemDefinition(definitionId, putBusinessItemDefinitionRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2506,16 +2482,16 @@ export class ItemDefinitionsApi extends BaseAPI {
     }
 
     /**
-     * This endpoint is used to change details of existing item definitions (benefits).
+     * This endpoint is used to change details of existing item definitions (benefits). Client has to provide all values, even if values do not change
      * @summary Update an exiting item definition
      * @param {string} definitionId Public id of the definition to update
-     * @param {PatchBusinessItemDefinitionRequest} patchBusinessItemDefinitionRequest 
+     * @param {PutBusinessItemDefinitionRequest} putBusinessItemDefinitionRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ItemDefinitionsApi
      */
-    public updateItemDefinition(definitionId: string, patchBusinessItemDefinitionRequest: PatchBusinessItemDefinitionRequest, options?: AxiosRequestConfig) {
-        return ItemDefinitionsApiFp(this.configuration).updateItemDefinition(definitionId, patchBusinessItemDefinitionRequest, options).then((request) => request(this.axios, this.basePath));
+    public updateItemDefinition(definitionId: string, putBusinessItemDefinitionRequest: PutBusinessItemDefinitionRequest, options?: AxiosRequestConfig) {
+        return ItemDefinitionsApiFp(this.configuration).updateItemDefinition(definitionId, putBusinessItemDefinitionRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2938,11 +2914,93 @@ export class SessionsApi extends BaseAPI {
 
 
 /**
- * TransactionApi - axios parameter creator
+ * TransactionsApi - axios parameter creator
  * @export
  */
-export const TransactionApiAxiosParamCreator = function (configuration?: Configuration) {
+export const TransactionsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * This endpoint is used in the third step of transaction processing, the app should use it to update transaction details with data about points added to user\'s account and actions that were taken on items included in the transaction.
+         * @summary Finish a transaction
+         * @param {string} transactionCode Transaction code (scanned or typed in)
+         * @param {PostBusinessTransactionRequest} postBusinessTransactionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        finishTransaction: async (transactionCode: string, postBusinessTransactionRequest: PostBusinessTransactionRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'transactionCode' is not null or undefined
+            assertParamExists('finishTransaction', 'transactionCode', transactionCode)
+            // verify required parameter 'postBusinessTransactionRequest' is not null or undefined
+            assertParamExists('finishTransaction', 'postBusinessTransactionRequest', postBusinessTransactionRequest)
+            const localVarPath = `/business/transactions/{transactionCode}`
+                .replace(`{${"transactionCode"}}`, encodeURIComponent(String(transactionCode)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionToken required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(postBusinessTransactionRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * This endpoint is used in the second step of transaction processing, the app should use it to retrieve details about a transaction started by a user, after scanning user\'s transaction code.
+         * @summary Get info about a started transaction
+         * @param {string} transactionCode Transaction code (scanned or typed in)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTransactionDetails: async (transactionCode: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'transactionCode' is not null or undefined
+            assertParamExists('getTransactionDetails', 'transactionCode', transactionCode)
+            const localVarPath = `/business/transactions/{transactionCode}`
+                .replace(`{${"transactionCode"}}`, encodeURIComponent(String(transactionCode)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication sessionToken required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * This endpoint is used in the last step of transaction processing, it\'s used to check the status of the transaction.
          * @summary Get info about a transaction
@@ -3033,198 +3091,6 @@ export const TransactionApiAxiosParamCreator = function (configuration?: Configu
 };
 
 /**
- * TransactionApi - functional programming interface
- * @export
- */
-export const TransactionApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = TransactionApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * This endpoint is used in the last step of transaction processing, it\'s used to check the status of the transaction.
-         * @summary Get info about a transaction
-         * @param {string} businessId Public ID of the business which card was requested
-         * @param {string} transactionCode Transaction code
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getTransactionStatus(businessId: string, transactionCode: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserVirtualCardTransactionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getTransactionStatus(businessId, transactionCode, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * This endpoint is used in the first step of transaction processing, the app should use it to start a transaction optionally providing items to be exchanged.
-         * @summary Start a transaction
-         * @param {string} businessId Public ID of the business which card was requested
-         * @param {PostUserVirtualCardTransactionRequest} postUserVirtualCardTransactionRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async startTransaction(businessId: string, postUserVirtualCardTransactionRequest: PostUserVirtualCardTransactionRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostUserVirtualCardTransactionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.startTransaction(businessId, postUserVirtualCardTransactionRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
-};
-
-/**
- * TransactionApi - factory interface
- * @export
- */
-export const TransactionApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = TransactionApiFp(configuration)
-    return {
-        /**
-         * This endpoint is used in the last step of transaction processing, it\'s used to check the status of the transaction.
-         * @summary Get info about a transaction
-         * @param {string} businessId Public ID of the business which card was requested
-         * @param {string} transactionCode Transaction code
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTransactionStatus(businessId: string, transactionCode: string, options?: any): AxiosPromise<GetUserVirtualCardTransactionResponse> {
-            return localVarFp.getTransactionStatus(businessId, transactionCode, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * This endpoint is used in the first step of transaction processing, the app should use it to start a transaction optionally providing items to be exchanged.
-         * @summary Start a transaction
-         * @param {string} businessId Public ID of the business which card was requested
-         * @param {PostUserVirtualCardTransactionRequest} postUserVirtualCardTransactionRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        startTransaction(businessId: string, postUserVirtualCardTransactionRequest: PostUserVirtualCardTransactionRequest, options?: any): AxiosPromise<PostUserVirtualCardTransactionResponse> {
-            return localVarFp.startTransaction(businessId, postUserVirtualCardTransactionRequest, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * TransactionApi - object-oriented interface
- * @export
- * @class TransactionApi
- * @extends {BaseAPI}
- */
-export class TransactionApi extends BaseAPI {
-    /**
-     * This endpoint is used in the last step of transaction processing, it\'s used to check the status of the transaction.
-     * @summary Get info about a transaction
-     * @param {string} businessId Public ID of the business which card was requested
-     * @param {string} transactionCode Transaction code
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TransactionApi
-     */
-    public getTransactionStatus(businessId: string, transactionCode: string, options?: AxiosRequestConfig) {
-        return TransactionApiFp(this.configuration).getTransactionStatus(businessId, transactionCode, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * This endpoint is used in the first step of transaction processing, the app should use it to start a transaction optionally providing items to be exchanged.
-     * @summary Start a transaction
-     * @param {string} businessId Public ID of the business which card was requested
-     * @param {PostUserVirtualCardTransactionRequest} postUserVirtualCardTransactionRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TransactionApi
-     */
-    public startTransaction(businessId: string, postUserVirtualCardTransactionRequest: PostUserVirtualCardTransactionRequest, options?: AxiosRequestConfig) {
-        return TransactionApiFp(this.configuration).startTransaction(businessId, postUserVirtualCardTransactionRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * TransactionsApi - axios parameter creator
- * @export
- */
-export const TransactionsApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * This endpoint is used in the third step of transaction processing, the app should use it to update transaction details with data about points added to user\'s account and actions that were taken on items included in the transaction.
-         * @summary Finish a transaction
-         * @param {string} transactionCode Transaction code (scanned or typed in)
-         * @param {PostBusinessTransactionRequest} postBusinessTransactionRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        finishTransaction: async (transactionCode: string, postBusinessTransactionRequest: PostBusinessTransactionRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'transactionCode' is not null or undefined
-            assertParamExists('finishTransaction', 'transactionCode', transactionCode)
-            // verify required parameter 'postBusinessTransactionRequest' is not null or undefined
-            assertParamExists('finishTransaction', 'postBusinessTransactionRequest', postBusinessTransactionRequest)
-            const localVarPath = `/business/transactions/{transactionCode}`
-                .replace(`{${"transactionCode"}}`, encodeURIComponent(String(transactionCode)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication sessionToken required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(postBusinessTransactionRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * This endpoint is used in the second step of transaction processing, the app should use it to retrieve details about a transaction started by a user, after scanning user\'s transaction code.
-         * @summary Get info about a started transaction
-         * @param {string} transactionCode Transaction code (scanned or typed in)
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTransactionDetails: async (transactionCode: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'transactionCode' is not null or undefined
-            assertParamExists('getTransactionDetails', 'transactionCode', transactionCode)
-            const localVarPath = `/business/transactions/{transactionCode}`
-                .replace(`{${"transactionCode"}}`, encodeURIComponent(String(transactionCode)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication sessionToken required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
  * TransactionsApi - functional programming interface
  * @export
  */
@@ -3252,6 +3118,30 @@ export const TransactionsApiFp = function(configuration?: Configuration) {
          */
         async getTransactionDetails(transactionCode: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetBusinessTransactionResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getTransactionDetails(transactionCode, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * This endpoint is used in the last step of transaction processing, it\'s used to check the status of the transaction.
+         * @summary Get info about a transaction
+         * @param {string} businessId Public ID of the business which card was requested
+         * @param {string} transactionCode Transaction code
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTransactionStatus(businessId: string, transactionCode: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserVirtualCardTransactionResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTransactionStatus(businessId, transactionCode, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * This endpoint is used in the first step of transaction processing, the app should use it to start a transaction optionally providing items to be exchanged.
+         * @summary Start a transaction
+         * @param {string} businessId Public ID of the business which card was requested
+         * @param {PostUserVirtualCardTransactionRequest} postUserVirtualCardTransactionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async startTransaction(businessId: string, postUserVirtualCardTransactionRequest: PostUserVirtualCardTransactionRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostUserVirtualCardTransactionResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.startTransaction(businessId, postUserVirtualCardTransactionRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -3284,6 +3174,28 @@ export const TransactionsApiFactory = function (configuration?: Configuration, b
          */
         getTransactionDetails(transactionCode: string, options?: any): AxiosPromise<GetBusinessTransactionResponse> {
             return localVarFp.getTransactionDetails(transactionCode, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * This endpoint is used in the last step of transaction processing, it\'s used to check the status of the transaction.
+         * @summary Get info about a transaction
+         * @param {string} businessId Public ID of the business which card was requested
+         * @param {string} transactionCode Transaction code
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTransactionStatus(businessId: string, transactionCode: string, options?: any): AxiosPromise<GetUserVirtualCardTransactionResponse> {
+            return localVarFp.getTransactionStatus(businessId, transactionCode, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * This endpoint is used in the first step of transaction processing, the app should use it to start a transaction optionally providing items to be exchanged.
+         * @summary Start a transaction
+         * @param {string} businessId Public ID of the business which card was requested
+         * @param {PostUserVirtualCardTransactionRequest} postUserVirtualCardTransactionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        startTransaction(businessId: string, postUserVirtualCardTransactionRequest: PostUserVirtualCardTransactionRequest, options?: any): AxiosPromise<PostUserVirtualCardTransactionResponse> {
+            return localVarFp.startTransaction(businessId, postUserVirtualCardTransactionRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -3318,6 +3230,32 @@ export class TransactionsApi extends BaseAPI {
      */
     public getTransactionDetails(transactionCode: string, options?: AxiosRequestConfig) {
         return TransactionsApiFp(this.configuration).getTransactionDetails(transactionCode, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * This endpoint is used in the last step of transaction processing, it\'s used to check the status of the transaction.
+     * @summary Get info about a transaction
+     * @param {string} businessId Public ID of the business which card was requested
+     * @param {string} transactionCode Transaction code
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TransactionsApi
+     */
+    public getTransactionStatus(businessId: string, transactionCode: string, options?: AxiosRequestConfig) {
+        return TransactionsApiFp(this.configuration).getTransactionStatus(businessId, transactionCode, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * This endpoint is used in the first step of transaction processing, the app should use it to start a transaction optionally providing items to be exchanged.
+     * @summary Start a transaction
+     * @param {string} businessId Public ID of the business which card was requested
+     * @param {PostUserVirtualCardTransactionRequest} postUserVirtualCardTransactionRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TransactionsApi
+     */
+    public startTransaction(businessId: string, postUserVirtualCardTransactionRequest: PostUserVirtualCardTransactionRequest, options?: AxiosRequestConfig) {
+        return TransactionsApiFp(this.configuration).startTransaction(businessId, postUserVirtualCardTransactionRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
