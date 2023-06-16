@@ -52,7 +52,7 @@ export const postTransaction = async (
   const TsA = new api.TransactionsApi();
   try {
     const header = Auth.getAuthHeader();
-
+    console.log(transactionRequest);
     const transactionResponse = await TsA.finishTransaction(
       transactionCode,
       transactionRequest,
@@ -70,10 +70,12 @@ export const buyBenefit = async (businessId: string, itemDefinitionId: string) =
   const VCA = new api.VirtualCardsApi();
   try {
     const header = Auth.getAuthHeader();
-    const transactionResponse = await VCA.buyItem(businessId, itemDefinitionId);
+    const transactionResponse = await VCA.buyItem(businessId, itemDefinitionId, header);
+    //console.log(transactionResponse.statusText);
     return transactionResponse.data.itemId;
   } catch (e) {
     console.log('error', e);
+    console.log();
     return;
   }
 };

@@ -27,6 +27,6 @@ export const getPoints = ({ Card }: Props) => {
 };
 
 export const getInventory = ({ Card }: Props) => {
-  if ('inventory' in Card) return Card.inventory;
+  if ('ownedItems' in Card) return Card.ownedItems;
   return [];
 };

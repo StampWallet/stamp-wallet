@@ -74,7 +74,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   const name = getName({ Card: selectedCard });
   let points = getPoints({ Card: selectedCard });
   //let inventory = getInventory({ Card: selectedCard });
-  let [inventory, inventoryProper] = ProcessInventory(benefits);
+  let [inventory, inventoryProper] = ProcessInventory(getInventory({ Card: selectedCard }));
   //let [inventory, inventoryProper] = ProcessInventory(getInventory({ Card: selectedCard }));
 
   const [state, dispatch] = useReducer(reducer, {
@@ -88,8 +88,8 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
     benefitsToRealize: inventoryProper,
     isSubmitting: false,
   });
-  console.log(state.barcode);
   const { onPressBack } = useOnPressHandlers();
+  console.log(inventory);
 
   const handleAddCard = async (cardData) => {
     dispatch({ type: ACTIONS.SET_SUBMITTING, payload: !state.isSubmitting });

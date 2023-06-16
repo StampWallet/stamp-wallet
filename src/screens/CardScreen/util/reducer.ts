@@ -1,5 +1,5 @@
 import { itemDefinitions } from '../../../assets/mockData/itemDefinition';
-import { startTransaction } from '../../../utils/transactions';
+import { buyBenefit, startTransaction } from '../../../utils/transactions';
 
 export const INITIAL_STATE = {
   screenState: 'card',
@@ -60,6 +60,7 @@ export function ProcessInventory(ownedItems) {
 }
 
 function ProcessTransactionStart(state) {
+  /*
   let claimedBenefits = [];
   state.benefitsToRealize.forEach((obj) => {
     let item = findInArrDefinitionPublicId(obj, state.inventoryIds);
@@ -68,6 +69,15 @@ function ProcessTransactionStart(state) {
     }
   });
   return claimedBenefits;
+  */
+  let transactionrequest = [];
+  let inventoryIds = state.inventoryIds.slice();
+  inventoryIds.forEach((obj) => {
+    for (let i = 0; i < obj.ids.length; i++) {
+      transactionrequest.push(obj.ids[i]);
+    }
+  });
+  return transactionrequest;
 }
 
 function findInArrDefinitionPublicId(benefit, benefitArr) {
@@ -106,15 +116,6 @@ function addToArr(benefit, benefitArr, balance) {
 }
 
 function completeTransaction(state, payload) {
-  //todo: dodaj do drugiego typu inventory ktory trzyma [itemDefinitionId, [publicId]]
-  //wykorzystaj to inventory do wyslania benefitow do realizacji w show card
-  /*
-  state.benefitsToAdd.forEach((obj) => {
-    for(let i = 0; i < obj.amountToRealize; i++) {
-      buyBenefit(payload.businessDetails.publicId, obj.definitionId);
-    }
-  })
-  */
   let benefitsToAdd = state.benefitsToAdd.slice();
   let inventory = state.inventory;
   console.log(inventory);
@@ -122,6 +123,24 @@ function completeTransaction(state, payload) {
     let obj = findInArr(benefit, inventory);
     obj ? (obj.amount += benefit.amount) : inventory.push(benefit);
   });
+
+  //todo: dodaj do drugiego typu inventory ktory trzyma [itemDefinitionId, [publicId]]
+  //wykorzystaj to inventory do wyslania benefitow do realizacji w show card
+  let inventoryIds = state.inventoryIds.slice();
+  console.log(state.benefitsToAdd);
+  benefitsToAdd.forEach((obj) => {
+    for (let i = 0; i < obj.amount; i++) {
+      console.log(payload.businessDetails.publicId);
+      let id = buyBenefit(payload.businessDetails.publicId, obj.publicId);
+      //obj.definitionId = id
+      let item = findInArrDefinitionPublicId(obj, inventoryIds);
+      if (item) item.ids.push(id);
+      else {
+        inventoryIds.push({ definitionId: obj.publicId, ids: [id] });
+      }
+    }
+  });
+  console.log('inventoryIds: ', inventoryIds);
 
   //api request
   //temp solution
@@ -258,7 +277,7 @@ export function reducer(state, action) {
       };
     }
     case ACTIONS.TRANSACTION_SAVE: {
-      let inventory = completeTransaction(state, action.payload);
+      let inventory = completeTransaction(state, payload);
       console.log(inventory);
       return {
         ...state,
