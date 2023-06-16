@@ -23,7 +23,7 @@ export default function MainScreenBenefitList({
   onPress,
 }: Props) {
   const navigation = useNavigation();
-  const { onPressCard } = useOnPressHandlers();
+  const { onPressBenefit } = useOnPressHandlers();
 
   return (
     <View style={[StyleBase.container, { paddingTop: 10 }]}>
@@ -34,7 +34,7 @@ export default function MainScreenBenefitList({
             <CardTile
               imageUrl={`${BASE_PATH}/file/${item.imageId}`}
               onLongCardPress={onLongBenefitPress}
-              onPress={deletionMode ? () => onPress(item) : () => onPressCard(navigation, item)}
+              onPress={deletionMode ? () => onPress(item) : () => onPressBenefit(navigation, item)}
               deletionMode={deletionMode}
               isBenefit
             />

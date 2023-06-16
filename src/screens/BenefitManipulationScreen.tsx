@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, StatusBar, View, Platform, ScrollView, SafeAreaView } from 'react-native';
 import { useForm, FormProvider } from 'react-hook-form';
 
@@ -25,10 +25,14 @@ todo:
       provide initial value to forminput
 */
 
-export default function BenefitManipulationScreen({ navigation, Benefit }) {
+export default function BenefitManipulationScreen({ navigation, route }) {
   const name = /*Benefits.name*/ '';
   const description = /*Benefits.description*/ '';
   const maxAmount = /*Benefits.maxAmount*/ '';
+
+  const data = route?.params?.params;
+
+  console.log(data);
 
   const { ...methods } = useForm();
   const {
@@ -36,6 +40,7 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
     control,
     formState: { errors },
     watch,
+    setValue,
   } = methods;
 
   const pointsWatch = watch('noPoints');
@@ -43,10 +48,22 @@ export default function BenefitManipulationScreen({ navigation, Benefit }) {
   const dateFromWatch = watch('dateFrom');
   const dateToWatch = watch('dateToWatch');
 
-  const title = Benefit /*.publicId*/ ? 'Edit benefit' : 'Create benefit';
-  const onPress = Benefit /*.publicId*/
+  const title = data /*.publicId*/ ? 'Edit benefit' : 'Create benefit';
+  const onPress = data /*.publicId*/
     ? handleSubmit(() => alert('Work on edition in progress'))
     : handleSubmit(() => alert('Work on creation in progress'));
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    setValue('name', data.name);
+    setValue('price', data.price);
+    setValue('desc', data.description);
+    setValue('dateFrom', data.startDate);
+    // setValue('benefits', data.maxAmount);
+  }, [data, setValue]);
 
   return (
     <SafeAreaView style={StyleBase.container}>

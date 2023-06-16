@@ -60,7 +60,8 @@ export default function Scanner({ onPressAdd, disabled }: Props) {
             style={{ height: 250, width: 350 }}
           />
         </View>
-        {!scanned && (
+        <Text style={{ textAlign: 'center', fontSize: 20 }}>{text}</Text>
+        {scanned && (
           <View style={styles.horizontalContainer}>
             <CustomButton
               title='Scan again?'
@@ -106,7 +107,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    borderRadius: 100,
     height: 300,
     width: '80%',
   },
