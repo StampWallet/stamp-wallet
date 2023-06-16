@@ -11,6 +11,7 @@ import {
 import Tile from '../Miscellaneous/Tile';
 import colors from '../../constants/colors';
 import { ImageSourcePropType } from 'react-native/types';
+import Auth from '../../database/Auth';
 
 interface CardTileProps {
   imageUrl: string;
@@ -19,6 +20,7 @@ interface CardTileProps {
   tileStyle?: StyleProp<ViewStyle>;
   onLongCardPress?: () => SetStateAction<any>;
   deletionMode?: boolean;
+  isBenefit?: boolean;
 }
 
 const CardTile = ({
@@ -28,12 +30,23 @@ const CardTile = ({
   tileStyle,
   onLongCardPress,
   deletionMode = false,
+  isBenefit = false,
 }: CardTileProps) => (
   <Pressable onPress={onPress} style={containerStyle} onLongPress={onLongCardPress}>
     <Tile style={tileStyle}>
       <Image
-        style={[styles.image, deletionMode && { width: '80%'}]}
-        source={{ uri: imageUrl }}
+        style={[styles.image, deletionMode && { width: '80%' }]}
+        source={
+          isBenefit
+            ? {
+                uri: imageUrl,
+                method: 'GET',
+                headers: {
+                  Authorization: 'Bearer ' + Auth.token,
+                },
+              }
+            : { uri: imageUrl }
+        }
         resizeMode='cover'
       />
     </Tile>

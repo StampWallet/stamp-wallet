@@ -36,12 +36,10 @@ export default function MyBusinessScreen({ navigation, route }) {
     color: '',
   });
   const [loading, setLoading] = useState(true);
-  const { isEditing } = route.params || false;
+  const { isEditing } = route.params ?? false;
 
   const { ...methods } = useForm();
   const { handleSubmit, reset } = methods;
-
-  console.log(isEditing);
 
   useEffect(() => {
     const fetchBusinessData = async () => {
@@ -92,27 +90,6 @@ export default function MyBusinessScreen({ navigation, route }) {
     fetchBusinessData();
   }, [loading, isEditing, reset]);
 
-  const upload = async (fileUrl, signedUrl) => {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError('Network request failed'));
-      };
-      xhr.responseType = 'blob';
-      xhr.open('GET', fileUrl, true);
-      xhr.send(null);
-    });
-
-    console.log('Uploading!', JSON.stringify({ fileUrl, signedUrl, blob }));
-    await fetch(signedUrl, { method: 'POST', body: blob });
-
-    blob.close();
-  };
-
   const onPressStepForm = async (data) => {
     if (step < 2) {
       setBusinessRegistrationFormValues(data);
@@ -132,75 +109,6 @@ export default function MyBusinessScreen({ navigation, route }) {
     };
 
     const header = Auth.getAuthHeader();
-    let response = null;
-
-    console.log(data.banner);
-    const imagePath = data.banner.uri;
-    const imageExt = data.banner.uri.split('.').pop();
-    const imageMime = `image/${imageExt}`;
-
-    console.log('1');
-    const picture = await fetch(imagePath);
-    console.log('2');
-    const blob = await picture.blob();
-
-    console.log('3');
-    const imageData = new File([blob], `photo.${imageExt}`);
-    console.log(imageData);
-
-    try {
-      // const FA = new api.FileApi();
-      // const resp = await FA.uploadFile('Vddoh93Rpjv4wr3oeVpCr6', imageData, {
-      //   headers: {
-      //     Authorization: 'Bearer ' + Auth.token,
-      //     'Content-Type': imageMime,
-      //   },
-      // });
-      // const axios = new Axios();
-      // const prp = await axios.post('http://stampwallet.ddns.net/file/Vddoh93Rpjv4wr3oeVpCr6', {
-      //   method: 'POST',
-      //   body: blob,
-      //   headers: {
-      //     'Content-Type': imageMime,
-      //   },
-      // });
-
-      const resp = await upload(
-        imagePath,
-        'http://stampwallet.ddns.net/file/Vddoh93Rpjv4wr3oeVpCr6'
-      );
-      console.log(resp);
-    } catch (e) {
-      console.log(e.response);
-    }
-    // try {
-    //   const BA = new api.BusinessApi();
-    //   console.log('pre request');
-    //   response = await BA.createBusinessAccount(createAccountPayload, header);
-    //   console.log('business creation', response);
-    // } catch (e) {
-    //   console.log(e.response);
-    //   const { status } = e.response;
-    //   if (status === 'UNAUTHORIZED') {
-    //     setSnackbarState({
-    //       color: colors.swRed,
-    //       message: 'Unauthorized credentials.',
-    //       visible: true,
-    //     });
-    //   } else if (status === 'ALREADY_EXISTS') {
-    //     setSnackbarState({
-    //       color: colors.swRed,
-    //       message: 'Business already exists!.',
-    //       visible: true,
-    //     });
-    //   } else {
-    //     setSnackbarState({
-    //       color: colors.swRed,
-    //       message: 'Something went wrong.',
-    //       visible: true,
-    //     });
-    //   }
-    // }
 
     // TODO FINISH BUSINESS CREATION
     // if (response) {

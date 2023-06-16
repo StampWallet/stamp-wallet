@@ -405,9 +405,6 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   ) : (
     <SafeAreaView style={StyleBase.container}>
       <TopBar iconLeft='arrow-left' onPressLeft={() => onPressBack(navigation)} />
-      {!selectedCard.isAdded && (
-        <Scanner onPressAdd={(cardData) => handleAddCard(cardData)} disabled={state.isSubmitting} />
-      )}
       <CardTile
         containerStyle={[styles.cardTile, !selectedCard.isAdded && { paddingBottom: 75 }]}
         imageUrl={selectedCard.imageUrl}
@@ -415,6 +412,9 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
       />
       {selectedCard.isAdded && (
         <BarcodeTile value={selectedCard.code} format={selectedCard.barcodeType} />
+      )}
+      {!selectedCard.isAdded && (
+        <Scanner onPressAdd={(cardData) => handleAddCard(cardData)} disabled={state.isSubmitting} />
       )}
     </SafeAreaView>
   );

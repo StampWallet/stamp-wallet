@@ -86,7 +86,6 @@ export default function Scanner({ onPressAdd, disabled }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
   },
@@ -106,7 +105,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     fontSize: 16,
-    margin: 20,
     textAlign: 'center',
   },
   horizontalContainer: {

@@ -11,9 +11,10 @@ interface Props {
   tapBarState?: 'default' | 'deletion' | 'cardScreen';
   callbackFn?: () => void;
   dispatch?: React.Dispatch<any>;
+  screenMode?: 'business' | 'customer';
 }
 
-const TapBar = ({ tapBarState, callbackFn, dispatch }: Props) => {
+const TapBar = ({ tapBarState, callbackFn, dispatch, screenMode }: Props) => {
   const navigation = useNavigation();
   const { onPressBackHome, onPressCardAddition } = useOnPressHandlers();
 
@@ -47,6 +48,13 @@ const TapBar = ({ tapBarState, callbackFn, dispatch }: Props) => {
             <Icon name='home-outline' size={35} style={styles.icon} />
           </TouchableOpacity>
         </View>
+        {screenMode === 'business' && (
+          <View style={styles.containerIcon}>
+            <TouchableOpacity onPress={() => onPressCardAddition(navigation)}>
+              <Icon name='barcode-scan' size={35} style={styles.icon} />
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.containerIcon}>
           <TouchableOpacity
             onPress={
@@ -68,6 +76,7 @@ const TapBar = ({ tapBarState, callbackFn, dispatch }: Props) => {
             <Icon name='plus-circle-outline' size={35} style={styles.icon} />
           </TouchableOpacity>
         </View>
+
         <View style={styles.containerIcon}>
           <TouchableOpacity onPress={callbackFn}>
             <Icon name={iconName} size={35} style={styles.icon} />
@@ -94,8 +103,8 @@ const styles = StyleSheet.create({
   },
   containerIcon: {
     justifyContent: 'center',
-    paddingLeft: 50,
-    paddingRight: 50,
+    paddingLeft: 25,
+    paddingRight: 25,
   },
   icon: {
     color: colors.swWhite,

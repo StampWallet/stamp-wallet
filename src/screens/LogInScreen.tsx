@@ -23,8 +23,8 @@ import { LOGIN_ROUTE } from '../constants/paths';
 import CenteredLoader from '../components/CenteredLoader';
 
 const mockFormData = {
-  email: 'k-bania@tlen.pl',
-  password: 'Qwerty123',
+  email: 'coffeelab@example.com',
+  password: 'zaq1@WSX',
 };
 
 export default function LogInScreen({ navigation }) {

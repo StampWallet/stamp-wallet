@@ -9,7 +9,7 @@ import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 import * as api from '../../api';
 import Auth from '../../database/Auth';
 
-const SideBar = ({ translateXValue, mainScreenState }) => {
+const SideBar = ({ translateXValue, mainScreenState, flipMainScreenMode }) => {
   const { mainScreenMode, businessCreated } = mainScreenState;
   const userFields = mainScreenMode === 'customer';
 
@@ -32,6 +32,10 @@ const SideBar = ({ translateXValue, mainScreenState }) => {
               CommonActions.navigate({ name: BUSINESS_ROUTE, params: { isEditing: true } })
             )
           : navigation.dispatch(CommonActions.navigate(BUSINESS_ROUTE));
+      case 'BENEFIT_MODE':
+        return flipMainScreenMode('business');
+      case 'CARD_MODE':
+        return flipMainScreenMode('customer');
       case 'LOGOUT': {
         const SA = new api.SessionsApi();
         const header = Auth.getAuthHeader();
@@ -90,7 +94,7 @@ const SideBar = ({ translateXValue, mainScreenState }) => {
         )}
         {!userFields && (
           <CustomButton
-            onPress={() => {}}
+            onPress={() => onPressNavigate('CARD_MODE')}
             title='my cards'
             customButtonStyle={styles.customButtonStyle}
             customTextStyle={styles.customTextStyle}
@@ -98,7 +102,7 @@ const SideBar = ({ translateXValue, mainScreenState }) => {
         )}
         {userFields && businessCreated && (
           <CustomButton
-            onPress={() => {}}
+            onPress={() => onPressNavigate('BENEFIT_MODE')}
             title='my benefits'
             customButtonStyle={styles.customButtonStyle}
             customTextStyle={styles.customTextStyle}

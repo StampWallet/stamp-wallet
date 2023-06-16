@@ -25,6 +25,8 @@ import Loader from '../components/Loader';
 import SideBar from '../components/Bars/SideBar';
 import { fetchUserCards } from '../utils/fetchCards';
 import CenteredLoader from '../components/CenteredLoader';
+import fetchBusiness from '../utils/fetchBusiness';
+import MainScreenBenefitList from '../components/Benefits/MainScreenBenefitList';
 
 /*
 todo:
@@ -36,15 +38,16 @@ todo:
 
 export default function MainScreen({ navigation, route }) {
   const [cardQuery, setCardQuery] = useState('');
-  const [isFilterDropdownOpen, setFilterDropdownVisibility] = useState(false);
   const [filter, setFilter] = useState<OptionKey | null>(null);
   const [cards, setCards] = useState(null);
+  const [itemToDelete, setItemToDelete] = useState(null);
   // const [benefits, setBenefits] = useState([]);
   const [filteredCards, setFilteredCards] = useState(cards);
+
+  const [businessInfo, setBusinessInfo] = useState(null);
+
+  const [isFilterDropdownOpen, setFilterDropdownVisibility] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [deletionMode, setDeletionMode] = useState(false);
-  const [mainScreenMode, setMainScreenMode] = useState<'customer' | 'business'>('customer');
-  const [cardToDelete, setCardToDelete] = useState(null);
   const [sidebarVisibility, setSidebarVisibility] = useState(false);
   const [snackbarState, setSnackbarState] = useState<{
     visible: boolean;
@@ -55,6 +58,10 @@ export default function MainScreen({ navigation, route }) {
     message: '',
     color: '',
   });
+
+  const [deletionMode, setDeletionMode] = useState(false);
+  const [mainScreenMode, setMainScreenMode] = useState<'customer' | 'business'>('customer');
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const translateXValue = useRef(new Animated.Value(0)).current;
@@ -69,6 +76,18 @@ export default function MainScreen({ navigation, route }) {
       useNativeDriver: true,
     }).start();
   };
+
+  useEffect(() => {
+    const getBusinessData = async () => {
+      const businessData = await fetchBusiness();
+
+      const { hasBusiness, itemDefinitions } = businessData;
+
+      setBusinessInfo({ hasBusiness, benefits: itemDefinitions });
+    };
+
+    getBusinessData();
+  }, []);
 
   useEffect(() => {
     if (!route.params) {
@@ -105,31 +124,73 @@ export default function MainScreen({ navigation, route }) {
     setFilteredCards(cardsWithSearchedName);
   }, [cards, filter, cardQuery]);
 
-  const handleOnDelete = (card) => {
-    setCardToDelete(card);
+  const handleOnDelete = (item) => {
+    setItemToDelete(item);
     setIsModalOpen(true);
   };
 
-  const confirmDeleteAction = async () => {
+  const handleDeleteAction = () => {
+    if (mainScreenMode === 'customer') {
+      confirmDeleteCardAction();
+      return;
+    }
+
+    confirmDeleteBenefitAction();
+  };
+
+  const confirmDeleteBenefitAction = async () => {
     setIsModalOpen(false);
-    if (!cardToDelete) {
+    if (!itemToDelete) {
+      return;
+    }
+    setIsSubmitting(true);
+
+    const header = Auth.getAuthHeader();
+    let requestResponse = null;
+
+    const VA = new api.VirtualCardsApi();
+    try {
+      requestResponse = await VA.deleteItem(businessInfo.businessId, itemToDelete.itemId, header);
+      const benefitsWithoutDeleted = businessInfo.benefits.filter(
+        (benefit) => benefit.itemId !== itemToDelete.itemId
+      );
+      setBusinessInfo((prev) => ({ ...prev, benefits: benefitsWithoutDeleted }));
+
+      requestResponse = {
+        color: colors.swDarkGreen,
+        message: 'Benefit has been successfully deleted from your account.',
+        visible: true,
+      };
+    } catch (e) {
+      requestResponse = { color: colors.swRed, message: 'Something went wrong.', visible: true };
+    }
+
+    setIsModalOpen(false);
+    setItemToDelete(null);
+    setSnackbarState({ ...requestResponse });
+    setIsSubmitting(false);
+  };
+
+  const confirmDeleteCardAction = async () => {
+    setIsModalOpen(false);
+    if (!itemToDelete) {
       return;
     }
 
     setIsSubmitting(true);
 
-    const isLocal = Boolean(cardToDelete.imageUrl);
+    const isLocal = Boolean(itemToDelete.imageUrl);
     const header = Auth.getAuthHeader();
     let requestResponse = null;
 
     if (isLocal) {
       const LCA = new api.LocalCardsApi();
-      const cardId = cardToDelete.publicId;
+      const cardId = itemToDelete.publicId;
       try {
         const deleteResponse = await LCA.deleteLocalCard(cardId, header);
         const virtualCards = cards.filter((card) => Boolean(card.businessDetails));
         const localCards = cards.filter((card) =>
-          Boolean(card.name && card.publicId !== cardToDelete.publicId)
+          Boolean(card.name && card.publicId !== itemToDelete.publicId)
         );
 
         const filteredCardsWithRemovedDeletedCard = filteredCards.filter((card) => {
@@ -137,7 +198,7 @@ export default function MainScreen({ navigation, route }) {
             return true;
           }
 
-          return card.publicId !== cardToDelete.publicId;
+          return card.publicId !== itemToDelete.publicId;
         });
 
         setCards([...localCards, ...virtualCards]);
@@ -151,7 +212,7 @@ export default function MainScreen({ navigation, route }) {
         requestResponse = { color: colors.swRed, message: 'Something went wrong.', visible: true };
       }
 
-      setCardToDelete(null);
+      setItemToDelete(null);
       setSnackbarState({ ...requestResponse });
       setIsSubmitting(false);
       return;
@@ -161,7 +222,7 @@ export default function MainScreen({ navigation, route }) {
     const {
       businessDetails,
       businessDetails: { publicId },
-    } = cardToDelete;
+    } = itemToDelete;
     try {
       const deleteResponse = await VCA.deleteVirtualCard(publicId, header);
       const localCards = cards.filter((card) => Boolean(card.name));
@@ -189,10 +250,14 @@ export default function MainScreen({ navigation, route }) {
     }
 
     setIsModalOpen(false);
-    setCardToDelete(null);
+    setItemToDelete(null);
     setSnackbarState({ ...requestResponse });
     setIsSubmitting(false);
   };
+
+  if (isSubmitting) {
+    return <CenteredLoader animation='loader' />;
+  }
 
   return (
     <SafeAreaView style={StyleBase.container}>
@@ -206,7 +271,7 @@ export default function MainScreen({ navigation, route }) {
           setSidebarVisibility((prev) => !prev);
           toggleXPosition();
         }}
-        iconRight='filter-menu-outline'
+        iconRight={mainScreenMode === 'customer' ? 'filter-menu-outline' : ''}
         onPressRight={
           sidebarVisibility
             ? () => {}
@@ -217,9 +282,10 @@ export default function MainScreen({ navigation, route }) {
       <SideBar
         translateXValue={translateXValue}
         mainScreenState={{
-          businessCreated: true,
+          businessCreated: businessInfo?.hasBusiness,
           mainScreenMode,
         }}
+        flipMainScreenMode={setMainScreenMode}
       />
       {isFilterDropdownOpen && (
         <SortOptions
@@ -228,9 +294,7 @@ export default function MainScreen({ navigation, route }) {
           setFilterDropdownVisibility={setFilterDropdownVisibility}
         />
       )}
-      {isSubmitting ? (
-        <CenteredLoader animation='loader' />
-      ) : (
+      {mainScreenMode === 'customer' && (
         <>
           <SearchBar onChangeText={setCardQuery} value={cardQuery} deletionMode={deletionMode} />
           <View
@@ -255,10 +319,44 @@ export default function MainScreen({ navigation, route }) {
           </View>
         </>
       )}
+      {mainScreenMode === 'business' && (
+        <View style={[StyleBase.container, StyleBase.listContainer]}>
+          {businessInfo?.benefits?.length ? (
+            <View style={{ marginTop: 60 }}>
+              <View
+                style={{
+                  borderBottomColor: colors.swBlack,
+                  borderBottomWidth: 2,
+                  marginBottom: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    alignSelf: 'center',
+                    fontSize: 24,
+                  }}
+                >
+                  List of offered benefits
+                </Text>
+              </View>
+
+              <MainScreenBenefitList
+                benefits={businessInfo.benefits}
+                onLongBenefitPress={() => setDeletionMode(true)}
+                onPress={() => {}}
+                deletionMode={deletionMode}
+              />
+            </View>
+          ) : (
+            <Text>Add your first benefit!</Text>
+          )}
+        </View>
+      )}
 
       <TapBar
         callbackFn={() => setDeletionMode((prev) => !prev)}
         tapBarState={deletionMode ? 'deletion' : 'default'}
+        screenMode={mainScreenMode}
       />
       <CustomModal
         header={`Are you sure you want to delete this ${
@@ -271,7 +369,7 @@ export default function MainScreen({ navigation, route }) {
         }`}
         confirmOption={
           <CustomButton
-            onPress={() => confirmDeleteAction()}
+            onPress={() => handleDeleteAction()}
             title='confirm'
             customButtonStyle={styles.modalButton}
             customTextStyle={styles.modalButtonText}
