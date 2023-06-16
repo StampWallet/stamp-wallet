@@ -73,7 +73,7 @@ export const fetchUserCards = async (callbackFn: React.Dispatch<React.SetStateAc
         }))
       : [];
 
-    console.log(virtualCards);
+    //console.log(virtualCards);
 
     localCards.forEach((card) => {
       const matchingCard = allLocalCards.find((cardWithUrl) => cardWithUrl.publicId === card.type);
@@ -125,7 +125,7 @@ export const fetchVirtualCard = async (publicId: string) => {
   const header = Auth.getAuthHeader();
   try {
     const virtualCard = await VC.getVirtualCard(publicId, header);
-    console.log(virtualCard.data);
+    return { ...virtualCard.data, isAdded: true };
   } catch (e) {
     console.log('error: ', e);
   }

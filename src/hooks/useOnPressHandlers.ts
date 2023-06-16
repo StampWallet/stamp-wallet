@@ -12,6 +12,8 @@ import {
 } from '../constants/paths';
 import MainScreen from '../screens/MainScreen';
 import { benefits } from '../assets/mockData/Benefits';
+import { fetchVirtualCard } from '../utils/fetchCards';
+import { fetchFile } from '../utils/files';
 
 const useOnPressHandlers = () => {
   const onPressLogIn = (navigation, data) => {
@@ -52,19 +54,26 @@ const useOnPressHandlers = () => {
     navigation.push(ADD_CARD_ROUTE);
   };
 
-  const onPressCard = (navigation, card) => {
+  const onPressCard = async (navigation, card) => {
     //if virtualcard
     //if isAdded use getVirtualCard else getBusiness and use as card
 
     //then just add isAdded argument to object ig
     //temp solution on mockData below
-    console.log(card.businessDetails);
+    let Card;
+    if ('businessDetails' in card && card.isAdded) {
+      Card = await fetchVirtualCard(card.businessDetails.publicId);
+    } else {
+      Card = card;
+    }
     /*
-    if ('businessDetails' in card)
-      card.businessDetails = { ...card.businessDetails, itemDefinitions: benefits };
-      */
+    if ('businessDetails' in card) {
+      const imageUrl = await fetchFile(Card.businessDetails.bannerImageId);
+      Card = { ...Card, imageUrl: imageUrl };
+    }
+    */
 
-    navigation.push(CARD_ROUTE, { Card: card });
+    navigation.push(CARD_ROUTE, { Card: Card });
   };
 
   const onPressCardInfo = (navigation) => {

@@ -12,6 +12,7 @@ export const startTransaction = async (publicId: string, claimedBenefits: any[])
       header
     );
     console.log(transactionResponse.data.Code, ' ', transactionResponse.data.publicId);
+    return transactionResponse.data.Code;
   } catch (e) {
     console.log('error:', e);
   }

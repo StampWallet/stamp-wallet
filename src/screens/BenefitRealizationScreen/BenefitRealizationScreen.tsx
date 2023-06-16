@@ -7,7 +7,13 @@ import colors from '../../constants/colors';
 import TopBar from '../../components/Bars/TopBar';
 import { BUSINESS_ROUTE, MAIN_ROUTE } from '../../constants/paths';
 
-import { reducer, INITIAL_STATE, ACTIONS, ProcessBenefitsIn } from './util/reducer';
+import {
+  reducer,
+  INITIAL_STATE,
+  ACTIONS,
+  ProcessBenefitsIn,
+  ProcessInventory,
+} from './util/reducer';
 import BenefitList from '../../components/Benefits/BenefitList';
 import BoxContainer from '../../components/Miscellaneous/BoxContainer';
 import HookFormInput from '../../components/HookFormComponents/HookFormInput';
@@ -77,17 +83,22 @@ const mockBenefitsData = [
 export default function BenefitRealizationScreen({ navigation, route }: Props) {
   //const benefits = route.props;
   const Benefits = benefits;
-  let benefitsProcessed = ProcessBenefitsIn(Benefits);
-  console.log(benefitsProcessed);
+  //let benefitsProcessed = ProcessBenefitsIn(Benefits);
+  const [benefitsEnd, benefitsProper] = ProcessInventory(Benefits);
   const { control } = useForm();
   const [state, dispatch] = useReducer(reducer, {
     ...INITIAL_STATE,
+    benefitsEnd: benefitsEnd,
+    benefitsToRealize: benefitsProper.slice(),
+    benefitsInt: benefitsProper.slice(),
     //screenState: 'transaction',
-    //benefitsInt: benefitsProcessed,
-    //benefitsToRealize: benefitsProcessed,
-    benefitsInt: mockBenefitsData.map((obj) => ({ ...obj, amountToRealize: obj.amount })),
-    benefitsToRealize: mockBenefitsData.map((obj) => ({ ...obj, amountToRealize: obj.amount })),
+    //benefitsInt: benefitsProcessed.slice(),
+    //benefitsToRealize: benefitsProcessed.slice(),
+    //benefitsInt: mockBenefitsData.map((obj) => ({ ...obj, amountToRealize: obj.amount })),
+    //benefitsToRealize: mockBenefitsData.map((obj) => ({ ...obj, amountToRealize: obj.amount })),
   });
+
+  console.log(state.benefitsEnd);
 
   return (
     <SafeAreaView style={[StyleBase.container, { justifyContent: 'flex-end' }]}>
@@ -121,7 +132,7 @@ export default function BenefitRealizationScreen({ navigation, route }: Props) {
             />
           </View>
           <CustomButton
-            onPress={() => dispatch({ type: ACTIONS.REALIZATION_ACCEPT })}
+            onPress={() => dispatch({ type: ACTIONS.REALIZATION_ACCEPT, payload: 0 })}
             title='accept transaction'
           />
           <CustomButton

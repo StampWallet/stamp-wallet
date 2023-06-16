@@ -58,8 +58,6 @@ export function ProcessInventory(ownedItems) {
 }
 
 function ProcessTransactionStart(state) {
-  console.log(state.benefitsToRealize);
-  console.log(state.inventoryInt);
   let claimedBenefits = [];
   state.benefitsToRealize.forEach((obj) => {
     let item = findInArrDefinitionPublicId(obj, state.inventoryIds);
@@ -87,6 +85,7 @@ function addToArr(benefit, benefitArr, balance) {
   if (!item) {
     benefitArr.push({
       publicId: benefit.publicId,
+      definitionId: benefit.definitionId,
       amount: 1,
       name: benefit.name,
       price: benefit.price,
@@ -105,17 +104,27 @@ function addToArr(benefit, benefitArr, balance) {
 }
 
 function completeTransaction(state, payload) {
-  let inventory = state.inventory.slice();
+  /*
+  state.benefitsToAdd.forEach((obj) => {
+    for(let i = 0; i < obj.amountToRealize; i++) {
+      buyBenefit(payload.businessDetails.publicId, obj.definitionId);
+    }
+  })
+  */
+  /*
+  let benefitsToAdd = state.benefitsToAdd.slice();
   console.log(inventory);
-  inventory.forEach((benefit) => {
-    let obj = findInArr(benefit, inventory);
-    obj ? (obj.amount += benefit.amount) : inventory.push(benefit);
+  benefitsToAdd.forEach((benefit) => {
+    let obj = findInArr(benefit, state.inventory);
+    obj ? (obj.amount += benefit.amount) : benefitsToAdd.push(benefit);
   });
+
   //api request
   //temp solution
   payload.inventory = inventory;
   payload.points = state.balanceAfterTransaction;
   return inventory;
+  */
 }
 
 function addToTransaction(state, payload) {
@@ -229,18 +238,19 @@ export function reducer(state, action) {
     case ACTIONS.REALIZE_BENEFITS: {
       let claimedBenefits = ProcessTransactionStart(state);
       console.log(claimedBenefits);
-      //startTransaction(payload, claimedBenefits);
+      const barcode = 0;
+      //const barcode = startTransaction(payload, claimedBenefits);
       //start transaction businessId, claimedBenefits
       //get response, show barcode with given code
       return {
         ...state,
+        barcode: barcode,
       };
     }
     case ACTIONS.TRANSACTION_SAVE: {
-      const inventory = completeTransaction(state, action.payload);
+      completeTransaction(state, action.payload);
       return {
         ...state,
-        inventory,
         balance: state.balanceAfterTransaction,
         benefitsToAdd: [],
       };

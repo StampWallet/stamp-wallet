@@ -42,7 +42,7 @@ interface CardInfoScreenProps {
 }
 
 function ClaimBenefits(dispatch, inventory) {
-  console.log(inventory);
+  //console.log(inventory);
   dispatch({
     type: ACTIONS.SET_BENEFITS_TO_REALIZE,
     payload: inventory,
@@ -247,7 +247,13 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                       <CustomButton
                         onPress={() =>
                           //postTransaction('000680637592', { addedPoints: 1000, itemActions: [] })
-                          dispatch({ type: ACTIONS.REALIZE_BENEFITS })
+                          {
+                            dispatch({
+                              type: ACTIONS.REALIZE_BENEFITS,
+                              payload: selectedCard.businessDetails.publicId,
+                            });
+                            dispatch({ type: ACTIONS.SET_SCREEN, payload: 'barcode' });
+                          }
                         }
                         title='Show Card'
                       />
@@ -336,8 +342,11 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           </View>
           <CustomButton
             onPress={() => {
-              dispatch({ type: ACTIONS.REALIZE_BENEFITS });
-              alert('dummy text');
+              dispatch({
+                type: ACTIONS.REALIZE_BENEFITS,
+                payload: selectedCard.businessDetails.publicId,
+              });
+              dispatch({ type: ACTIONS.SET_SCREEN, payload: 'barcode' });
               //todo
             }}
             title='Show Card'
@@ -377,6 +386,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           </View>
         </>
       )}
+      {state.screenState === 'barcode' && <Text>Barcode will be here</Text>}
       {!selectedCard.isAdded && (
         <CustomButton
           title='add card'
@@ -406,7 +416,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
     <SafeAreaView style={StyleBase.container}>
       <TopBar iconLeft='arrow-left' onPressLeft={() => onPressBack(navigation)} />
       <CardTile
-        containerStyle={[styles.cardTile, !selectedCard.isAdded]}
+        containerStyle={styles.cardTile}
         imageUrl={selectedCard.imageUrl}
         tileStyle={{ width: '88.66%' }}
       />
