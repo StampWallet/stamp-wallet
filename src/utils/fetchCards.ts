@@ -28,11 +28,19 @@ export const fetchVirtualCards = async (
     const header = Auth.getAuthHeader();
     const virtualCardsResponse = await UA.searchBusinesses(query, undefined, undefined, header);
     console.log(virtualCardsResponse?.data);
-    const cards = virtualCardsResponse.data.businesses.map((obj) => ({
-      businessDetails: { ...obj },
-      isAdded: false,
-    }));
-    callbackFn([...cards]);
+    const { businesses } = virtualCardsResponse.data;
+    const VA = new api.VirtualCardsApi();
+
+    let virtualCards = [];
+
+    await Promise.all(
+      businesses.map(async (business) => {
+        const response = await VA.getVirtualCard(business.publicId, header);
+        virtualCards = [...virtualCards, { ...response.data, isAdded: false }];
+      })
+    );
+
+    callbackFn([...virtualCards]);
   } catch (e) {
     console.log('error:', e);
     callbackFn([]);
