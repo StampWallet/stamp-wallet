@@ -406,7 +406,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
     <SafeAreaView style={StyleBase.container}>
       <TopBar iconLeft='arrow-left' onPressLeft={() => onPressBack(navigation)} />
       <CardTile
-        containerStyle={[styles.cardTile, !selectedCard.isAdded && { paddingBottom: 75 }]}
+        containerStyle={[styles.cardTile, !selectedCard.isAdded && { paddingBottom: 25 }]}
         imageUrl={selectedCard.imageUrl}
         tileStyle={{ width: '88.66%' }}
       />
