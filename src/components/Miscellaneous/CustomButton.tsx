@@ -1,5 +1,5 @@
-import React, { ReactNode, useState } from 'react';
-import { StyleSheet, Pressable, Text, StyleProp, ViewStyle, TextStyle } from 'react-native';
+import React, { ReactNode } from 'react';
+import { StyleSheet, Text, StyleProp, ViewStyle, TextStyle, TouchableOpacity } from 'react-native';
 
 import colors from '../../constants/colors';
 
@@ -23,7 +23,7 @@ const CustomButton = ({
   mutableColor = true,
   disabled = false,
 }: CustomButtonProps) => {
-  const [buttonColor, setButtonColor] = useState<string>(null);
+  // const [buttonColor, setButtonColor] = useState<string>(null);
   const buttonStyle = StyleSheet.flatten([
     styles.buttonContainer,
     // sets primary or secondary button version, can be overloaded with custom style
@@ -31,32 +31,17 @@ const CustomButton = ({
     customButtonStyle,
     // this removes padding and border for image being present
     { ...(!title && { padding: 0 }) },
-    { ...(buttonColor && { backgroundColor: buttonColor }) },
+    // { ...(buttonColor && { backgroundColor: buttonColor }) },
+    // this adds opacity when button is disabled
+    { ...(disabled && { opacity: 0.5 }) },
   ]);
   const textStyle = StyleSheet.flatten([styles.buttonText, customTextStyle]);
 
   return (
-    <Pressable
-      onPressIn={() => {
-        if (!mutableColor) {
-          return;
-        }
-        setButtonColor(colors.swLightBlue);
-      }}
-      onPressOut={() => {
-        if (!mutableColor) {
-          onPress();
-          return;
-        }
-        setButtonColor(colors.swDarkBlue);
-        onPress();
-      }}
-      style={buttonStyle}
-      disabled={disabled}
-    >
+    <TouchableOpacity onPress={onPress} style={buttonStyle} disabled={disabled}>
       {title && <Text style={textStyle}>{title}</Text>}
       {!title && children}
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

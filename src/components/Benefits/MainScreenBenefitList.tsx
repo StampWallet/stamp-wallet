@@ -2,45 +2,41 @@ import React, { SetStateAction } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
-import CardTile from './CardTile';
 import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 import StyleBase from '../../styles/StyleBase';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { itemDefinitions } from '../../assets/mockData/itemDefinition';
+import CardTile from '../Cards/CardTile';
 import { BASE_PATH } from '../../api/base';
 
 interface Props {
   // todo change the type
-  cards: any[];
-  onLongCardPress?: () => SetStateAction<any>;
-  onPress?: (card) => void;
+  benefits: any[];
+  onLongBenefitPress?: () => SetStateAction<any>;
+  onPress?: (benefit) => void;
   deletionMode?: boolean;
 }
 
-export default function CardList({ cards, onLongCardPress, deletionMode = false, onPress }: Props) {
+export default function MainScreenBenefitList({
+  benefits,
+  onLongBenefitPress,
+  deletionMode = false,
+  onPress,
+}: Props) {
   const navigation = useNavigation();
-  const { onPressCard } = useOnPressHandlers();
-
-  const getImageUrl = (item) => {
-    if (item?.imageUrl) {
-      return item.imageUrl;
-    }
-
-    return `${BASE_PATH}/file/${item.businessDetails.bannerImageId}`;
-  };
+  const { onPressBenefit } = useOnPressHandlers();
 
   return (
     <View style={[StyleBase.container, { paddingTop: 10 }]}>
       <FlatList
-        data={cards}
+        data={benefits}
         renderItem={({ item }) => (
           <View>
             <CardTile
-              imageUrl={getImageUrl(item)}
-              onLongCardPress={onLongCardPress}
-              onPress={deletionMode ? () => onPress(item) : () => onPressCard(navigation, item)}
+              imageUrl={`${BASE_PATH}/file/${item.imageId}`}
+              onLongCardPress={onLongBenefitPress}
+              onPress={deletionMode ? () => onPress(item) : () => onPressBenefit(navigation, item)}
               deletionMode={deletionMode}
-              isBenefit={!item?.imageUrl}
+              isBenefit
             />
             {deletionMode && (
               <Icon

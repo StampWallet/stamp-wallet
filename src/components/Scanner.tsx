@@ -2,8 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import CustomButton from './Miscellaneous/CustomButton';
+import colors from '../constants/colors';
 
-export default function Scanner() {
+interface Props {
+  onPressAdd: (data) => void;
+  disabled: boolean;
+}
+
+export default function Scanner({ onPressAdd, disabled }: Props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [barcodeData, setBarcodeData] = useState(null);
@@ -11,6 +17,7 @@ export default function Scanner() {
 
   const getBarCodeScannerPermissions = async () => {
     const { status } = await BarCodeScanner.requestPermissionsAsync();
+    console.log(barcodeData);
     setHasPermission(status === 'granted');
   };
 
@@ -46,64 +53,71 @@ export default function Scanner() {
       <View>
         <Text style={styles.header}>Scan the barcode!</Text>
       </View>
-      <View style={styles.barcodeBox}>
-        <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          style={{ height: 400, width: 400 }}
-        />
-      </View>
-      <Text style={styles.footer}>{text}</Text>
-      {scanned && (
-        <View style={styles.horizontalContainer}>
-          <CustomButton
-            title='Scan again?'
-            onPress={() => {
-              setText('Not yet scanned...');
-              setScanned(false);
-              setBarcodeData(null);
-            }}
-            customButtonStyle={styles.customButton}
-            type='secondary'
-          />
-          <CustomButton
-            title='Add card!'
-            onPress={() => setScanned(false)}
-            customButtonStyle={styles.customButton}
+      <View>
+        <View style={styles.barcodeBox}>
+          <BarCodeScanner
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            style={{ height: 250, width: 350 }}
           />
         </View>
-      )}
+        <Text style={{ textAlign: 'center', fontSize: 20 }}>{text}</Text>
+        {scanned && (
+          <View style={styles.horizontalContainer}>
+            <CustomButton
+              title='Scan again?'
+              onPress={() => {
+                setText('Not yet scanned...');
+                setScanned(false);
+                setBarcodeData(null);
+              }}
+              customButtonStyle={styles.customButton}
+              type='secondary'
+              disabled={disabled}
+            />
+            <CustomButton
+              title='Add card!'
+              onPress={() => onPressAdd(barcodeData)}
+              customButtonStyle={styles.customButton}
+              disabled={disabled}
+            />
+          </View>
+        )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
+    width: '90%',
+    backgroundColor: colors.swPaleViolet,
+    borderRadius: 15,
+    marginTop: 50,
   },
   header: {
-    fontSize: 16,
+    fontSize: 20,
+    paddingTop: 10,
     textAlign: 'center',
-    marginBottom: 20,
+    fontWeight: '500',
   },
   barcodeBox: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 400,
-    width: 400,
     overflow: 'hidden',
-    borderRadius: 30,
-    backgroundColor: 'tomato',
+    height: 300,
+    width: '80%',
   },
   footer: {
     fontSize: 16,
-    margin: 20,
     textAlign: 'center',
   },
   horizontalContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    height: '1%',
     gap: 20,
   },
   customButton: {

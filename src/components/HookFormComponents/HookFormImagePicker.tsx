@@ -28,6 +28,7 @@ const HookFormImagePicker = ({ control, rules, name, isInvalid }: IHookFormImage
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      // base64: true,
     });
 
     if (!result.canceled) {

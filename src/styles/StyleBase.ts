@@ -9,7 +9,7 @@ const StyleBase = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  backArrow: { position: 'absolute', top: 25, left: 10 },
+  backArrow: { position: 'absolute', top: 25, left: 25 },
   formMargin: {
     flex: 1,
   },

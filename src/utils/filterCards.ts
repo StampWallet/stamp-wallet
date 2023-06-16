@@ -2,8 +2,8 @@ import { OptionName, OptionType } from '../components/Bars/SearchBar/OptionRow';
 import { getName } from './cardGetters';
 
 const compareNamesAsc = (a, b) => {
-  const nameA = getName(a).toUpperCase();
-  const nameB = getName(b).toUpperCase();
+  const nameA = getName({ Card: a }).toUpperCase();
+  const nameB = getName({ Card: b }).toUpperCase();
 
   if (nameA > nameB) {
     return -1;
@@ -16,8 +16,8 @@ const compareNamesAsc = (a, b) => {
   return 0;
 };
 const compareNamesDesc = (a, b) => {
-  const nameA = getName(a).toUpperCase();
-  const nameB = getName(b).toUpperCase();
+  const nameA = getName({ Card: a }).toUpperCase();
+  const nameB = getName({ Card: b }).toUpperCase();
 
   if (nameA < nameB) {
     return -1;
@@ -31,8 +31,8 @@ const compareNamesDesc = (a, b) => {
 };
 
 const sortByCardType = (cards, type: 'virtual' | 'real') => {
-  const virtualCards = cards.filter((card) => card.type === 'virtual');
-  const realCards = cards.filter((card) => card.type !== 'virtual');
+  const virtualCards = cards.filter((card) => 'businessDetails' in card);
+  const realCards = cards.filter((card) => !('businessDetails' in card));
 
   return type === 'virtual' ? [...virtualCards, ...realCards] : [...realCards, ...virtualCards];
 };

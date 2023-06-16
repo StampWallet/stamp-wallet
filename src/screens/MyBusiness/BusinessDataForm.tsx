@@ -16,33 +16,16 @@ export default function BusinessDataForm() {
 
   return (
     <BoxContainer style={StyleBase.formMargin}>
-      <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center' }}>
+      <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center', width: 300 }}>
         <HookFormInput
           control={control}
           rules={{
             required,
           }}
-          name='NIP'
-          placeholder='NIP'
-          isInvalid={Boolean(errors.NIP)}
-        />
-        <HookFormInput
-          control={control}
-          rules={{
-            required,
-          }}
-          name='KRS'
-          placeholder='KRS'
-          isInvalid={Boolean(errors.KRS)}
-        />
-        <HookFormInput
-          control={control}
-          rules={{
-            required,
-          }}
-          name='REGON'
-          placeholder='REGON'
-          isInvalid={Boolean(errors.REGON)}
+          name='name'
+          placeholder='name'
+          isInvalid={Boolean(errors.name)}
+          header='name'
         />
         <HookFormInput
           control={control}
@@ -52,6 +35,7 @@ export default function BusinessDataForm() {
           name='businessName'
           placeholder='business name'
           isInvalid={Boolean(errors.businessName)}
+          header='business name'
         />
         <HookFormInput
           control={control}
@@ -61,15 +45,17 @@ export default function BusinessDataForm() {
           name='businessAddress'
           placeholder='business address'
           isInvalid={Boolean(errors.businessAddress)}
+          header='business address'
         />
         <HookFormInput
           control={control}
           rules={{
             required,
           }}
-          name='postalCode'
-          placeholder='postal code'
-          isInvalid={Boolean(errors.postalCode)}
+          name='description'
+          placeholder='description'
+          isInvalid={Boolean(errors.businessAddress)}
+          header='short description'
         />
         <HookFormInput
           control={control}
@@ -79,7 +65,48 @@ export default function BusinessDataForm() {
           name='city'
           placeholder='city'
           isInvalid={Boolean(errors.city)}
+          header='city'
         />
+        <HookFormInput
+          control={control}
+          rules={{
+            required,
+          }}
+          name='NIP'
+          placeholder='NIP'
+          isInvalid={Boolean(errors.NIP)}
+          header='NIP'
+        />
+        <HookFormInput
+          control={control}
+          rules={{
+            required,
+          }}
+          name='KRS'
+          placeholder='KRS'
+          isInvalid={Boolean(errors.KRS)}
+          header='KRS'
+        />
+        <HookFormInput
+          control={control}
+          rules={{
+            required,
+          }}
+          name='REGON'
+          placeholder='REGON'
+          isInvalid={Boolean(errors.REGON)}
+          header='REGON'
+        />
+
+        {/*<HookFormInput*/}
+        {/*  control={control}*/}
+        {/*  rules={{*/}
+        {/*    required,*/}
+        {/*  }}*/}
+        {/*  name='postalCode'*/}
+        {/*  placeholder='postal code'*/}
+        {/*  isInvalid={Boolean(errors.postalCode)}*/}
+        {/*/>*/}
       </ScrollView>
     </BoxContainer>
   );

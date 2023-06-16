@@ -1,46 +1,86 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 import colors from '../../constants/colors';
+import { ACTIONS } from '../../screens/CardScreen/util/reducer';
 
 interface Props {
-  tapBarState?: 'default' | 'deletion';
-  callbackFn: () => void;
+  tapBarState?: 'default' | 'deletion' | 'cardScreen';
+  callbackFn?: () => void;
+  dispatch?: React.Dispatch<any>;
+  screenMode?: 'business' | 'customer';
 }
 
-const TapBar = ({ tapBarState, callbackFn }: Props) => {
+const TapBar = ({ tapBarState, callbackFn, dispatch, screenMode }: Props) => {
   const navigation = useNavigation();
   const { onPressBackHome, onPressCardAddition } = useOnPressHandlers();
+
+  const iconName =
+    tapBarState === 'default'
+      ? 'delete'
+      : tapBarState === 'deletion'
+      ? 'close-thick'
+      : 'cart-outline';
 
   return (
     <View style={styles.TapBar}>
       <View style={styles.container}>
         <View style={styles.containerIcon}>
-          <Icon
-            name='home-outline'
-            onPress={() => onPressBackHome(navigation)}
-            size={35}
-            style={styles.icon}
-          />
+          <TouchableOpacity
+            onPress={
+              dispatch && dispatch != undefined
+                ? () =>
+                    dispatch({
+                      type: ACTIONS.OPEN_MODAL,
+                      payload: () => {
+                        dispatch({ type: ACTIONS.CLOSE_MODAL });
+                        onPressBackHome(navigation);
+                      },
+                    })
+                : () => {
+                    onPressBackHome(navigation);
+                  }
+            }
+          >
+            <Icon name='home-outline' size={35} style={styles.icon} />
+          </TouchableOpacity>
         </View>
+        {screenMode === 'business' && (
+          <View style={styles.containerIcon}>
+            <TouchableOpacity onPress={() => onPressCardAddition(navigation)}>
+              <Icon name='barcode-scan' size={35} style={styles.icon} />
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.containerIcon}>
-          <Icon
-            name='plus-circle-outline'
-            onPress={() => onPressCardAddition(navigation)}
-            size={35}
-            style={styles.icon}
-          />
+          <TouchableOpacity
+            onPress={
+              dispatch && dispatch != undefined
+                ? () => {
+                    dispatch({
+                      type: ACTIONS.OPEN_MODAL,
+                      payload: () => {
+                        dispatch({ type: ACTIONS.TRANSACTION_CANCEL });
+                        dispatch({ type: ACTIONS.SET_SCREEN, payload: 'card' });
+                        dispatch({ type: ACTIONS.CLOSE_MODAL });
+                        onPressCardAddition(navigation);
+                      },
+                    });
+                  }
+                : () => onPressCardAddition(navigation)
+            }
+          >
+            <Icon name='plus-circle-outline' size={35} style={styles.icon} />
+          </TouchableOpacity>
         </View>
+
         <View style={styles.containerIcon}>
-          <Icon
-            name={tapBarState === 'default' ? 'delete' : 'close-thick'}
-            onPress={callbackFn}
-            size={35}
-            style={styles.icon}
-          />
+          <TouchableOpacity onPress={callbackFn}>
+            <Icon name={iconName} size={35} style={styles.icon} />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -63,8 +103,8 @@ const styles = StyleSheet.create({
   },
   containerIcon: {
     justifyContent: 'center',
-    paddingLeft: 50,
-    paddingRight: 50,
+    paddingLeft: 25,
+    paddingRight: 25,
   },
   icon: {
     color: colors.swWhite,

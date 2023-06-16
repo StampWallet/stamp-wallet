@@ -3,16 +3,16 @@ import { View, TextInput, StyleSheet, Text } from 'react-native';
 import { Controller, Control, RegisterOptions } from 'react-hook-form';
 
 import colors from '../../constants/colors';
-import StyleBase from '../../styles/StyleBase';
 import ErrorField from './ErrorField';
 
 interface IHookFormInput {
   control: Control;
   rules?: RegisterOptions;
   name: string;
-  placeholder: string;
+  placeholder?: string;
   secureTextEntry?: boolean;
   isInvalid?: boolean;
+  header?: string;
 }
 
 const HookFormInput = ({
@@ -22,6 +22,7 @@ const HookFormInput = ({
   placeholder,
   secureTextEntry,
   isInvalid,
+  header = '',
 }: IHookFormInput) => (
   <View style={styles.wrapper}>
     <Controller
@@ -30,13 +31,13 @@ const HookFormInput = ({
       rules={rules}
       render={({ field: { value, onChange, onBlur }, fieldState: { error } }) => (
         <>
+          {Boolean(header) && <Text style={styles.header}>{header}</Text>}
           <View style={[styles.container, isInvalid ? styles.invalidField : {}]}>
             <TextInput
               style={styles.input}
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
-              placeholder={placeholder}
               secureTextEntry={secureTextEntry}
               autoCapitalize='none'
             />
@@ -63,15 +64,21 @@ const styles = StyleSheet.create({
     display: 'flex',
     backgroundColor: colors.swWhite,
     width: '100%',
-    borderBottomColor: colors.swUnderlineBlue,
-    borderBottomWidth: 1,
+    borderColor: colors.swUnderlineBlue,
+    borderWidth: 1,
     paddingHorizontal: 10,
     marginVertical: 5,
     marginBottom: 10,
+    height: 40,
+    justifyContent: 'center',
+  },
+  header: {
+    fontSize: 16,
+    fontWeight: '600',
   },
   input: {},
   invalidField: {
-    borderBottomColor: colors.swRed,
+    borderColor: colors.swRed,
     marginBottom: 5,
   },
 });

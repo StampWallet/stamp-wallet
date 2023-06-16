@@ -8,8 +8,13 @@ import {
   HOME_ROUTE,
   MAIN_ROUTE,
   ADD_CARD_ROUTE,
+  BUSINESS_ROUTE,
+  BENEFIT_DESC_ROUTE,
 } from '../constants/paths';
 import MainScreen from '../screens/MainScreen';
+import { benefits } from '../assets/mockData/Benefits';
+import { fetchVirtualCard } from '../utils/fetchCards';
+import { fetchFile } from '../utils/files';
 
 const useOnPressHandlers = () => {
   const onPressLogIn = (navigation, data) => {
@@ -33,21 +38,47 @@ const useOnPressHandlers = () => {
     navigation.pop();
   };
 
+  const onPressBusiness = (navigation) => {
+    navigation.push(BUSINESS_ROUTE);
+  };
+
   const onPressBackHome = (navigation) => {
     navigation.dispatch(
       CommonActions.reset({
-        index: 1,
+        index: 0,
         routes: [{ name: MAIN_ROUTE }],
       })
     );
+  };
+
+  const onPressBenefit = (navigation, benefit) => {
+    navigation.dispatch(CommonActions.navigate(BENEFIT_DESC_ROUTE, { params: benefit }));
   };
 
   const onPressCardAddition = (navigation) => {
     navigation.push(ADD_CARD_ROUTE);
   };
 
-  const onPressCard = (navigation, card) => {
-    navigation.push(CARD_ROUTE, { Card: card });
+  const onPressCard = async (navigation, card) => {
+    //if virtualcard
+    //if isAdded use getVirtualCard else getBusiness and use as card
+
+    //then just add isAdded argument to object ig
+    //temp solution on mockData below
+    let Card;
+    if ('businessDetails' in card && card.isAdded) {
+      Card = await fetchVirtualCard(card.businessDetails.publicId);
+    } else {
+      Card = card;
+    }
+    /*
+    if ('businessDetails' in card) {
+      const imageUrl = await fetchFile(Card.businessDetails.bannerImageId);
+      Card = { ...Card, imageUrl: imageUrl };
+    }
+    */
+
+    navigation.push(CARD_ROUTE, { Card: Card });
   };
 
   const onPressCardInfo = (navigation) => {
@@ -62,6 +93,8 @@ const useOnPressHandlers = () => {
     onPressCard,
     onPressBackHome,
     onPressCardAddition,
+    onPressBusiness,
+    onPressBenefit,
   };
 };
 

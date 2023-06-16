@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { CommonActions } from '@react-navigation/native';
 
@@ -24,6 +24,8 @@ import { SERVER_ADDRESS } from '../constants/numericAndStringConstants';
 import { Configuration } from '../api';
 import Auth from '../database/Auth';
 import { REGISTER_ROUTE } from '../constants/paths';
+import Loader from '../components/Loader';
+import CenteredLoader from '../components/CenteredLoader';
 
 export default function RegistrationScreen({ navigation }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,6 +45,7 @@ export default function RegistrationScreen({ navigation }) {
 
     try {
       const registerResponse = await AccountApi.createAccount({ email, password });
+      console.log(registerResponse);
       const { token } = registerResponse.data;
       Auth.token = token;
       Auth.apiConfig = new Configuration({ apiKey: token });
@@ -78,55 +81,66 @@ export default function RegistrationScreen({ navigation }) {
 
   return (
     <SafeAreaView style={StyleBase.container}>
-      <Icon
-        name='arrow-left'
-        size={30}
-        style={StyleBase.backArrow}
-        onPress={() => navigation.pop()}
-        title='back'
-      />
-      <BoxContainer style={{ marginBottom: 25 }}>
-        <HookFormInput
-          control={control}
-          rules={{
-            required,
-          }}
-          name='name'
-          placeholder='name'
-          isInvalid={Boolean(errors.name)}
-        />
-        <HookFormInput
-          control={control}
-          rules={{ required, pattern: validateEmail }}
-          name='email'
-          placeholder='email'
-          isInvalid={Boolean(errors.email)}
-        />
-        <HookFormInput
-          control={control}
-          rules={{ required, pattern: validatePassword }}
-          name='password'
-          placeholder='password'
-          isInvalid={Boolean(errors.password)}
-          secureTextEntry
-        />
-        <HookFormInput
-          control={control}
-          rules={{
-            required,
-            validate: () => validateMatchingPasswords(password, passwordRepeated),
-          }}
-          name='passwordRepeated'
-          placeholder='repeat password'
-          isInvalid={Boolean(errors.passwordRepeated)}
-          secureTextEntry
-        />
-      </BoxContainer>
-      <CustomButton
-        onPress={handleSubmit((data: RegistrationFormData) => handleRegistration(data))}
-        title='Register'
-        disabled={isSubmitting}
-      />
+      <StatusBar barStyle='default' />
+      {isSubmitting ? (
+        <CenteredLoader animation='loader' />
+      ) : (
+        <>
+          <Icon
+            name='arrow-left'
+            size={30}
+            style={StyleBase.backArrow}
+            onPress={() => navigation.pop()}
+            title='back'
+          />
+          <BoxContainer style={{ marginBottom: 25 }}>
+            <HookFormInput
+              control={control}
+              rules={{
+                required,
+              }}
+              name='name'
+              placeholder='name'
+              isInvalid={Boolean(errors.name)}
+              header='name'
+            />
+            <HookFormInput
+              control={control}
+              rules={{ required, pattern: validateEmail }}
+              name='email'
+              placeholder='email'
+              isInvalid={Boolean(errors.email)}
+              header='email'
+            />
+            <HookFormInput
+              control={control}
+              rules={{ required, pattern: validatePassword }}
+              name='password'
+              placeholder='password'
+              isInvalid={Boolean(errors.password)}
+              secureTextEntry
+              header='password'
+            />
+            <HookFormInput
+              control={control}
+              rules={{
+                required,
+                validate: () => validateMatchingPasswords(password, passwordRepeated),
+              }}
+              name='passwordRepeated'
+              placeholder='repeat password'
+              isInvalid={Boolean(errors.passwordRepeated)}
+              secureTextEntry
+              header='repeat password'
+            />
+          </BoxContainer>
+          <CustomButton
+            onPress={handleSubmit((data: RegistrationFormData) => handleRegistration(data))}
+            title='Register'
+            disabled={isSubmitting}
+          />
+        </>
+      )}
     </SafeAreaView>
   );
 }

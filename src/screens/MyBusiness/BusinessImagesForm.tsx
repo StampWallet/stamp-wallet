@@ -15,24 +15,24 @@ export default function BusinessImagesForm() {
 
   return (
     <BoxContainer style={StyleBase.formMargin}>
-      <HookFormImagePicker
-        control={control}
-        rules={{ required }}
-        name='cardIcon'
-        isInvalid={Boolean(errors.cardIcon)}
-      />
+      {/*<HookFormImagePicker*/}
+      {/*  control={control}*/}
+      {/*  rules={{ required }}*/}
+      {/*  name='cardIcon'*/}
+      {/*  isInvalid={Boolean(errors.cardIcon)}*/}
+      {/*/>*/}
       <HookFormImagePicker
         control={control}
         rules={{ required }}
         name='banner'
         isInvalid={Boolean(errors.banner)}
       />
-      <HookFormImagePicker
-        control={control}
-        rules={{ required }}
-        name='menu'
-        isInvalid={Boolean(errors.menu)}
-      />
+      {/*<HookFormImagePicker*/}
+      {/*  control={control}*/}
+      {/*  rules={{ required }}*/}
+      {/*  name='menu'*/}
+      {/*  isInvalid={Boolean(errors.menu)}*/}
+      {/*/>*/}
     </BoxContainer>
   );
 }

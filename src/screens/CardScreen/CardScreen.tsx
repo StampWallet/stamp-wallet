@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { StyleSheet, Text, View, StatusBar, Pressable, SafeAreaView } from 'react-native';
-
-import { reducer, INITIAL_STATE, ACTIONS } from './util/reducer';
+import { CommonActions } from '@react-navigation/native';
+import { reducer, INITIAL_STATE, ACTIONS, ProcessInventory } from './util/reducer';
 
 import useOnPressHandlers from '../../hooks/useOnPressHandlers';
 
-import { getName, getImage } from '../../utils/cardGetters';
+import { getName, getBusinessDetails, getPoints, getInventory } from '../../utils/cardGetters';
 
 import StyleBase from '../../styles/StyleBase';
 
@@ -18,6 +18,21 @@ import Tile from '../../components/Miscellaneous/Tile';
 import BenefitList from '../../components/Benefits/BenefitList';
 import CustomButton from '../../components/Miscellaneous/CustomButton';
 import BoxContainer from '../../components/Miscellaneous/BoxContainer';
+import CustomModal from '../../components/Modals/CustomModal';
+import { Card } from '../../types';
+
+import * as api from '../../api';
+import Auth from '../../database/Auth';
+
+import { MAIN_ROUTE } from '../../constants/paths';
+import Scanner from '../../components/Scanner';
+import { Snackbar } from 'react-native-paper';
+import Barcode from '@kichiyaki/react-native-barcode-generator';
+import BarcodeTile from '../../components/BarcodeTile';
+import { fetchVirtualCard } from '../../utils/fetchCards';
+import { postTransaction, startTransaction } from '../../utils/transactions';
+import { benefits } from '../../assets/mockData/BenefitsApi';
+import { itemDefinitions } from '../../assets/mockData/itemDefinition';
 
 //chaos
 
@@ -26,6 +41,22 @@ interface CardInfoScreenProps {
   route: any; //proper type
 }
 
+function ClaimBenefits(dispatch, inventory) {
+  //console.log(inventory);
+  dispatch({
+    type: ACTIONS.SET_BENEFITS_TO_REALIZE,
+    payload: inventory,
+  });
+  dispatch({ type: 'setScreen', payload: 'claimBenefits' });
+}
+
+const StartTransaction = async (dispatch, selectedCard) => {
+  await dispatch({
+    type: ACTIONS.REALIZE_BENEFITS,
+    payload: [selectedCard.businessDetails.publicId, dispatch],
+  });
+};
+
 export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   /*
 
@@ -33,40 +64,122 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   add visible response for specific buttons (save, cancel, add benefit)
   code generation
   some alert if doing stuff with benefits to add pending
-  needs some styling
-  tested on pixel 6 pro (1440x3120), components MAY NOT fit properly on other models
-
-  proper account balance from api
-  proper descriptions
-  proper everything (after api implementation)
+  realize benefits
+  getImage
   */
 
-  const { Card: selectedCard } = route.params;
-  const {
-    content: { businessDetails },
-  } = selectedCard;
-  let {
-    content: { points, inventory },
-  } = selectedCard;
+  const selectedCard = route.params.Card as Card;
+  //console.log(selectedCard);
+  const businessDetails = getBusinessDetails({ Card: selectedCard });
+  const name = getName({ Card: selectedCard });
+  let points = getPoints({ Card: selectedCard });
+  //let inventory = getInventory({ Card: selectedCard });
+  let [inventory, inventoryProper] = ProcessInventory(getInventory({ Card: selectedCard }));
+  //let [inventory, inventoryProper] = ProcessInventory(getInventory({ Card: selectedCard }));
 
   const [state, dispatch] = useReducer(reducer, {
     ...INITIAL_STATE,
+    // dumb hack with fallbacks, but works for now
     balance: points,
     balanceAfterTransaction: points,
-    inventory: inventory,
+    //inventory: inventory,
+    inventory: inventoryProper,
+    inventoryIds: inventory,
+    benefitsToRealize: inventoryProper,
+    isSubmitting: false,
   });
   const { onPressBack } = useOnPressHandlers();
+  console.log(inventory);
 
-  return selectedCard.type === 'virtual' ? (
+  const handleAddCard = async (cardData) => {
+    dispatch({ type: ACTIONS.SET_SUBMITTING, payload: !state.isSubmitting });
+    console.log('handle add card');
+    let requestStatus = null;
+    const header = Auth.getAuthHeader();
+    //temp
+    if ('businessDetails' in selectedCard) {
+      const VCA = new api.VirtualCardsApi();
+
+      try {
+        console.log('test');
+        const response = await VCA.createVirtualCard(businessDetails.publicId, header);
+        requestStatus = {
+          color: colors.swDarkGreen,
+          message: 'Card has been successfully added to your account.',
+          visible: true,
+        };
+      } catch (e) {
+        const { status } = e.response.data;
+        if (status !== 'ALREADY_EXISTS') {
+          requestStatus = {
+            color: colors.swRed,
+            message: 'Something went wrong, try again later.',
+            visible: true,
+          };
+        } else {
+          requestStatus = {
+            color: colors.swRed,
+            message: 'You already have this card.',
+            visible: true,
+          };
+        }
+      }
+    }
+
+    //inaczej idee krzyczy
+    if ('publicId' in selectedCard) {
+      const LCA = new api.LocalCardsApi();
+
+      try {
+        const response = await LCA.createLocalCard(
+          { name, type: selectedCard.publicId, code: cardData.data },
+          header
+        );
+        requestStatus = {
+          color: colors.swDarkGreen,
+          message: 'Card has been successfully added to your account.',
+          visible: true,
+        };
+      } catch (e) {
+        const response = e.response.code;
+        requestStatus = {
+          color: colors.swRed,
+          message: 'Something went wrong, try again later.',
+          visible: true,
+        };
+      }
+    }
+
+    dispatch({ type: ACTIONS.SET_SUBMITTING, payload: !state.isSubmitting });
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: MAIN_ROUTE, params: requestStatus }],
+      })
+    );
+  };
+
+  return 'businessDetails' in selectedCard ? (
     <SafeAreaView style={StyleBase.container}>
       <StatusBar barStyle='default' />
       {state.screenState === 'card' && (
         <>
-          <TopBar iconLeft={'arrow-left'} onPressLeft={() => onPressBack(navigation)} />
+          <TopBar
+            iconLeft='arrow-left'
+            onPressLeft={
+              state.benefitsToAdd.length > 0
+                ? () =>
+                    dispatch({
+                      type: ACTIONS.OPEN_MODAL,
+                      payload: () => onPressBack(navigation),
+                    })
+                : () => onPressBack(navigation)
+            }
+          />
           {/* todo: image as Card.businessDetails.iconImageId */}
           <CardTile
             containerStyle={[styles.cardTile, !selectedCard.isAdded && { paddingBottom: 75 }]}
-            image={getImage(selectedCard)}
+            imageUrl={businessDetails.bannerImageId}
             tileStyle={{ width: '88.66%' }}
           />
           {selectedCard.isAdded && (
@@ -109,7 +222,9 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
             {state.cardInfoState === 'business' && (
               <>
                 <BoxContainer style={styles.boxContainer}>
-                  <Text style={[styles.text, { paddingBottom: 40 }]}>{getName(selectedCard)}</Text>
+                  <Text style={[styles.text, { paddingBottom: 40 }]}>
+                    {getName({ Card: selectedCard })}
+                  </Text>
                   <Text style={[styles.text, { paddingBottom: 40 }]}>Address</Text>
                   <Text style={styles.text}>{businessDetails.description}</Text>
                 </BoxContainer>
@@ -117,18 +232,42 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                   <>
                     <View style={styles.claimButton}>
                       <CustomButton
-                        onPress={() => {
-                          dispatch({
-                            type: ACTIONS.SET_BENEFITS_TO_REALIZE,
-                            payload: inventory,
-                          });
-                          dispatch({ type: 'setScreen', payload: 'claimBenefits' });
-                        }}
+                        onPress={
+                          state.benefitsToAdd.length > 0
+                            ? () =>
+                                dispatch({
+                                  type: ACTIONS.OPEN_MODAL,
+                                  payload: () => {
+                                    dispatch({ type: ACTIONS.TRANSACTION_CANCEL });
+                                    dispatch({ type: ACTIONS.CLOSE_MODAL });
+                                    ClaimBenefits(dispatch, state.inventory);
+                                  },
+                                })
+                            : () => {
+                                //console.log(state.benefitsToRealize);
+                                ClaimBenefits(dispatch, state.inventory);
+                              }
+                        }
                         title='Claim Benefits'
                       />
                     </View>
                     <View style={styles.showCard}>
-                      <CustomButton onPress={() => alert('Work in progress')} title='Show Card' />
+                      <CustomButton
+                        onPress={() =>
+                          //postTransaction('000680637592', { addedPoints: 1000, itemActions: [] })
+                          {
+                            StartTransaction(dispatch, selectedCard);
+                            /*
+                            dispatch({
+                              type: ACTIONS.REALIZE_BENEFITS,
+                              payload: selectedCard.businessDetails.publicId,
+                            });
+                            */
+                            //dispatch({ type: ACTIONS.SET_SCREEN, payload: 'barcode' });
+                          }
+                        }
+                        title='Show Card'
+                      />
                     </View>
                   </>
                 )}
@@ -140,7 +279,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                   <Text style={styles.text}>List of benefits</Text>
                   {selectedCard.isAdded && (
                     <BenefitList
-                      benefits={selectedCard.content.benefits}
+                      benefits={selectedCard.businessDetails.itemDefinitions}
                       dispatch={dispatch}
                       customBenefitTileStyle={{ width: '100%', height: 60 }}
                       mode='addToInventory'
@@ -148,7 +287,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                   )}
                   {!selectedCard.isAdded && (
                     <BenefitList
-                      benefits={selectedCard.content.benefits}
+                      benefits={selectedCard.businessDetails.itemDefinitions}
                       customBenefitTileStyle={{ width: '100%', height: 60 }}
                       mode='preview'
                     />
@@ -157,26 +296,14 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                 {selectedCard.isAdded && (
                   <View style={[styles.buttonsContainer, { marginTop: '10%' }]}>
                     <CustomButton
-                      onPress={() => dispatch({ type: ACTIONS.TRANSACTION_CANCEL })}
-                      title='Cancel'
-                      customButtonStyle={styles.button}
-                    />
-                    <CustomButton
-                      onPress={() => {
-                        dispatch({ type: ACTIONS.TRANSACTION_SAVE, payload: selectedCard });
-                      }}
-                      title='Save'
-                      customButtonStyle={styles.button}
+                      onPress={() => dispatch({ type: ACTIONS.SET_SCREEN, payload: 'cart' })}
+                      title='Cart'
                     />
                   </View>
                 )}
               </>
             )}
           </View>
-          {!selectedCard.isAdded && (
-            <CustomButton title='add card' onPress={() => alert('Work in progress')} />
-          )}
-          <TapBar navigation={navigation} />
         </>
       )}
       {state.screenState === 'benefit' && (
@@ -184,10 +311,12 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           <TopBar
             iconLeft='arrow-left'
             onPressLeft={() => {
-              dispatch({
-                type: ACTIONS.ON_BACK_BENEFITS,
-                payload: { screenState: 'card', cardInfoState: 'benefits' },
-              });
+              {
+                dispatch({
+                  type: ACTIONS.ON_BACK_BENEFITS,
+                  payload: { screenState: 'card', cardInfoState: 'benefits' },
+                });
+              }
             }}
           />
           <BoxContainer style={styles.benefitDesc}>
@@ -196,7 +325,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           <CustomButton
             title='add benefit'
             onPress={() => {
-              dispatch({ type: ACTIONS.TRANSACTION_ADD_BENEFIT });
+              dispatch({ type: ACTIONS.TRANSACTION_ADD_BENEFIT, payload: state.benefit });
             }}
             customButtonStyle={styles.benefitButton}
           />
@@ -215,7 +344,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           />
           <View style={{ alignItems: 'center', height: '75%' }}>
             {inventory.length !== 0 && <Text style={styles.headline}>Available Benefits</Text>}
-            {inventory.length === 0 && <Text style={styles.headline}>No available benefits</Text>}
+            {inventory?.length === 0 && <Text style={styles.headline}>No available benefits</Text>}
             <BenefitList
               benefits={state.benefitsToRealize}
               mode='addToRealization'
@@ -224,21 +353,91 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           </View>
           <CustomButton
             onPress={() => {
-              dispatch({ type: ACTIONS.REALIZE_BENEFITS });
-              alert('dummy text');
+              StartTransaction(dispatch, selectedCard);
+              /*
+              dispatch({
+                type: ACTIONS.REALIZE_BENEFITS,
+                payload: selectedCard.businessDetails.publicId,
+              });
+              */
+              //dispatch({ type: ACTIONS.SET_SCREEN, payload: 'barcode' });
               //todo
             }}
-            title='generate code'
+            title='Show Card'
             customButtonStyle={[styles.button, { width: '80%' }]}
           />
         </>
       )}
-      <TapBar navigation={navigation} />
+      {state.screenState === 'cart' && (
+        <>
+          <TopBar
+            iconLeft='arrow-left'
+            onPressLeft={() => {
+              dispatch({ type: ACTIONS.TRANSACTION_CLEANUP });
+              dispatch({ type: ACTIONS.SET_SCREEN, payload: 'card' });
+            }}
+          />
+          <View style={{ height: '60%' }}>
+            <BenefitList benefits={state.benefitsToAdd} mode='cart' dispatch={dispatch} />
+          </View>
+          <View style={[styles.buttonsContainer, { marginTop: '10%' }]}>
+            <CustomButton
+              onPress={() => {
+                dispatch({ type: ACTIONS.TRANSACTION_CANCEL });
+                dispatch({ type: ACTIONS.SET_SCREEN, payload: 'card' });
+              }}
+              title='Cancel'
+              customButtonStyle={styles.button}
+            />
+            <CustomButton
+              onPress={() => {
+                dispatch({ type: ACTIONS.TRANSACTION_SAVE, payload: selectedCard });
+                dispatch({ type: ACTIONS.SET_SCREEN, payload: 'card' });
+              }}
+              title='Purchase'
+              customButtonStyle={styles.button}
+            />
+          </View>
+        </>
+      )}
+      {state.screenState === 'barcode' && <BarcodeTile value={state.barcode} format='EAN13' />}
+      {!selectedCard.isAdded && (
+        <CustomButton
+          title='add card'
+          onPress={() => handleAddCard(null)}
+          disabled={state.isSubmitting}
+        />
+      )}
+      <TapBar
+        dispatch={state.benefitsToAdd.length > 0 ? dispatch : undefined}
+        callbackFn={() =>
+          //upo
+          selectedCard.isAdded && dispatch({ type: ACTIONS.SET_SCREEN, payload: 'cart' })
+        }
+        tapBarState='cardScreen'
+      />
+      <CustomModal
+        header='You have items pending in cart!'
+        description='Do you wish to discard them and proceed?'
+        isModalOpen={state.isModalOpen}
+        confirmOption={<CustomButton onPress={state.onConfirmModal} title='Yes' />}
+        cancelOption={
+          <CustomButton onPress={() => dispatch({ type: ACTIONS.CLOSE_MODAL })} title='No' />
+        }
+      />
     </SafeAreaView>
   ) : (
     <SafeAreaView style={StyleBase.container}>
-      <TopBar iconLeft={'arrow-left'} onPressLeft={() => onPressBack(navigation)} />
-      <Text>This is real card info</Text>
+      <TopBar iconLeft='arrow-left' onPressLeft={() => onPressBack(navigation)} />
+      <CardTile
+        containerStyle={styles.cardTile}
+        imageUrl={selectedCard.imageUrl}
+        tileStyle={{ width: '88.66%' }}
+      />
+      {selectedCard.isAdded && <BarcodeTile value={selectedCard.code} format='EAN13' />}
+      {!selectedCard.isAdded && (
+        <Scanner onPressAdd={(cardData) => handleAddCard(cardData)} disabled={state.isSubmitting} />
+      )}
     </SafeAreaView>
   );
 }
@@ -275,7 +474,6 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     height: '7.875%',
-    //width
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -286,6 +484,7 @@ const styles = StyleSheet.create({
     width: '88.66%',
     height: '8%',
     marginTop: '0.075%',
+    backgroundColor: colors.swViolet,
   },
   cardTile: {
     marginBottom: '2%',
@@ -303,7 +502,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   showCard: {
-    //marginTop: '2.375%',
     width: '100%',
     alignItems: 'center',
   },
@@ -312,7 +510,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   description: {
-    //fontFamily: 'Inter',
     fontStyle: 'normal',
     fontWeight: '300',
     fontSize: 24,
@@ -323,8 +520,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '88.33%',
     height: '68.75%',
-    justifyContent: 'flex-start', //?
-    //shadows to be applied
+    justifyContent: 'flex-start',
   },
   benefitButton: {
     marginTop: '3.375%',

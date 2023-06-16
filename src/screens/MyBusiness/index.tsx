@@ -1,73 +1,173 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, SafeAreaView, StatusBar } from 'react-native';
 import { useForm, FormProvider } from 'react-hook-form';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import CustomButton from '../../components/Miscellaneous/CustomButton';
-import PersonalDataForm from './PersonalDataForm';
 import BusinessDataForm from './BusinessDataForm';
 
 import { BusinessRegistrationFormData } from '../../types';
 import StyleBase from '../../styles/StyleBase';
 import BusinessImagesForm from './BusinessImagesForm';
+import { CommonActions } from '@react-navigation/native';
+import { MAIN_ROUTE } from '../../constants/paths';
 
-const mockFormData = {
-  name: 'bill',
-  surname: 'macGill',
-  email: 'callme@wp.pl',
-  phoneNumber: '+48518274407',
-  NIP: '1231456',
-  KRS: '12312',
-  REGON: '123213',
-  businessName: 'pay a bill @ bill',
-  businessAddress: 'hrumczakowa 41/12',
-  postalCode: '21-37',
-  city: 'Wydzial Matematyczny i Informatyczny Jot U',
-};
+import * as api from '../../api';
+import Auth from '../../database/Auth';
 
 const getTitle = (step: number) => {
   if (step === 1) {
-    return 'To business details';
+    return 'To business customisation';
   }
-  return step === 2 ? 'To business customisation' : 'Create business';
+  return 'Create business';
 };
 
-export default function MyBusinessScreen({ navigation }) {
+export default function MyBusinessScreen({ navigation, route }) {
   const [step, setCurrentStep] = useState(1);
   const [businessRegistrationFormValues, setBusinessRegistrationFormValues] =
     useState<BusinessRegistrationFormData>(null);
-
-  const { ...methods } = useForm({
-    defaultValues: mockFormData,
+  const [snackbarState, setSnackbarState] = useState<{
+    visible: boolean;
+    message: string;
+    color: string;
+  }>({
+    visible: false,
+    message: '',
+    color: '',
   });
-  const { handleSubmit } = methods;
+  const [loading, setLoading] = useState(true);
+  const { isEditing } = route.params ?? false;
 
-  const onPressStepForm = (data) => {
-    if (step < 3) {
+  const { ...methods } = useForm();
+  const { handleSubmit, reset } = methods;
+
+  useEffect(() => {
+    const fetchBusinessData = async () => {
+      const BA = new api.BusinessApi();
+      const header = Auth.getAuthHeader();
+
+      try {
+        const response = await BA.getBusinessAccountInfo(header);
+        const {
+          address,
+          bannerImageId,
+          description,
+          iconImageId,
+          krs,
+          name,
+          nip,
+          ownerName,
+          publicId,
+          regon,
+        } = response.data;
+
+        const addressList = address.split(', ');
+
+        reset({
+          name: ownerName,
+          businessName: name,
+          businessAddress: addressList[0],
+          description,
+          city: addressList[1],
+          NIP: nip,
+          KRS: krs,
+          REGON: regon,
+        });
+        setLoading(false);
+      } catch (e) {
+        console.log(e.response);
+      }
+    };
+
+    if (!loading) {
+      return;
+    }
+
+    if (!isEditing) {
+      setLoading(false);
+    }
+
+    fetchBusinessData();
+  }, [loading, isEditing, reset]);
+
+  const onPressStepForm = async (data) => {
+    if (step < 2) {
       setBusinessRegistrationFormValues(data);
       setCurrentStep((prev) => prev + 1);
       return;
     }
 
-    console.log(businessRegistrationFormValues);
-    navigation.push('MainScreen');
+    const createAccountPayload = {
+      name: data.businessName,
+      address: `${data.businessAddress}, ${data.city}`,
+      gpsCoordinates: '12.123,11.123',
+      description: data.description,
+      nip: data.NIP,
+      krs: data.KRS,
+      regon: data.REGON,
+      ownerName: data.name,
+    };
+
+    const header = Auth.getAuthHeader();
+
+    // TODO FINISH BUSINESS CREATION
+    // if (response) {
+    //   const { publicId, bannerImageId, iconImageId } = response.data;
+    //   console.log('image upload');
+    //
+    //   const FA = new api.FileApi();
+    //   const BA = new api.BusinessApi();
+    //
+    //   try {
+    //     const bannerIconResp = await FA.uploadFile(bannerImageId, data.banner, header);
+    //     const cardIconResp = await FA.uploadFile(iconImageId, data.cardIcon, header);
+    //     const menuIconId = await BA.addMenuImage(header);
+    //     const menuIconResp = await FA.uploadFile(menuIconId, data.menu, header);
+    //
+    //     setSnackbarState({
+    //       color: colors.swDarkGreen,
+    //       message: 'Business successfully created.',
+    //       visible: true,
+    //     });
+    //   } catch (e) {
+    //     console.log(e.response);
+    //     setSnackbarState({
+    //       color: colors.swRed,
+    //       message: 'Something went wrong.',
+    //       visible: true,
+    //     });
+    //   }
+    // }
   };
+
+  const handleArrowPress = () => {
+    if (step === 1) {
+      return navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: MAIN_ROUTE }],
+        })
+      );
+    }
+
+    return setCurrentStep((prev) => prev - 1);
+  };
+
   return (
     <SafeAreaView style={StyleBase.container}>
-      <Text style={styles.stepCounter}>{`Step ${step}/3`}</Text>
-      {step > 1 && (
-        <Icon
-          name='arrow-left'
-          size={30}
-          style={StyleBase.backArrow}
-          onPress={() => setCurrentStep((prev) => prev - 1)}
-          title='back'
-        />
-      )}
+      <StatusBar barStyle='default' />
+      <Text style={styles.stepCounter}>{`Step ${step}/2`}</Text>
+      <Icon
+        name='arrow-left'
+        size={30}
+        style={StyleBase.backArrow}
+        onPress={() => handleArrowPress()}
+        title='back'
+      />
       <FormProvider {...methods}>
-        {step === 1 && <PersonalDataForm />}
-        {step === 2 && <BusinessDataForm />}
-        {step === 3 && <BusinessImagesForm />}
+        {/*{step === 1 && <PersonalDataForm />}*/}
+        {step === 1 && <BusinessDataForm />}
+        {step === 2 && <BusinessImagesForm />}
         <CustomButton onPress={handleSubmit(onPressStepForm)} title={getTitle(step)} />
       </FormProvider>
     </SafeAreaView>
