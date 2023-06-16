@@ -27,7 +27,6 @@ export const fetchVirtualCards = async (
   try {
     const header = Auth.getAuthHeader();
     const virtualCardsResponse = await UA.searchBusinesses(query, undefined, undefined, header);
-    console.log(virtualCardsResponse?.data);
     const { businesses } = virtualCardsResponse.data;
     const VA = new api.VirtualCardsApi();
 
@@ -40,9 +39,9 @@ export const fetchVirtualCards = async (
       })
     );
 
-    callbackFn([...virtualCards]);
+    callbackFn(virtualCards);
   } catch (e) {
-    console.log('error:', e);
+    console.log('error:', e.response);
     callbackFn([]);
   }
 };

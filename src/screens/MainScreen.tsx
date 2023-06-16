@@ -27,6 +27,7 @@ import { fetchUserCards } from '../utils/fetchCards';
 import CenteredLoader from '../components/CenteredLoader';
 import fetchBusiness from '../utils/fetchBusiness';
 import MainScreenBenefitList from '../components/Benefits/MainScreenBenefitList';
+import { postTransaction } from '../utils/transactions';
 
 /*
 todo:

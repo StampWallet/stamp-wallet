@@ -386,7 +386,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           </View>
         </>
       )}
-      {state.screenState === 'barcode' && <Text>Barcode will be here</Text>}
+      {state.screenState === 'barcode' && <BarcodeTile value={state.barcode} format='EAN13' />}
       {!selectedCard.isAdded && (
         <CustomButton
           title='add card'

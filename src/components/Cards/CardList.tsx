@@ -7,6 +7,7 @@ import ListItemSeparator from '../Miscellaneous/ListItemSeparator';
 import StyleBase from '../../styles/StyleBase';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { itemDefinitions } from '../../assets/mockData/itemDefinition';
+import { BASE_PATH } from '../../api/base';
 
 interface Props {
   // todo change the type
@@ -20,6 +21,14 @@ export default function CardList({ cards, onLongCardPress, deletionMode = false,
   const navigation = useNavigation();
   const { onPressCard } = useOnPressHandlers();
 
+  const getImageUrl = (item) => {
+    if (item?.imageUrl) {
+      return item.imageUrl;
+    }
+
+    return `${BASE_PATH}/file/${item.businessDetails.bannerImageId}`;
+  };
+
   return (
     <View style={[StyleBase.container, { paddingTop: 10 }]}>
       <FlatList
@@ -27,10 +36,11 @@ export default function CardList({ cards, onLongCardPress, deletionMode = false,
         renderItem={({ item }) => (
           <View>
             <CardTile
-              imageUrl={item?.imageUrl ? item.imageUrl : item.businessDetails.bannerImageId}
+              imageUrl={getImageUrl(item)}
               onLongCardPress={onLongCardPress}
               onPress={deletionMode ? () => onPress(item) : () => onPressCard(navigation, item)}
               deletionMode={deletionMode}
+              isBenefit={!item?.imageUrl}
             />
             {deletionMode && (
               <Icon
