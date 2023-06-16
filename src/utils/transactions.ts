@@ -1,8 +1,13 @@
 import React from 'react';
 import * as api from '../api';
 import Auth from '../database/Auth';
+import { ACTIONS } from '../screens/CardScreen/util/reducer';
 
-export const startTransaction = async (publicId: string, claimedBenefits: any[]) => {
+export const startTransaction = async (
+  publicId: string,
+  claimedBenefits: any[],
+  dispatch?: any
+) => {
   const TA = new api.TransactionApi();
   try {
     const header = Auth.getAuthHeader();
@@ -12,6 +17,10 @@ export const startTransaction = async (publicId: string, claimedBenefits: any[])
       header
     );
     console.log(transactionResponse.data.Code, ' ', transactionResponse.data.publicId);
+    if (dispatch) {
+      dispatch({ type: ACTIONS.SET_BARCODE, payload: transactionResponse.data.Code });
+      dispatch({ type: ACTIONS.SET_SCREEN, payload: 'barcode' });
+    }
     return transactionResponse.data.Code;
   } catch (e) {
     console.log('error:', e);
@@ -53,6 +62,18 @@ export const postTransaction = async (
     return;
   } catch (e) {
     console.log('error: ', e);
+    return;
+  }
+};
+
+export const buyBenefit = async (businessId: string, itemDefinitionId: string) => {
+  const VCA = new api.VirtualCardsApi();
+  try {
+    const header = Auth.getAuthHeader();
+    const transactionResponse = await VCA.buyItem(businessId, itemDefinitionId);
+    return transactionResponse.data.itemId;
+  } catch (e) {
+    console.log('error', e);
     return;
   }
 };

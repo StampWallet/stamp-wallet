@@ -9,6 +9,7 @@ export const INITIAL_STATE = {
   benefitsToRealize: [],
   isModalOpen: false,
   onConfirmModal: () => {},
+  barcode: '978020137962',
 };
 
 export const ACTIONS = {
@@ -33,6 +34,7 @@ export const ACTIONS = {
   SET_SUBMITTING: 'setSubmit',
   OPEN_MODAL: 'checkIfTransactionPending',
   CLOSE_MODAL: 'closeModal',
+  SET_BARCODE: 'setBarcode',
 };
 
 export function ProcessInventory(ownedItems) {
@@ -91,7 +93,7 @@ function addToArr(benefit, benefitArr, balance) {
       price: benefit.price,
       maxAmount: benefit.maxAmount,
     });
-    return balance;
+    return balance - benefit.price;
   }
   if (item.amount === benefit.maxAmount) {
     alert('Maximum number of this benefit reached!');
@@ -104,6 +106,8 @@ function addToArr(benefit, benefitArr, balance) {
 }
 
 function completeTransaction(state, payload) {
+  //todo: dodaj do drugiego typu inventory ktory trzyma [itemDefinitionId, [publicId]]
+  //wykorzystaj to inventory do wyslania benefitow do realizacji w show card
   /*
   state.benefitsToAdd.forEach((obj) => {
     for(let i = 0; i < obj.amountToRealize; i++) {
@@ -111,12 +115,12 @@ function completeTransaction(state, payload) {
     }
   })
   */
-  /*
   let benefitsToAdd = state.benefitsToAdd.slice();
+  let inventory = state.inventory;
   console.log(inventory);
   benefitsToAdd.forEach((benefit) => {
-    let obj = findInArr(benefit, state.inventory);
-    obj ? (obj.amount += benefit.amount) : benefitsToAdd.push(benefit);
+    let obj = findInArr(benefit, inventory);
+    obj ? (obj.amount += benefit.amount) : inventory.push(benefit);
   });
 
   //api request
@@ -124,7 +128,6 @@ function completeTransaction(state, payload) {
   payload.inventory = inventory;
   payload.points = state.balanceAfterTransaction;
   return inventory;
-  */
 }
 
 function addToTransaction(state, payload) {
@@ -175,6 +178,12 @@ function subFromRealization(state, benefit) {
 export function reducer(state, action) {
   const { payload } = action;
   switch (action.type) {
+    case ACTIONS.SET_BARCODE: {
+      return {
+        ...state,
+        barcode: payload,
+      };
+    }
     case ACTIONS.CLOSE_MODAL: {
       return {
         ...state,
@@ -238,21 +247,24 @@ export function reducer(state, action) {
     case ACTIONS.REALIZE_BENEFITS: {
       let claimedBenefits = ProcessTransactionStart(state);
       console.log(claimedBenefits);
-      const barcode = 0;
-      //const barcode = startTransaction(payload, claimedBenefits);
+      //const barcode = '978020137962';
+      const barcode = startTransaction(payload[0], claimedBenefits, payload[1]);
       //start transaction businessId, claimedBenefits
       //get response, show barcode with given code
       return {
         ...state,
         barcode: barcode,
+        screenState: 'barcode',
       };
     }
     case ACTIONS.TRANSACTION_SAVE: {
-      completeTransaction(state, action.payload);
+      let inventory = completeTransaction(state, action.payload);
+      console.log(inventory);
       return {
         ...state,
         balance: state.balanceAfterTransaction,
         benefitsToAdd: [],
+        inventory: inventory,
       };
     }
     case ACTIONS.TRANSACTION_CANCEL: {
@@ -286,14 +298,14 @@ export function reducer(state, action) {
       const benefitsToRealize = addToRealization(state, action.payload);
       return {
         ...state,
-        benefitsToRealize,
+        benefitsToRealize: benefitsToRealize,
       };
     }
     case ACTIONS.REALIZATION_SUB: {
       const benefitsToRealize = subFromRealization(state, action.payload);
       return {
         ...state,
-        benefitsToRealize,
+        benefitsToRealize: benefitsToRealize,
       };
     }
 
@@ -304,6 +316,7 @@ export function reducer(state, action) {
       };
     }
     case ACTIONS.SET_BENEFITS_TO_REALIZE: {
+      console.log(state.inventory);
       return {
         ...state,
         benefitsToRealize: payload.map((obj) => ({ ...obj, amountToRealize: 0 })),

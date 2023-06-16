@@ -50,6 +50,13 @@ function ClaimBenefits(dispatch, inventory) {
   dispatch({ type: 'setScreen', payload: 'claimBenefits' });
 }
 
+const StartTransaction = async (dispatch, selectedCard) => {
+  await dispatch({
+    type: ACTIONS.REALIZE_BENEFITS,
+    payload: [selectedCard.businessDetails.publicId, dispatch],
+  });
+};
+
 export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   /*
 
@@ -62,7 +69,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
   */
 
   const selectedCard = route.params.Card as Card;
-  console.log(selectedCard);
+  //console.log(selectedCard);
   const businessDetails = getBusinessDetails({ Card: selectedCard });
   const name = getName({ Card: selectedCard });
   let points = getPoints({ Card: selectedCard });
@@ -81,6 +88,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
     benefitsToRealize: inventoryProper,
     isSubmitting: false,
   });
+  console.log(state.barcode);
   const { onPressBack } = useOnPressHandlers();
 
   const handleAddCard = async (cardData) => {
@@ -236,7 +244,7 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                                   },
                                 })
                             : () => {
-                                console.log(state.benefitsToRealize);
+                                //console.log(state.benefitsToRealize);
                                 ClaimBenefits(dispatch, state.inventory);
                               }
                         }
@@ -248,11 +256,14 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
                         onPress={() =>
                           //postTransaction('000680637592', { addedPoints: 1000, itemActions: [] })
                           {
+                            StartTransaction(dispatch, selectedCard);
+                            /*
                             dispatch({
                               type: ACTIONS.REALIZE_BENEFITS,
                               payload: selectedCard.businessDetails.publicId,
                             });
-                            dispatch({ type: ACTIONS.SET_SCREEN, payload: 'barcode' });
+                            */
+                            //dispatch({ type: ACTIONS.SET_SCREEN, payload: 'barcode' });
                           }
                         }
                         title='Show Card'
@@ -342,11 +353,14 @@ export default function CardScreen({ navigation, route }: CardInfoScreenProps) {
           </View>
           <CustomButton
             onPress={() => {
+              StartTransaction(dispatch, selectedCard);
+              /*
               dispatch({
                 type: ACTIONS.REALIZE_BENEFITS,
                 payload: selectedCard.businessDetails.publicId,
               });
-              dispatch({ type: ACTIONS.SET_SCREEN, payload: 'barcode' });
+              */
+              //dispatch({ type: ACTIONS.SET_SCREEN, payload: 'barcode' });
               //todo
             }}
             title='Show Card'
