@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
+import { Text, StyleSheet, StatusBar, SafeAreaView, View } from 'react-native';
 import CustomButton from '../components/Miscellaneous/CustomButton';
 
 import StyleBase from '../styles/StyleBase';
@@ -11,6 +11,7 @@ import useOnPressHandlers from '../hooks/useOnPressHandlers';
 import * as api from '../api';
 import { fetchNonAddedCards, fetchVirtualCards } from '../utils/fetchCards';
 import CenteredLoader from '../components/CenteredLoader';
+import colors from '../constants/colors';
 
 type AdditionScreenMode = 'search' | 'scan' | 'virtual' | 'real' | null;
 
@@ -56,7 +57,7 @@ export default function CardAdditionScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={StyleBase.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar barStyle='default' />
       <TopBar
         iconLeft='arrow-left'
@@ -77,21 +78,23 @@ export default function CardAdditionScreen({ navigation }) {
         <>
           {filteredCards !== null && <SearchBar onChangeText={setCardQuery} value={cardQuery} />}
           {filteredCards === null && <CenteredLoader animation='loader' />}
-          {Boolean(filteredCards?.length) && (
-            <CardList
-              cards={filteredCards.map((obj) => ({
-                ...obj,
-                isAdded: false,
-                type: screenMode === 'virtual' ? 'virtual' : 'local',
-              }))}
-            />
-          )}
-          {filteredCards !== null && !filteredCards.length && screenMode === 'real' && (
-            <Text>No cards found</Text>
-          )}
-          {filteredCards !== null && !filteredCards.length && screenMode === 'virtual' && (
-            <Text>Find business</Text>
-          )}
+          <View style={[StyleBase.container, StyleBase.listContainer]}>
+            {Boolean(filteredCards?.length) && (
+              <CardList
+                cards={filteredCards.map((obj) => ({
+                  ...obj,
+                  isAdded: false,
+                  type: screenMode === 'virtual' ? 'virtual' : 'local',
+                }))}
+              />
+            )}
+            {filteredCards !== null && !filteredCards.length && screenMode === 'real' && (
+              <Text style={styles.textStyle}>No cards found</Text>
+            )}
+            {filteredCards !== null && !filteredCards.length && screenMode === 'virtual' && (
+              <Text style={styles.textStyle}>Find business</Text>
+            )}
+          </View>
         </>
       )}
     </SafeAreaView>
@@ -102,9 +105,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     display: 'flex',
-    flexDirection: 'column',
+    height: 500,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.swWhite,
+  },
+  textStyle: {
+    textAlign: 'center',
   },
   firstContainer: {
     flex: 1,

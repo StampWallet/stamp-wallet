@@ -26,12 +26,8 @@ export const fetchVirtualCards = async (
 
   try {
     const header = Auth.getAuthHeader();
-    const virtualCardsResponse = await UA.searchBusinesses(
-      'franek biznes',
-      undefined,
-      undefined,
-      header
-    );
+    const virtualCardsResponse = await UA.searchBusinesses(query, undefined, undefined, header);
+    console.log(virtualCardsResponse?.data);
     const cards = virtualCardsResponse.data.businesses.map((obj) => ({
       businessDetails: { ...obj },
       isAdded: false,
